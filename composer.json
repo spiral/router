@@ -1,5 +1,5 @@
 {
-  "name": "spiral/router",
+  "name": "spiral/routing",
   "type": "library",
   "description": "Routes, RESTFull, URI generation",
   "license": "MIT",
@@ -12,8 +12,8 @@
   "require": {
     "php": "^7.1",
     "spiral/core": "^1.0",
-    "spiral/http": "^1.0",
-    "spiral/hmvc": "^1.0"
+    "spiral/hmvc": "^1.0",
+    "spiral/http": "^1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "~7.0",
@@ -21,7 +21,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Spiral\\Router\\": "src/"
+      "Spiral\\Routing\\": "src/"
     }
   }
 }
