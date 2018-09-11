@@ -55,6 +55,4 @@ class AbstractRoute implements RouteInterface
     {
         // TODO: Implement uri() method.
     }
-
-
 }
