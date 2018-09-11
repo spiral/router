@@ -19,7 +19,7 @@ use Spiral\Core\ResolverInterface;
 use Spiral\Core\ScopeInterface;
 use Spiral\Routing\CallableRouteInterface;
 use Spiral\Routing\Exceptions\RouteNotFoundException;
-use Spiral\Routing\HMVCRouteInterface;
+use Spiral\Routing\CoreRouteInterface;
 
 /**
  * Manages set of routes. Container must include bindings to:
@@ -163,7 +163,7 @@ class Router implements RouterInterface, RequestHandlerInterface
     {
         $route = $route->withPrefix($this->basePath);
 
-        if ($route instanceof HMVCRouteInterface && !$route->hasCore()) {
+        if ($route instanceof CoreRouteInterface && !$route->hasCore()) {
             $route = $route->withCore($this->container->get(CoreInterface::class));
         }
 

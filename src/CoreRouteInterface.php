@@ -11,7 +11,7 @@ namespace Spiral\Routing;
 use Spiral\Core\CoreInterface;
 use Spiral\Router\RouteInterface;
 
-interface HMVCRouteInterface extends RouteInterface
+interface CoreRouteInterface extends RouteInterface
 {
     /**
      * Associate HMVC core with the route.

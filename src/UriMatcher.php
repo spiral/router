@@ -87,7 +87,7 @@ class UriMatcher
     public function match(UriInterface $uri, array $defaults): ?array
     {
         $matches = [];
-        if (!preg_match($this->pattern, $uri, $matches)) {
+        if (!preg_match($this->pattern, $this->fetchTarget($uri), $matches)) {
             return null;
         }
 
@@ -122,7 +122,7 @@ class UriMatcher
      * @param UriInterface $uri
      * @return string
      */
-    private function getTarget(UriInterface $uri): string
+    private function fetchTarget(UriInterface $uri): string
     {
         $path = $uri->getPath();
 
