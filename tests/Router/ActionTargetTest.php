@@ -13,8 +13,6 @@ use Spiral\Http\Uri;
 use Spiral\Router\Fixtures\TestController;
 use Spiral\Router\Route;
 use Spiral\Router\Targets\Action;
-use Spiral\Router\Targets\Controller;
-use Spiral\Router\Targets\RESTFul;
 use Zend\Diactoros\ServerRequest;
 
 class ActionTargetTest extends TestCase
@@ -84,7 +82,5 @@ class ActionTargetTest extends TestCase
     public function testActionException()
     {
         new Action(TestController::class, $this);
-
-        new RESTFul(new Controller(TestController::class));
     }
 }
