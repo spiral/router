@@ -71,6 +71,14 @@ class UriHandler
     }
 
     /**
+     * @return array
+     */
+    public function getConstrains(): array
+    {
+        return $this->constrains;
+    }
+
+    /**
      * @param mixed $prefix
      */
     public function setPrefix($prefix): void
