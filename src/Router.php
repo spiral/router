@@ -176,8 +176,6 @@ class Router implements RouterInterface
      */
     protected function castRoute(string $route): RouteInterface
     {
-        // todo: find route by constrains and defaults (!)
-
         //Will be handled via default route where route name is specified as controller::action
         if (strpos($route, ':') === false) {
             throw new RouteNotFoundException(
@@ -190,6 +188,18 @@ class Router implements RouterInterface
             ':',
             str_replace(['/', '::'], ':', $route)
         );
+
+        foreach ($this->routes as $route) {
+            // todo: find route by constrains and defaults (!)
+
+            $options = array_merge($route->getDefaults(), $route->getDefaults());
+
+            if (isset($options['controller'])) {
+                if (isset($options['controller'])) {
+
+                }
+            }
+        }
 
         if (empty($this->default)) {
             throw new RouteNotFoundException("Default route is missing");
