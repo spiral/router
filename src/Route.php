@@ -42,6 +42,9 @@ class Route extends AbstractRoute implements ContainerizedInterface
     /** @var string|callable|RequestHandlerInterface|TargetInterface */
     private $target;
 
+    /** @var RequestHandlerInterface */
+    private $requestHandler;
+
     /**
      * @param string                                  $pattern  Uri pattern.
      * @param string|callable|RequestHandlerInterface $target   Callable route target.
@@ -51,7 +54,7 @@ class Route extends AbstractRoute implements ContainerizedInterface
     {
         if ($target instanceof TargetInterface) {
             $this->defaults = array_merge($defaults, $target->getDefaults());
-            $this->handler = new UriHandler($pattern, new Slugify(), $target->getConstrains());
+            $this->uriHandler = new UriHandler($pattern, new Slugify(), $target->getConstrains());
         } else {
             parent::__construct($pattern, $defaults);
         }
@@ -66,13 +69,13 @@ class Route extends AbstractRoute implements ContainerizedInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        if (empty($this->handler)) {
-            $this->handler = $this->makeHandler();
+        if (empty($this->requestHandler)) {
+            $this->requestHandler = $this->requestHandler();
         }
 
         return $this->makePipeline()->process(
             $request->withAttribute(self::ROUTE_ATTRIBUTE, $this),
-            $this->handler
+            $this->requestHandler
         );
     }
 
@@ -81,7 +84,7 @@ class Route extends AbstractRoute implements ContainerizedInterface
      *
      * @throws RouteException
      */
-    protected function makeHandler(): RequestHandlerInterface
+    protected function requestHandler(): RequestHandlerInterface
     {
         if (!$this->hasContainer()) {
             throw new RouteException("Unable to configure route pipeline without associated container.");
