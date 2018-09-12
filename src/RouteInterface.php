@@ -21,6 +21,11 @@ use Spiral\Routing\Exceptions\RouteException;
 interface RouteInterface extends RequestHandlerInterface
 {
     /**
+     * List of possible verbs for the route.
+     */
+    const VERBS = ['GET', 'POST', 'PUT', 'PATCH', 'OPTIONS', 'DELETE'];
+
+    /**
      * Return list of HTTP verbs route must handle.
      *
      * @return array
@@ -31,9 +36,9 @@ interface RouteInterface extends RequestHandlerInterface
      * Returns new route instance with new route name.
      *
      * @param string $name
-     * @return RouteInterface
+     * @return self
      */
-    public function withName(string $name): RouteInterface;
+    public function withName(string $name): self;
 
     /**
      * @return string
@@ -44,9 +49,9 @@ interface RouteInterface extends RequestHandlerInterface
      * Prefix must always include back slash at the end of prefix!
      *
      * @param string $prefix
-     * @return RouteInterface
+     * @return self
      */
-    public function withPrefix(string $prefix): RouteInterface;
+    public function withPrefix(string $prefix): self;
 
     /**
      * @return string
@@ -56,10 +61,10 @@ interface RouteInterface extends RequestHandlerInterface
     /**
      * Returns new route instance with forced default values.
      *
-     * @param array $matches
-     * @return RouteInterface
+     * @param array $defaults
+     * @return self
      */
-    public function withDefaults(array $matches): RouteInterface;
+    public function withDefaults(array $defaults): self;
 
     /**
      * Get default route values.
@@ -72,9 +77,9 @@ interface RouteInterface extends RequestHandlerInterface
      * Associated route with given container.
      *
      * @param ContainerInterface $container
-     * @return RouteInterface
+     * @return self
      */
-    public function withContainer(ContainerInterface $container): RouteInterface;
+    public function withContainer(ContainerInterface $container): self;
 
     /**
      * Indicates that route has associated container.
@@ -88,11 +93,11 @@ interface RouteInterface extends RequestHandlerInterface
      * not match.
      *
      * @param Request $request
-     * @return RouteInterface|null
+     * @return self|null
      *
      * @throws RouteException
      */
-    public function match(Request $request): ?RouteInterface;
+    public function match(Request $request): ?self;
 
     /**
      * Generate valid route URL using set of routing parameters.

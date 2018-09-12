@@ -97,18 +97,17 @@ final class Matcher
         return array_merge($this->options, $defaults, $matches);
     }
 
-    public function build(): UriInterface
+    public function build(array $options): UriInterface
     {
+        // todo: what is parameters?
         $parameters = array_merge(
-            $this->options,
-            $this->defaults,
-            $this->matches,
+            $options,
             $this->fetchSegments($parameters, $query)
         );
 
         //Uri without empty blocks (pretty stupid implementation)
         $path = strtr(
-            \Spiral\interpolate($this->compiled['template'], $parameters, '<', '>'),
+            $this->interpolate($this->compiled['template'], $parameters, '<', '>'),
             ['[]' => '', '[/]' => '', '[' => '', ']' => '', '://' => '://', '//' => '/']
         );
 
@@ -139,5 +138,28 @@ final class Matcher
         }
 
         return trim($uri, '/');
+    }
+
+    function interpolate(
+        string $string,
+        array $values,
+        string $prefix = '{',
+        string $postfix = '}'
+    ): string {
+        $replaces = [];
+        foreach ($values as $key => $value) {
+            $value = (is_array($value) || $value instanceof \Closure) ? '' : $value;
+
+            try {
+                //Object as string
+                $value = is_object($value) ? (string)$value : $value;
+            } catch (\Exception $e) {
+                $value = '';
+            }
+
+            $replaces[$prefix . $key . $postfix] = $value;
+        }
+
+        return strtr($string, $replaces);
     }
 }

@@ -166,7 +166,12 @@ class Router implements RouterInterface, RequestHandlerInterface
      */
     protected function configure(RouteInterface $route): RouteInterface
     {
-        return $route->withPrefix($this->basePath)->withContainer($this->container);
+        if (!$route->hasContainer()) {
+            // isolating route in a given container
+            $route = $route->withContainer($this->container);
+        }
+
+        return $route->withPrefix($this->basePath);
     }
 
     /**
