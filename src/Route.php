@@ -38,6 +38,10 @@ class Route extends AbstractRoute implements ContainerizedInterface
      */
     public function __construct(string $pattern, $target, array $defaults = [])
     {
+        if ($target instanceof TargetInterface) {
+            $defaults = array_merge($defaults, $target);
+        }
+
         parent::__construct($pattern, $defaults);
         $this->target = $target;
     }
@@ -64,6 +68,8 @@ class Route extends AbstractRoute implements ContainerizedInterface
      */
     protected function makeHandler(): RequestHandlerInterface
     {
+        // todo: handle TargetInterface
+
         if ($this->target instanceof RequestHandlerInterface) {
             return $this->target;
         }
