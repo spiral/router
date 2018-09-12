@@ -68,7 +68,9 @@ class Route extends AbstractRoute implements ContainerizedInterface
      */
     protected function makeHandler(): RequestHandlerInterface
     {
-        // todo: handle TargetInterface
+        if ($this->target instanceof TargetInterface) {
+            // todo: handle TargetInterface
+        }
 
         if ($this->target instanceof RequestHandlerInterface) {
             return $this->target;
