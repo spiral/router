@@ -9,6 +9,7 @@
 namespace Spiral\Router\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Spiral\Http\Uri;
 use Spiral\Router\Fixtures\TestController;
 use Spiral\Router\Route;
 use Spiral\Router\Targets\Action;
@@ -29,6 +30,24 @@ class ActionTargetTest extends TestCase
     {
         $route = new Route("/home", new Action(TestController::class, ["test", "other"]));
         $route->match(new ServerRequest());
+    }
+
+    public function testActionSelector()
+    {
+        $route = new Route(
+            "/test[/<action>]",
+            new Action(TestController::class, ["test", "other"])
+        );
+
+        $route = $route->withDefaults(['action' => 'test']);
+
+        $this->assertNull($route->match(new ServerRequest()));
+        $this->assertNull($route->match(new ServerRequest([], [], new Uri('/test/something'))));
+
+        $this->assertNotNull($route->match(new ServerRequest([], [], new Uri('/test'))));
+        $this->assertNotNull($route->match(new ServerRequest([], [], new Uri('/test/'))));
+
+        $this->assertNotNull($route->match(new ServerRequest([], [], new Uri('/test/other'))));
     }
 
     /**

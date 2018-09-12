@@ -33,7 +33,10 @@ class UriHandler
     /** @var string */
     private $pattern;
 
-    /** @var SlugifyInterface */
+    /**
+     * @invisible
+     * @var SlugifyInterface
+     */
     private $slugify;
 
     /** @var array */
@@ -267,7 +270,7 @@ class UriHandler
             }
         }
 
-        $this->compiled = '/^' . strtr($template, self::PATTERN_REPLACES) . '$/iu';
+        $this->compiled = '/^' . strtr($template, $replaces + self::PATTERN_REPLACES) . '$/iu';
         $this->template = stripslashes(str_replace('?', '', $template));
         $this->options = $options;
     }
