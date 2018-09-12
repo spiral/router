@@ -176,6 +176,8 @@ class Router implements RouterInterface
      */
     protected function castRoute(string $route): RouteInterface
     {
+        // todo: find route by constrains and defaults (!)
+
         if (empty($this->default)) {
             throw new RouteNotFoundException("Default route is missing");
         }
