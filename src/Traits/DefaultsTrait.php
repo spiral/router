@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Routing\Traits;
+namespace Spiral\Router\Traits;
 
 use Spiral\Router\RouteInterface;
 

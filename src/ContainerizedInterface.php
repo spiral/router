@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Routing;
+namespace Spiral\Router;
 
 use Psr\Container\ContainerInterface;
 use Spiral\Router\RouteInterface;

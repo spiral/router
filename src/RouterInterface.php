@@ -10,9 +10,9 @@ namespace Spiral\Router;
 
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Spiral\Routing\Exceptions\RouteException;
-use Spiral\Routing\Exceptions\RouteNotFoundException;
-use Spiral\Routing\Exceptions\RouterException;
+use Spiral\Router\Exceptions\RouteException;
+use Spiral\Router\Exceptions\RouteNotFoundException;
+use Spiral\Router\Exceptions\RouterException;
 
 interface RouterInterface extends RequestHandlerInterface
 {

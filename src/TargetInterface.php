@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Routing;
+namespace Spiral\Router;
 
 
 use Psr\Container\ContainerInterface;
@@ -43,7 +43,7 @@ interface TargetInterface
      *
      * @return Handler
      *
-     * @throws \Spiral\Routing\Exceptions\TargetException
+     * @throws \Spiral\Router\Exceptions\TargetException
      */
     public function makeHandler(ContainerInterface $container, array $matches): Handler;
 }

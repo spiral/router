@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Routing\Targets;
+namespace Spiral\Router\Targets;
 
 final class Group
 {

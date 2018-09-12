@@ -6,13 +6,13 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Routing;
+namespace Spiral\Router;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Spiral\Core\CoreInterface;
-use Spiral\Routing\Exceptions\TargetException;
+use Spiral\Router\Exceptions\TargetException;
 
 abstract class AbstractTarget implements TargetInterface
 {

@@ -6,13 +6,13 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Routing\Targets;
+namespace Spiral\Router\Targets;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
-use Spiral\Routing\AbstractTarget;
-use Spiral\Routing\Exceptions\InvalidArgumentException;
-use Spiral\Routing\Exceptions\TargetException;
+use Spiral\Router\AbstractTarget;
+use Spiral\Router\Exceptions\InvalidArgumentException;
+use Spiral\Router\Exceptions\TargetException;
 
 /**
  * Targets to specific controller action or actions.

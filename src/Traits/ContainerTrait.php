@@ -6,10 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Routing\Traits;
+namespace Spiral\Router\Traits;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Routing\ContainerizedInterface;
+use Spiral\Router\ContainerizedInterface;
 
 trait ContainerTrait
 {

@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Routing\Exceptions;
+namespace Spiral\Router\Exceptions;
 
 class InvalidArgumentException extends \InvalidArgumentException
 {

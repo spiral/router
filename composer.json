@@ -1,5 +1,5 @@
 {
-  "name": "spiral/routing",
+  "name": "spiral/router",
   "type": "library",
   "description": "Routes, RESTFull, URI generation",
   "license": "MIT",
@@ -22,7 +22,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Spiral\\Routing\\": "src/"
+      "Spiral\\Router\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Spiral\\Router\\": "tests/Router/"
     }
   }
 }

@@ -11,7 +11,7 @@ namespace Spiral\Router;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Spiral\Routing\Exceptions\RouteException;
+use Spiral\Router\Exceptions\RouteException;
 
 /**
  * Route provides ability to handle incoming request based on defined pattern. Each route must be

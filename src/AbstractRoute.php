@@ -6,14 +6,13 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Routing;
+namespace Spiral\Router;
 
 use Cocur\Slugify\Slugify;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\UriInterface;
-use Spiral\Router\RouteInterface;
-use Spiral\Routing\Traits\DefaultsTrait;
-use Spiral\Routing\Traits\VerbsTrait;
+use Spiral\Router\Traits\DefaultsTrait;
+use Spiral\Router\Traits\VerbsTrait;
 
 abstract class AbstractRoute implements RouteInterface
 {
@@ -52,31 +51,6 @@ abstract class AbstractRoute implements RouteInterface
     public function getPrefix(): string
     {
         return $this->handler->getPrefix();
-    }
-
-    /**
-     * Enable to disable host name matching.
-     *
-     * @param bool $matchHost
-     *
-     * @return RouteInterface
-     */
-    public function withHost(bool $matchHost = true): RouteInterface
-    {
-        $route = clone $this;
-        $route->handler->setMatchHost($matchHost);
-
-        return $route;
-    }
-
-    /**
-     * Indicates that route will be matching hostname.
-     *
-     * @return bool
-     */
-    public function isMatchHost(): bool
-    {
-        return $this->handler->isMatchHost();
     }
 
     /**

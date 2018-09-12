@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Routing;
+namespace Spiral\Router;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -19,7 +19,7 @@ use Spiral\Http\Exceptions\ClientExceptions\BadRequestException;
 use Spiral\Http\Exceptions\ClientExceptions\ForbiddenException;
 use Spiral\Http\Exceptions\ClientExceptions\NotFoundException;
 use Spiral\Http\Traits\JsonTrait;
-use Spiral\Routing\Exceptions\HandlerException;
+use Spiral\Router\Exceptions\HandlerException;
 
 class CoreHandler implements RequestHandlerInterface
 {

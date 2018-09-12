@@ -6,20 +6,22 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Routing;
+namespace Spiral\Router;
 
 use Cocur\Slugify\SlugifyInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Http\Uri;
+use Spiral\Router\Exceptions\ConstrainException;
 
 /**
  * UriMatcher provides ability to match and generate uris based on given parameters.
  */
 class UriHandler
 {
-    private const DEFAULT_SEGMENT = '[^\/]+';
-    private const REPLACES        = ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.'];
-    private const URI_FIXERS      = [
+    private const DEFAULT_SEGMENT  = '[^\/]+';
+    private const PATTERN_REPLACES = ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.'];
+    private const SEGMENT_REPLACES = ['/' => '\\/', '.' => '\.'];
+    private const URI_FIXERS       = [
         '[]'  => '',
         '[/]' => '',
         '['   => '',
@@ -59,7 +61,8 @@ class UriHandler
      */
     public function __construct(string $pattern, SlugifyInterface $slugify, array $constrains = [])
     {
-        $this->pattern = ltrim($pattern, '/');
+        $this->matchHost = strpos($pattern, '://') == 0;
+        $this->pattern = $pattern;
         $this->slugify = $slugify;
         $this->constrains = $constrains;
     }
@@ -78,22 +81,6 @@ class UriHandler
     public function getPattern(): string
     {
         return $this->pattern;
-    }
-
-    /**
-     * @param bool $matchHost
-     */
-    public function setMatchHost(bool $matchHost)
-    {
-        $this->matchHost = $matchHost;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isMatchHost(): bool
-    {
-        return $this->matchHost;
     }
 
     /**
@@ -154,7 +141,7 @@ class UriHandler
         }
 
         $matches = [];
-        if (!preg_match($this->pattern, $this->fetchTarget($uri), $matches)) {
+        if (!preg_match($this->compiled, $this->fetchTarget($uri), $matches)) {
             return null;
         }
 
@@ -256,22 +243,33 @@ class UriHandler
     private function compile()
     {
         $options = [];
-        if (preg_match_all('/<(\w+):?(.*?)?>/', $this->pattern, $matches)) {
+        $pattern = ltrim($this->pattern, ':/');
+        if (preg_match_all('/<(\w+):?(.*?)?>/', $pattern, $matches)) {
             $variables = array_combine($matches[1], $matches[2]);
 
-            foreach ($variables as $name => $segment) {
-                //Segment regex
-                $segment = $segment ?? self::DEFAULT_SEGMENT;
-                $replaces["<$name>"] = "(?P<$name>$segment)";
-                $options[] = $name;
+            foreach ($variables as $key => $segment) {
+                $segment = $this->prepareSegment($key, $segment);
+                $replaces["<$key>"] = "(?P<$key>$segment)";
+                $options[] = $key;
             }
         }
 
-        $template = preg_replace('/<(\w+):?.*?>/', '<\1>', $this->pattern);
+        $template = preg_replace('/<(\w+):?.*?>/', '<\1>', $pattern);
+        $options = array_fill_keys($options, null);
 
-        $this->pattern = '/^' . strtr($template, self::REPLACES) . '$/iu';
+        foreach ($this->constrains as $key => $values) {
+            if (!array_key_exists($key, $options)) {
+                throw new ConstrainException(sprintf(
+                    "Route `%s` does not define required option `%s`.",
+                    $this->pattern,
+                    $key
+                ));
+            }
+        }
+
+        $this->compiled = '/^' . strtr($template, self::PATTERN_REPLACES) . '$/iu';
         $this->template = stripslashes(str_replace('?', '', $template));
-        $this->options = array_fill_keys($options, null);
+        $this->options = $options;
     }
 
     /**
@@ -299,5 +297,43 @@ class UriHandler
         }
 
         return strtr($string, $replaces + self::URI_FIXERS);
+    }
+
+    /**
+     * Prepares segment pattern with given constrains.
+     *
+     * @param string $name
+     * @param string $segment
+     *
+     * @return string
+     */
+    private function prepareSegment(string $name, string $segment): string
+    {
+        if (!empty($segment)) {
+            return $this->filterSegment($segment);
+        }
+
+        if (!isset($this->constrains[$name])) {
+            return self::DEFAULT_SEGMENT;
+        }
+
+        if (is_array($this->constrains[$name])) {
+            $values = array_map([$this, 'filterSegment'], $this->constrains[$name]);
+
+            return join('|', $values);
+        }
+
+        // get segment pattern from given constrain
+        return strtr($segment, $this->constrains[$name]);
+    }
+
+    /**
+     * @param string $segment
+     *
+     * @return string
+     */
+    private function filterSegment(string $segment): string
+    {
+        return strtr($segment, self::SEGMENT_REPLACES);
     }
 }

@@ -14,9 +14,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Core\Exceptions\Container\NotFoundException;
 use Spiral\Core\ScopeInterface;
-use Spiral\Routing\ContainerizedInterface;
-use Spiral\Routing\Exceptions\RouteNotFoundException;
-use Spiral\Routing\Exceptions\RouterException;
+use Spiral\Router\ContainerizedInterface;
+use Spiral\Router\Exceptions\RouteNotFoundException;
+use Spiral\Router\Exceptions\RouterException;
 
 /**
  * Manages set of routes.

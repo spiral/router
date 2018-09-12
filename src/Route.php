@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Routing;
+namespace Spiral\Router;
 
 use Cocur\Slugify\Slugify;
 use Psr\Container\ContainerExceptionInterface;
@@ -14,8 +14,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Http\CallableHandler;
-use Spiral\Routing\Exceptions\RouteException;
-use Spiral\Routing\Traits\PipelineTrait;
+use Spiral\Router\Exceptions\RouteException;
+use Spiral\Router\Traits\PipelineTrait;
 
 /**
  * Default route provides ability to route request to a given callable handler.
@@ -31,9 +31,7 @@ use Spiral\Routing\Traits\PipelineTrait;
  * new Route("/login", new Action(\App\Controllers|HomeController::class, "login");
  * new Route("/<controller>/<action>/<id>", new Group("\App\Controllers");
  * new Route("/signup/<action>", new Controller("\App\Controllers");
- *
- * @todo autodetect host usage
- * @todo mount constrains
+ * new Route("://<domain>/info", new Action(\App\Controllers|ProfileController::class, "info");
  */
 class Route extends AbstractRoute implements ContainerizedInterface
 {
@@ -44,9 +42,6 @@ class Route extends AbstractRoute implements ContainerizedInterface
     /** @var string|callable|RequestHandlerInterface|TargetInterface */
     private $target;
 
-    /** @var RequestHandlerInterface|null */
-    private $handler;
-
     /**
      * @param string                                  $pattern  Uri pattern.
      * @param string|callable|RequestHandlerInterface $target   Callable route target.
@@ -55,7 +50,7 @@ class Route extends AbstractRoute implements ContainerizedInterface
     public function __construct(string $pattern, $target, array $defaults = [])
     {
         if ($target instanceof TargetInterface) {
-            $this->defaults = array_merge($defaults, $target);
+            $this->defaults = array_merge($defaults, $target->getDefaults());
             $this->handler = new UriHandler($pattern, new Slugify(), $target->getConstrains());
         } else {
             parent::__construct($pattern, $defaults);
