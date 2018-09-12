@@ -6,12 +6,10 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Routing;
+namespace Spiral\Routing\Targets;
 
-class Controllers
+
+final class Action
 {
-    public function getDefaults(): array
-    {
 
-    }
 }

@@ -6,10 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Routing;
+namespace Spiral\Routing\Targets;
 
-
-interface DDD
+final class Controller
 {
-    public function getDefaults(): array;
+    private $controller;
 }
