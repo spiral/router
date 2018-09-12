@@ -8,7 +8,19 @@
 
 namespace Spiral\Router\Targets;
 
-final class Controller
+/**
+ * Targets to all actions in specific controller. Variation of Action without action constrain.
+ *
+ * Examples:
+ * new Controller(HomeController::class);
+ */
+final class Controller extends Action
 {
-    private $controller;
+    /**
+     * @param string $controller
+     */
+    public function __construct(string $controller)
+    {
+        parent::__construct($controller, []);
+    }
 }

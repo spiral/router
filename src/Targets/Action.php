@@ -22,7 +22,7 @@ use Spiral\Router\Exceptions\TargetException;
  * new Action(HomeController::class, "index");
  * new Action(SingUpController::class, ["login", "logout"]); // creates <action> constrain
  */
-final class Action extends AbstractTarget
+class Action extends AbstractTarget
 {
     /** @var string */
     private $controller;
@@ -66,7 +66,10 @@ final class Action extends AbstractTarget
     {
         $action = $this->action;
         if (!is_string($action)) {
-            if (empty($matches['action']) || !in_array($matches['action'], $action)) {
+            if (
+                empty($matches['action'])
+                || (!empty($action) && !in_array($matches['action'], $action))
+            ) {
                 throw new TargetException("Invalid action target, action not allowed.");
             }
 
