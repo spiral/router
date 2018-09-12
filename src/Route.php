@@ -30,7 +30,7 @@ use Spiral\Router\Traits\PipelineTrait;
  *
  * new Route("/login", new Action(\App\Controllers|HomeController::class, "login");
  * new Route("/<controller>/<action>/<id>", new Group("\App\Controllers");
- * new Route("/signup/<action>", new Controller(\App\Controllers\SignUpController::class);
+ * new Route("/signup/<action>", new Controller(\App\Controllers\SignupController::class);
  * new Route("://<domain>/info", new Action(\App\Controllers|ProfileController::class, "info");
  */
 class Route extends AbstractRoute implements ContainerizedInterface
