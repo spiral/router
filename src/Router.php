@@ -189,14 +189,13 @@ class Router implements RouterInterface
             str_replace(['/', '::'], ':', $route)
         );
 
-        foreach ($this->routes as $route) {
-            // todo: find route by constrains and defaults (!)
+        foreach ($this->routes as $name => $route) {
+            if ($name == $controller) {
+                $options = array_merge($route->getDefaults(), $route->getDefaults());
+                if (isset($options['action'])) {
+                    // todo: find route by constrains and defaults (!)
 
-            $options = array_merge($route->getDefaults(), $route->getDefaults());
-
-            if (isset($options['controller'])) {
-                if (isset($options['controller'])) {
-
+                    // found route by action
                 }
             }
         }
