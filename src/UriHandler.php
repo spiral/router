@@ -245,7 +245,7 @@ class UriHandler
      */
     private function compile()
     {
-        $options = [];
+        $options = $replaces = [];
         $pattern = ltrim($this->pattern, ':/');
         if (preg_match_all('/<(\w+):?(.*?)?>/', $pattern, $matches)) {
             $variables = array_combine($matches[1], $matches[2]);
