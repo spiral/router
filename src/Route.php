@@ -18,6 +18,8 @@ use Spiral\Routing\Traits\PipelineTrait;
 
 /**
  * Default route provides ability to route request to a given callable handler.
+ *
+ * @todo: add examples
  */
 class Route extends AbstractRoute implements ContainerizedInterface
 {

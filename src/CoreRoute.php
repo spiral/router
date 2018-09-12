@@ -8,31 +8,32 @@
 
 namespace Spiral\Routing;
 
-use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Routing\Traits\PipelineTrait;
 
 /**
  * CoreRoute provides ability to invoke controller actions or group of controllers.
+ *
+ * @todo: add examples
  */
 abstract class CoreRoute extends AbstractRoute
 {
     use PipelineTrait;
 
-    /** @var string */
+    /** @var DDD */
     private $target;
 
     /** @var CoreInterface */
     private $core;
 
     /**
-     * @param string                                  $pattern  Uri pattern.
-     * @param string|callable|RequestHandlerInterface $target   Target controller action pair, or controller group.
-     * @param array                                   $defaults Default value set.
+     * @param string $pattern  Uri pattern.
+     * @param DDD    $target   Defines set of controllers (statically or dynamically) route can invoke.
+     * @param array  $defaults Default value set.
      */
-    public function __construct(string $pattern, string $target, array $defaults = [])
+    public function __construct(string $pattern, DDD $target, array $defaults = [])
     {
-        parent::__construct($pattern, $defaults);
+        parent::__construct($pattern, array_merge($defaults, $target->getDefaults()));
         $this->target = $target;
     }
 }
