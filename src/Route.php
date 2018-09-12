@@ -68,16 +68,16 @@ class Route extends AbstractRoute implements ContainerizedInterface
      */
     protected function makeHandler(): RequestHandlerInterface
     {
-        if ($this->target instanceof TargetInterface) {
-            // todo: handle TargetInterface
-        }
-
         if ($this->target instanceof RequestHandlerInterface) {
             return $this->target;
         }
 
         if (!$this->hasContainer()) {
             throw new RouteException("Unable to configure route pipeline without associated container.");
+        }
+
+        if ($this->target instanceof TargetInterface) {
+            // todo: handle TargetInterface
         }
 
         try {
