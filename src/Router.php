@@ -178,10 +178,6 @@ class Router implements RouterInterface
     {
         // todo: find route by constrains and defaults (!)
 
-        if (empty($this->default)) {
-            throw new RouteNotFoundException("Default route is missing");
-        }
-
         //Will be handled via default route where route name is specified as controller::action
         if (strpos($route, ':') === false) {
             throw new RouteNotFoundException(
@@ -194,6 +190,10 @@ class Router implements RouterInterface
             ':',
             str_replace(['/', '::'], ':', $route)
         );
+
+        if (empty($this->default)) {
+            throw new RouteNotFoundException("Default route is missing");
+        }
 
         //Let's create new route for a controller and action
         return $this->default->withDefaults([
