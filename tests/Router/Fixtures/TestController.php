@@ -12,5 +12,5 @@ use Spiral\Core\Controller;
 
 class TestController extends Controller
 {
-
+    const PUBLIC_ACTIONS = [];
 }

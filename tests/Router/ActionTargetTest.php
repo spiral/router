@@ -64,7 +64,7 @@ class ActionTargetTest extends TestCase
         $this->assertNotNull(
             $match = $route->match(new ServerRequest([], [], new Uri('/test/other')))
         );
-dump($match);
+
         $this->assertSame(['action' => 'other'], $match->getMatches());
     }
 
