@@ -8,6 +8,8 @@
 
 namespace Spiral\Routing\Traits;
 
+use Spiral\Router\RouteInterface;
+
 trait DefaultsTrait
 {
     /** @var array */
@@ -17,9 +19,9 @@ trait DefaultsTrait
      * Returns new route instance with forced default values.
      *
      * @param array $defaults
-     * @return self
+     * @return RouteInterface|$this
      */
-    public function withDefaults(array $defaults): self
+    public function withDefaults(array $defaults): RouteInterface
     {
         $route = clone $this;
         $route->defaults = $defaults;

@@ -20,11 +20,11 @@ trait VerbsTrait
      * Attach specific list of HTTP verbs to the route.
      *
      * @param string ...$verbs
-     * @return self
+     * @return RouteInterface|$this
      *
      * @throws RouteException
      */
-    public function withVerbs(string ...$verbs): self
+    public function withVerbs(string ...$verbs): RouteInterface
     {
         foreach ($verbs as &$verb) {
             $verb = strtoupper($verb);

@@ -25,6 +25,16 @@ interface RouteInterface extends RequestHandlerInterface
     const VERBS = ['GET', 'POST', 'PUT', 'PATCH', 'OPTIONS', 'DELETE'];
 
     /**
+     * Attach specific list of HTTP verbs to the route.
+     *
+     * @param string ...$verbs
+     * @return RouteInterface|$this
+     *
+     * @throws RouteException
+     */
+    public function withVerbs(string ...$verbs): RouteInterface;
+
+    /**
      * Return list of HTTP verbs route must handle.
      *
      * @return array
@@ -35,9 +45,9 @@ interface RouteInterface extends RequestHandlerInterface
      * Prefix must always include back slash at the end of prefix!
      *
      * @param string $prefix
-     * @return self
+     * @return RouteInterface|$this
      */
-    public function withPrefix(string $prefix): self;
+    public function withPrefix(string $prefix): RouteInterface;
 
     /**
      * @return string
@@ -48,9 +58,9 @@ interface RouteInterface extends RequestHandlerInterface
      * Returns new route instance with forced default values.
      *
      * @param array $defaults
-     * @return self
+     * @return RouteInterface|$this
      */
-    public function withDefaults(array $defaults): self;
+    public function withDefaults(array $defaults): RouteInterface;
 
     /**
      * Get default route values.
@@ -64,11 +74,11 @@ interface RouteInterface extends RequestHandlerInterface
      * not match.
      *
      * @param Request $request
-     * @return self|null
+     * @return RouteInterface|$this|null
      *
      * @throws RouteException
      */
-    public function match(Request $request): ?self;
+    public function match(Request $request): ?RouteInterface;
 
     /**
      * Generate valid route URL using set of routing parameters.

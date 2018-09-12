@@ -17,9 +17,9 @@ interface ContainerizedInterface extends RouteInterface
      * Associated route with given container.
      *
      * @param ContainerInterface $container
-     * @return self
+     * @return ContainerizedInterface|$this
      */
-    public function withContainer(ContainerInterface $container): self;
+    public function withContainer(ContainerInterface $container): ContainerizedInterface;
 
     /**
      * Indicates that route has associated container.
