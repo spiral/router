@@ -39,7 +39,7 @@ final class Action extends AbstractTarget
     public function __construct(string $controller, $action)
     {
         if (!class_exists($controller)) {
-            throw new TargetException("Undefined class `{$controller}`");
+            throw new InvalidArgumentException("Undefined class `{$controller}`");
         }
 
         if (!is_string($action) && !is_array($action)) {
@@ -67,7 +67,7 @@ final class Action extends AbstractTarget
         $action = $this->action;
         if (!is_string($action)) {
             if (empty($matches['action']) || !in_array($matches['action'], $action)) {
-                throw new TargetException("Invalid action target.");
+                throw new TargetException("Invalid action target, action not allowed.");
             }
 
             $action = $matches['action'];
