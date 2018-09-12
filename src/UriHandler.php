@@ -17,9 +17,9 @@ use Spiral\Http\Uri;
  */
 class UriHandler
 {
-    const DEFAULT_SEGMENT = '[^\/]+';
-    const REPLACES = ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.'];
-    const URI_FIXERS = ['[]' => '', '[/]' => '', '[' => '', ']' => '', '://' => '://', '//' => '/'];
+    private const DEFAULT_SEGMENT = '[^\/]+';
+    private const REPLACES = ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.'];
+    private const URI_FIXERS = ['[]' => '', '[/]' => '', '[' => '', ']' => '', '://' => '://', '//' => '/'];
 
     /** @var string */
     private $pattern;

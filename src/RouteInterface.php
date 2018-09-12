@@ -22,7 +22,7 @@ interface RouteInterface extends RequestHandlerInterface
     /**
      * List of possible verbs for the route.
      */
-    const VERBS = ['GET', 'POST', 'PUT', 'PATCH', 'OPTIONS', 'DELETE'];
+    public const VERBS = ['GET', 'POST', 'PUT', 'PATCH', 'OPTIONS', 'DELETE'];
 
     /**
      * Attach specific list of HTTP verbs to the route.
