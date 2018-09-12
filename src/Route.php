@@ -30,11 +30,11 @@ class Route extends AbstractRoute implements ContainerizedInterface
     private $handler;
 
     /**
-     * @param string                                  $pattern
-     * @param array                                   $defaults
-     * @param string|callable|RequestHandlerInterface $target Route target. Can be in a form of controller:action
+     * @param string                                  $pattern  Uri pattern.
+     * @param string|callable|RequestHandlerInterface $target   Callable route target.
+     * @param array                                   $defaults Default value set.
      */
-    public function __construct(string $pattern, array $defaults = [], $target)
+    public function __construct(string $pattern, $target, array $defaults = [])
     {
         parent::__construct($pattern, $defaults);
         $this->target = $target;

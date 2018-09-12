@@ -31,8 +31,9 @@ trait PipelineTrait
      * $route->withMiddleware(new CacheMiddleware(100));
      * $route->withMiddleware(ProxyMiddleware::class);
      * $route->withMiddleware(ProxyMiddleware::class, OtherMiddleware::class);
+     * $route->withMiddleware([ProxyMiddleware::class, OtherMiddleware::class]);
      *
-     * @param MiddlewareInterface|string ...$middleware
+     * @param MiddlewareInterface|string|array ...$middleware
      * @return RouteInterface|$this
      *
      * @throws RouteException
@@ -41,6 +42,12 @@ trait PipelineTrait
     {
         $route = clone $this;
         $route->pipeline = null;
+
+        // array fallback
+        if (count($middleware) == 1 && is_array($middleware[0])) {
+            $middleware = $middleware[0];
+        }
+
         foreach ($middleware as $item) {
             if (!is_string($item) && !$item instanceof MiddlewareInterface) {
                 if (is_object($item)) {
