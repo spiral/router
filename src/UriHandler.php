@@ -18,14 +18,24 @@ use Spiral\Http\Uri;
 class UriHandler
 {
     private const DEFAULT_SEGMENT = '[^\/]+';
-    private const REPLACES = ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.'];
-    private const URI_FIXERS = ['[]' => '', '[/]' => '', '[' => '', ']' => '', '://' => '://', '//' => '/'];
+    private const REPLACES        = ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.'];
+    private const URI_FIXERS      = [
+        '[]'  => '',
+        '[/]' => '',
+        '['   => '',
+        ']'   => '',
+        '://' => '://',
+        '//'  => '/'
+    ];
 
     /** @var string */
     private $pattern;
 
     /** @var SlugifyInterface */
     private $slugify;
+
+    /** @var array */
+    private $constrains = [];
 
     /** @var bool */
     private $matchHost = false;
@@ -45,11 +55,13 @@ class UriHandler
     /**
      * @param string           $pattern
      * @param SlugifyInterface $slugify
+     * @param array            $constrains
      */
-    public function __construct(string $pattern, SlugifyInterface $slugify)
+    public function __construct(string $pattern, SlugifyInterface $slugify, array $constrains = [])
     {
         $this->pattern = ltrim($pattern, '/');
         $this->slugify = $slugify;
+        $this->constrains = $constrains;
     }
 
     /**
@@ -127,10 +139,12 @@ class UriHandler
     }
 
     /**
-     * Match given url against compiled template and return matches array or null if pattern does not match.
+     * Match given url against compiled template and return matches array or null if pattern does
+     * not match.
      *
      * @param UriInterface $uri
      * @param array        $defaults
+     *
      * @return array|null
      */
     public function match(UriInterface $uri, array $defaults): ?array
@@ -145,6 +159,7 @@ class UriHandler
         }
 
         $matches = array_intersect_key($matches, $this->options);
+
         return array_merge($this->options, $defaults, $matches);
     }
 
@@ -153,6 +168,7 @@ class UriHandler
      *
      * @param array|\Traversable $parameters
      * @param array              $defaults
+     *
      * @return UriInterface
      */
     public function uri($parameters = [], array $defaults = []): UriInterface
@@ -214,6 +230,7 @@ class UriHandler
      * Part of uri path which is being matched.
      *
      * @param UriInterface $uri
+     *
      * @return string
      */
     private function fetchTarget(UriInterface $uri): string
@@ -262,6 +279,7 @@ class UriHandler
      *
      * @param string $string
      * @param array  $values
+     *
      * @return string
      */
     private function interpolate(string $string, array $values): string

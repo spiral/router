@@ -20,6 +20,7 @@ trait ContainerTrait
      * Associated route with given container.
      *
      * @param ContainerInterface $container
+     *
      * @return ContainerizedInterface|$this
      */
     public function withContainer(ContainerInterface $container): ContainerizedInterface

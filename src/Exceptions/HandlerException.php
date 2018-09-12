@@ -6,10 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Routing;
+namespace Spiral\Routing\Exceptions;
 
-
-class CoreRoute
+class HandlerException extends \RuntimeException
 {
 
 }

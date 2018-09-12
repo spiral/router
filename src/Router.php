@@ -12,7 +12,6 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Core\Exceptions\Container\NotFoundException;
 use Spiral\Core\ScopeInterface;
 use Spiral\Routing\ContainerizedInterface;
@@ -21,13 +20,9 @@ use Spiral\Routing\Exceptions\RouterException;
 
 /**
  * Manages set of routes.
- *
- * @todo add support for pre-compiled route groups as FastRoute
  */
-class Router implements RouterInterface, RequestHandlerInterface
+class Router implements RouterInterface
 {
-    const ROUTE_ATTRIBUTE = 'route';
-
     /** @var string */
     private $basePath = '/';
 
@@ -66,9 +61,7 @@ class Router implements RouterInterface, RequestHandlerInterface
         return $this->container->get(ScopeInterface::class)->runScope(
             [RouteInterface::class => $this],
             function () use ($route, $request) {
-                return $route->handle(
-                    $request->withAttribute(self::ROUTE_ATTRIBUTE, $route)
-                );
+                return $route->handle($request);
             }
         );
     }
@@ -132,6 +125,7 @@ class Router implements RouterInterface, RequestHandlerInterface
      * Find route matched for given request.
      *
      * @param ServerRequestInterface $request
+     *
      * @return null|RouteInterface
      */
     protected function matchRoute(ServerRequestInterface $request): ?RouteInterface
@@ -162,6 +156,7 @@ class Router implements RouterInterface, RequestHandlerInterface
      * Configure route with needed dependencies.
      *
      * @param RouteInterface $route
+     *
      * @return RouteInterface
      */
     protected function configure(RouteInterface $route): RouteInterface
@@ -197,10 +192,13 @@ class Router implements RouterInterface, RequestHandlerInterface
         }
 
         //We can fetch controller and action names from url
-        list($controller, $action) = explode(':', str_replace(['/', '::'], ':', $route));
+        list($controller, $action) = explode(
+            ':',
+            str_replace(['/', '::'], ':', $route)
+        );
 
         //Let's create new route for a controller and action
-        return $this->default->withName($route)->withDefaults([
+        return $this->default->withDefaults([
             'controller' => $controller,
             'action'     => $action
         ]);

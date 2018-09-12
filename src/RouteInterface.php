@@ -14,8 +14,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Routing\Exceptions\RouteException;
 
 /**
- * Route provides ability to handle incoming request based on defined pattern. Each route must be isolated using
- * given container.
+ * Route provides ability to handle incoming request based on defined pattern. Each route must be
+ * isolated using given container.
  */
 interface RouteInterface extends RequestHandlerInterface
 {
@@ -27,7 +27,8 @@ interface RouteInterface extends RequestHandlerInterface
     /**
      * Attach specific list of HTTP verbs to the route.
      *
-     * @param string ...$verbs
+     * @param string[] ...$verbs
+     *
      * @return RouteInterface|$this
      *
      * @throws RouteException
@@ -45,6 +46,7 @@ interface RouteInterface extends RequestHandlerInterface
      * Prefix must always include back slash at the end of prefix!
      *
      * @param string $prefix
+     *
      * @return RouteInterface|$this
      */
     public function withPrefix(string $prefix): RouteInterface;
@@ -58,6 +60,7 @@ interface RouteInterface extends RequestHandlerInterface
      * Returns new route instance with forced default values.
      *
      * @param array $defaults
+     *
      * @return RouteInterface|$this
      */
     public function withDefaults(array $defaults): RouteInterface;
@@ -70,10 +73,11 @@ interface RouteInterface extends RequestHandlerInterface
     public function getDefaults(): array;
 
     /**
-     * Match route against given request, must return matched route instance or return null if route does
-     * not match.
+     * Match route against given request, must return matched route instance or return null if
+     * route does not match.
      *
      * @param Request $request
+     *
      * @return RouteInterface|$this|null
      *
      * @throws RouteException
@@ -81,9 +85,17 @@ interface RouteInterface extends RequestHandlerInterface
     public function match(Request $request): ?RouteInterface;
 
     /**
+     * Return matched route parameters if any (must be populated by match call).
+     *
+     * @return array|null
+     */
+    public function getMatches(): ?array;
+
+    /**
      * Generate valid route URL using set of routing parameters.
      *
      * @param array|\Traversable $parameters
+     *
      * @return UriInterface
      *
      * @throws RouteException

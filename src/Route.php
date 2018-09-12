@@ -8,10 +8,11 @@
 
 namespace Spiral\Routing;
 
+use Cocur\Slugify\Slugify;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Spiral\Core\Exceptions\Container\ContainerException;
 use Spiral\Http\CallableHandler;
 use Spiral\Routing\Exceptions\RouteException;
 use Spiral\Routing\Traits\PipelineTrait;
@@ -19,13 +20,28 @@ use Spiral\Routing\Traits\PipelineTrait;
 /**
  * Default route provides ability to route request to a given callable handler.
  *
- * @todo: add examples
+ * Examples:
+ *
+ * new Route("/login", function(){
+ *   return "hello";
+ * });
+ * new Route("/login", new Handler());
+ * new Route("/login", \App\Handlers\Handler::class);
+ *
+ * new Route("/login", new Action(\App\Controllers|HomeController::class, "login");
+ * new Route("/<controller>/<action>/<id>", new Group("\App\Controllers");
+ * new Route("/signup/<action>", new Controller("\App\Controllers");
+ *
+ * @todo autodetect host usage
+ * @todo mount constrains
  */
 class Route extends AbstractRoute implements ContainerizedInterface
 {
     use PipelineTrait;
 
-    /** @var string|callable|RequestHandlerInterface */
+    const ROUTE_ATTRIBUTE = 'route';
+
+    /** @var string|callable|RequestHandlerInterface|TargetInterface */
     private $target;
 
     /** @var RequestHandlerInterface|null */
@@ -39,15 +55,16 @@ class Route extends AbstractRoute implements ContainerizedInterface
     public function __construct(string $pattern, $target, array $defaults = [])
     {
         if ($target instanceof TargetInterface) {
-            $defaults = array_merge($defaults, $target);
+            $this->defaults = array_merge($defaults, $target);
+            $this->handler = new UriHandler($pattern, new Slugify(), $target->getConstrains());
+        } else {
+            parent::__construct($pattern, $defaults);
         }
-
-        parent::__construct($pattern, $defaults);
-        $this->target = $target;
     }
 
     /**
      * @param ServerRequestInterface $request
+     *
      * @return ResponseInterface
      *
      * @throws RouteException
@@ -58,7 +75,10 @@ class Route extends AbstractRoute implements ContainerizedInterface
             $this->handler = $this->makeHandler();
         }
 
-        return $this->makePipeline()->process($request, $this->handler);
+        return $this->makePipeline()->process(
+            $request->withAttribute(self::ROUTE_ATTRIBUTE, $this),
+            $this->handler
+        );
     }
 
     /**
@@ -68,16 +88,16 @@ class Route extends AbstractRoute implements ContainerizedInterface
      */
     protected function makeHandler(): RequestHandlerInterface
     {
-        if ($this->target instanceof RequestHandlerInterface) {
-            return $this->target;
-        }
-
         if (!$this->hasContainer()) {
             throw new RouteException("Unable to configure route pipeline without associated container.");
         }
 
         if ($this->target instanceof TargetInterface) {
-            // todo: handle TargetInterface
+            return $this->target->makeHandler($this->container, $this->matches);
+        }
+
+        if ($this->target instanceof RequestHandlerInterface) {
+            return $this->target;
         }
 
         try {
@@ -87,8 +107,11 @@ class Route extends AbstractRoute implements ContainerizedInterface
                 $target = $this->container->get($this->target);
             }
 
-            return new CallableHandler($target, $this->container->get(RequestHandlerInterface::class));
-        } catch (ContainerException $e) {
+            return new CallableHandler(
+                $target,
+                $this->container->get(RequestHandlerInterface::class)
+            );
+        } catch (ContainerExceptionInterface $e) {
             throw new RouteException($e->getMessage(), $e->getCode(), $e);
         }
     }

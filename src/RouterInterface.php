@@ -9,11 +9,12 @@
 namespace Spiral\Router;
 
 use Psr\Http\Message\UriInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Routing\Exceptions\RouteException;
 use Spiral\Routing\Exceptions\RouteNotFoundException;
 use Spiral\Routing\Exceptions\RouterException;
 
-interface RouterInterface
+interface RouterInterface extends RequestHandlerInterface
 {
     /**
      * @param string         $name
@@ -34,6 +35,7 @@ interface RouterInterface
      * Get route by it's name.
      *
      * @param string $name
+     *
      * @return RouteInterface
      *
      * @throws RouteNotFoundException
@@ -54,6 +56,7 @@ interface RouterInterface
      *
      * @param string             $route      Route name.
      * @param array|\Traversable $parameters Routing parameters.
+     *
      * @return UriInterface
      *
      * @throws RouteException

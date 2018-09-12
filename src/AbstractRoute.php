@@ -12,7 +12,6 @@ use Cocur\Slugify\Slugify;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\UriInterface;
 use Spiral\Router\RouteInterface;
-use Spiral\Routing\Exceptions\RouteException;
 use Spiral\Routing\Traits\DefaultsTrait;
 use Spiral\Routing\Traits\VerbsTrait;
 
@@ -24,7 +23,7 @@ abstract class AbstractRoute implements RouteInterface
     protected $handler;
 
     /** @var array|null */
-    protected $matches;
+    protected $matches = null;
 
     /**
      * @param string $pattern
@@ -59,6 +58,7 @@ abstract class AbstractRoute implements RouteInterface
      * Enable to disable host name matching.
      *
      * @param bool $matchHost
+     *
      * @return RouteInterface
      */
     public function withHost(bool $matchHost = true): RouteInterface
@@ -80,13 +80,7 @@ abstract class AbstractRoute implements RouteInterface
     }
 
     /**
-     * Match route against given request, must return matched route instance or return null if route does
-     * not match.
-     *
-     * @param Request $request
-     * @return RouteInterface|$this|null
-     *
-     * @throws RouteException
+     * @inheritdoc
      */
     public function match(Request $request): ?RouteInterface
     {
@@ -102,16 +96,22 @@ abstract class AbstractRoute implements RouteInterface
     }
 
     /**
-     * Generate valid route URL using set of routing parameters.
-     *
-     * @param array|\Traversable $parameters
-     * @return UriInterface
-     *
-     * @throws RouteException
+     * @inheritdoc
+     */
+    public function getMatches(): ?array
+    {
+        return $this->matches;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function uri($parameters = []): UriInterface
     {
-        return $this->handler->uri($parameters, array_merge($this->defaults, $this->matches));
+        return $this->handler->uri(
+            $parameters,
+            array_merge($this->defaults, $this->matches ?? [])
+        );
     }
 
     /**

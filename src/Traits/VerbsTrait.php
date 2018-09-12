@@ -20,6 +20,7 @@ trait VerbsTrait
      * Attach specific list of HTTP verbs to the route.
      *
      * @param string ...$verbs
+     *
      * @return RouteInterface|$this
      *
      * @throws RouteException

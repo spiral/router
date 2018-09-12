@@ -8,8 +8,8 @@
 
 namespace Spiral\Routing\Traits;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Spiral\Core\Exceptions\Container\ContainerException;
 use Spiral\Http\Pipeline;
 use Spiral\Router\RouteInterface;
 use Spiral\Routing\Exceptions\RouteException;
@@ -34,6 +34,7 @@ trait PipelineTrait
      * $route->withMiddleware([ProxyMiddleware::class, OtherMiddleware::class]);
      *
      * @param MiddlewareInterface|string|array ...$middleware
+     *
      * @return RouteInterface|$this
      *
      * @throws RouteException
@@ -92,7 +93,7 @@ trait PipelineTrait
                     $this->pipeline->pushMiddleware($this->container->get($middleware));
                 }
             }
-        } catch (ContainerException $e) {
+        } catch (ContainerExceptionInterface $e) {
             throw new RouteException($e->getMessage(), $e->getCode(), $e);
         }
 
