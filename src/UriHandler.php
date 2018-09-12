@@ -64,7 +64,7 @@ class UriHandler
      */
     public function __construct(string $pattern, SlugifyInterface $slugify, array $constrains = [])
     {
-        $this->matchHost = strpos($pattern, '://') == 0;
+        $this->matchHost = strpos($pattern, '://') === 0;
         $this->pattern = $pattern;
         $this->slugify = $slugify;
         $this->constrains = $constrains;

@@ -44,10 +44,26 @@ class ActionTargetTest extends TestCase
         $this->assertNull($route->match(new ServerRequest()));
         $this->assertNull($route->match(new ServerRequest([], [], new Uri('/test/something'))));
 
-        $this->assertNotNull($route->match(new ServerRequest([], [], new Uri('/test'))));
-        $this->assertNotNull($route->match(new ServerRequest([], [], new Uri('/test/'))));
+        $this->assertNotNull(
+            $match = $route->match(new ServerRequest([], [], new Uri('/test')))
+        );
+        $this->assertSame(['action' => 'test'], $match->getMatches());
 
-        $this->assertNotNull($route->match(new ServerRequest([], [], new Uri('/test/other'))));
+        $this->assertNotNull(
+            $match = $route->match(new ServerRequest([], [], new Uri('/test/')))
+        );
+        $this->assertSame(['action' => 'test'], $match->getMatches());
+
+        $this->assertNotNull(
+            $match = $route->match(new ServerRequest([], [], new Uri('/test/test')))
+        );
+        $this->assertSame(['action' => 'test'], $match->getMatches());
+
+        $this->assertNotNull(
+            $match = $route->match(new ServerRequest([], [], new Uri('/test/other')))
+        );
+
+        $this->assertSame(['action' => 'other'], $match->getMatches());
     }
 
     /**
