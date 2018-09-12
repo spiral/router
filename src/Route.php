@@ -8,7 +8,9 @@
 
 namespace Spiral\Routing;
 
-class Route extends AbstractRoute
-{
+use Spiral\Routing\Traits\ContainerTrait;
 
+class Route extends AbstractRoute implements ContainerizedInterface
+{
+    use ContainerTrait;
 }

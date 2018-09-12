@@ -15,7 +15,9 @@ use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Core\Exceptions\Container\NotFoundException;
 use Spiral\Core\ScopeInterface;
+use Spiral\Routing\ContainerizedInterface;
 use Spiral\Routing\Exceptions\RouteNotFoundException;
+use Spiral\Routing\Exceptions\RouterException;
 
 /**
  * Manages set of routes.
@@ -74,10 +76,14 @@ class Router implements RouterInterface, RequestHandlerInterface
     /**
      * @inheritdoc
      */
-    public function addRoute(RouteInterface $route)
+    public function addRoute(string $name, RouteInterface $route)
     {
+        if (isset($this->routes[$name])) {
+            throw new RouterException("Duplicate route `{$name}`.");
+        }
+
         //Each added route must inherit basePath prefix
-        $this->routes[] = $this->configure($route);
+        $this->routes[$name] = $this->configure($route);
     }
 
     /**
@@ -93,14 +99,8 @@ class Router implements RouterInterface, RequestHandlerInterface
      */
     public function getRoute(string $name): RouteInterface
     {
-        if (!empty($this->default) && $this->default->getName() == $name) {
-            return $this->default;
-        }
-
-        foreach ($this->routes as $route) {
-            if ($route->getName() == $name) {
-                return $route;
-            }
+        if (isset($this->routes[$name])) {
+            return $this->routes[$name];
         }
 
         throw new RouteNotFoundException("Undefined route `{$name}`");
@@ -166,7 +166,7 @@ class Router implements RouterInterface, RequestHandlerInterface
      */
     protected function configure(RouteInterface $route): RouteInterface
     {
-        if (!$route->hasContainer()) {
+        if ($route instanceof ContainerizedInterface && !$route->hasContainer()) {
             // isolating route in a given container
             $route = $route->withContainer($this->container);
         }

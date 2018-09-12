@@ -8,7 +8,6 @@
 
 namespace Spiral\Router;
 
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -31,19 +30,6 @@ interface RouteInterface extends RequestHandlerInterface
      * @return array
      */
     public function getVerbs(): array;
-
-    /**
-     * Returns new route instance with new route name.
-     *
-     * @param string $name
-     * @return self
-     */
-    public function withName(string $name): self;
-
-    /**
-     * @return string
-     */
-    public function getName(): string;
 
     /**
      * Prefix must always include back slash at the end of prefix!
@@ -72,21 +58,6 @@ interface RouteInterface extends RequestHandlerInterface
      * @return array
      */
     public function getDefaults(): array;
-
-    /**
-     * Associated route with given container.
-     *
-     * @param ContainerInterface $container
-     * @return self
-     */
-    public function withContainer(ContainerInterface $container): self;
-
-    /**
-     * Indicates that route has associated container.
-     *
-     * @return bool
-     */
-    public function hasContainer(): bool;
 
     /**
      * Match route against given request, must return matched route instance or return null if route does

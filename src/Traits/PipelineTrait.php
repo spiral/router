@@ -8,8 +8,7 @@
 
 namespace Spiral\Routing\Traits;
 
-trait MiddlewareTrait
+trait PipelineTrait
 {
-    protected $middleware;
-
+    protected $pipeline;
 }

@@ -9,14 +9,19 @@
 namespace Spiral\Router;
 
 use Psr\Http\Message\UriInterface;
+use Spiral\Routing\Exceptions\RouteException;
+use Spiral\Routing\Exceptions\RouteNotFoundException;
 use Spiral\Routing\Exceptions\RouterException;
 
 interface RouterInterface
 {
     /**
+     * @param string         $name
      * @param RouteInterface $route
+     *
+     * @throws RouterException
      */
-    public function addRoute(RouteInterface $route);
+    public function addRoute(string $name, RouteInterface $route);
 
     /**
      * Default route is needed as fallback if no other route matched the request.
@@ -31,7 +36,7 @@ interface RouterInterface
      * @param string $name
      * @return RouteInterface
      *
-     * @throws RouterException
+     * @throws RouteNotFoundException
      */
     public function getRoute(string $name): RouteInterface;
 
@@ -51,7 +56,8 @@ interface RouterInterface
      * @param array|\Traversable $parameters Routing parameters.
      * @return UriInterface
      *
-     * @throws RouterException
+     * @throws RouteException
+     * @throws RouteNotFoundException
      */
     public function uri(string $route, $parameters = []): UriInterface;
 }

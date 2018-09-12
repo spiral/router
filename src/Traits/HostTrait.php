@@ -8,8 +8,9 @@
 
 namespace Spiral\Routing\Traits;
 
-trait MiddlewareTrait
+trait HostTrait
 {
-    protected $middleware;
+    protected $matchHost = false;
+
 
 }
