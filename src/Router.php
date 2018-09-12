@@ -13,21 +13,19 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Spiral\Core\CoreInterface;
 use Spiral\Core\Exceptions\Container\NotFoundException;
-use Spiral\Core\ResolverInterface;
 use Spiral\Core\ScopeInterface;
-use Spiral\Routing\CallableRouteInterface;
 use Spiral\Routing\Exceptions\RouteNotFoundException;
-use Spiral\Routing\CoreRouteInterface;
 
 /**
- * Manages set of routes. Container must include bindings to:
- * - ResolverInterface for callable routes.
- * - CoreInterface     for HMVC routes
+ * Manages set of routes.
+ *
+ * @todo add support for pre-compiled route groups as FastRoute
  */
 class Router implements RouterInterface, RequestHandlerInterface
 {
+    const ROUTE_ATTRIBUTE = 'route';
+
     /** @var string */
     private $basePath = '/';
 
@@ -66,7 +64,9 @@ class Router implements RouterInterface, RequestHandlerInterface
         return $this->container->get(ScopeInterface::class)->runScope(
             [RouteInterface::class => $this],
             function () use ($route, $request) {
-                return $route->handle($request);
+                return $route->handle(
+                    $request->withAttribute(self::ROUTE_ATTRIBUTE, $route)
+                );
             }
         );
     }
@@ -136,8 +136,13 @@ class Router implements RouterInterface, RequestHandlerInterface
      */
     protected function matchRoute(ServerRequestInterface $request): ?RouteInterface
     {
+        $method = strtoupper($request->getMethod());
         foreach ($this->routes as $route) {
-            //Route might return altered version on matching (route with populated parameters)
+            if (!in_array($method, $route->getVerbs())) {
+                continue;
+            }
+
+            // Matched route will return new route instance with matched parameters
             $matched = $route->match($request);
 
             if (!empty($matched)) {
@@ -161,17 +166,7 @@ class Router implements RouterInterface, RequestHandlerInterface
      */
     protected function configure(RouteInterface $route): RouteInterface
     {
-        $route = $route->withPrefix($this->basePath);
-
-        if ($route instanceof CoreRouteInterface && !$route->hasCore()) {
-            $route = $route->withCore($this->container->get(CoreInterface::class));
-        }
-
-        if ($route instanceof CallableRouteInterface && !$route->hasResolver()) {
-            $route = $route->withResolver($this->container->get(ResolverInterface::class));
-        }
-
-        return $route;
+        return $route->withPrefix($this->basePath)->withContainer($this->container);
     }
 
     /**
@@ -185,6 +180,10 @@ class Router implements RouterInterface, RequestHandlerInterface
      */
     protected function castRoute(string $route): RouteInterface
     {
+        if (empty($this->default)) {
+            throw new RouteNotFoundException("Default route is missing");
+        }
+
         //Will be handled via default route where route name is specified as controller::action
         if (strpos($route, ':') === false) {
             throw new RouteNotFoundException(
@@ -192,22 +191,13 @@ class Router implements RouterInterface, RequestHandlerInterface
             );
         }
 
-        if (empty($this->default)) {
-            throw new RouteNotFoundException("Default route is missing");
-        }
-
         //We can fetch controller and action names from url
         list($controller, $action) = explode(':', str_replace(['/', '::'], ':', $route));
 
         //Let's create new route for a controller and action
-        $route = $this->default->withName($route)->withDefaults([
+        return $this->default->withName($route)->withDefaults([
             'controller' => $controller,
             'action'     => $action
         ]);
-
-        //For future requests
-        $this->addRoute($route);
-
-        return $route;
     }
 }

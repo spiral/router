@@ -13,14 +13,17 @@ use Psr\Http\Message\UriInterface;
 /**
  * Compile route declarations into proper regexp expressions.
  */
-class UriMatcher
+final class Matcher
 {
     /**
      * Default segment pattern, this patter can be applied to controller names, actions and etc.
      */
     const DEFAULT_SEGMENT = '[^\/]+';
 
-    //todo: PUBLIC?
+    /**
+     * Replaces route expression with given tokens.
+     */
+    const REPLACES = ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.'];
 
     /** @var bool */
     private $matchHost = false;
@@ -42,17 +45,15 @@ class UriMatcher
      * Examples:
      *  - userPanel/<action>
      *  - [<controller>[/<action>[/<id>]]]
-     *  - domain.com[/<controller>[/<action>[/<id>]]]
+     *  - domain.com[/<controller>[/<action>[/<id:\d+>]]]
      *
      * @param string $prefix
      * @param string $pattern   Route pattern.
      * @param bool   $matchHost Match hostname.
-     * @return UriMatcher
+     * @return Matcher
      */
-    public static function compile(string $prefix, string $pattern, bool $matchHost): UriMatcher
+    public static function compile(string $prefix, string $pattern, bool $matchHost): Matcher
     {
-        $replaces = ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.'];
-
         $options = [];
         if (preg_match_all('/<(\w+):?(.*?)?>/', $pattern, $matches)) {
             $variables = array_combine($matches[1], $matches[2]);
@@ -67,10 +68,10 @@ class UriMatcher
 
         $template = preg_replace('/<(\w+):?.*?>/', '<\1>', $pattern);
 
-        $matcher = new UriMatcher();
+        $matcher = new Matcher();
         $matcher->prefix = $prefix;
         $matcher->matchHost = $matchHost;
-        $matcher->pattern = '/^' . strtr($template, $replaces) . '$/iu';
+        $matcher->pattern = '/^' . strtr($template, self::REPLACES) . '$/iu';
         $matcher->template = stripslashes(str_replace('?', '', $template));
         $matcher->options = array_fill_keys($options, null);
 
@@ -91,6 +92,7 @@ class UriMatcher
             return null;
         }
 
+        //todo: what?
         $matches = array_intersect_key($matches, $this->options);
         return array_merge($this->options, $defaults, $matches);
     }

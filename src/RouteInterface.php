@@ -8,13 +8,25 @@
 
 namespace Spiral\Router;
 
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Routing\Exceptions\RouteException;
 
+/**
+ * Route provides ability to handle incoming request based on defined pattern. Each route must be isolated using
+ * given container.
+ */
 interface RouteInterface extends RequestHandlerInterface
 {
+    /**
+     * Return list of HTTP verbs route must handle.
+     *
+     * @return array
+     */
+    public function getVerbs(): array;
+
     /**
      * Returns new route instance with new route name.
      *
@@ -57,11 +69,26 @@ interface RouteInterface extends RequestHandlerInterface
     public function getDefaults(): array;
 
     /**
+     * Associated route with given container.
+     *
+     * @param ContainerInterface $container
+     * @return RouteInterface
+     */
+    public function withContainer(ContainerInterface $container): RouteInterface;
+
+    /**
+     * Indicates that route has associated container.
+     *
+     * @return bool
+     */
+    public function hasContainer(): bool;
+
+    /**
      * Match route against given request, must return matched route instance or return null if route does
      * not match.
      *
      * @param Request $request
-     * @return self|null
+     * @return RouteInterface|null
      *
      * @throws RouteException
      */
