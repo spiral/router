@@ -8,8 +8,8 @@
 
 namespace Spiral\Router\Traits;
 
-use Spiral\Router\RouteInterface;
 use Spiral\Router\Exceptions\RouteException;
+use Spiral\Router\RouteInterface;
 
 trait VerbsTrait
 {

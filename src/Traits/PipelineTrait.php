@@ -11,8 +11,8 @@ namespace Spiral\Router\Traits;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Spiral\Http\Pipeline;
-use Spiral\Router\RouteInterface;
 use Spiral\Router\Exceptions\RouteException;
+use Spiral\Router\RouteInterface;
 
 trait PipelineTrait
 {
