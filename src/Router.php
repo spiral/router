@@ -131,12 +131,7 @@ class Router implements RouterInterface
      */
     protected function matchRoute(ServerRequestInterface $request): ?RouteInterface
     {
-        $method = strtoupper($request->getMethod());
         foreach ($this->routes as $route) {
-            if (!in_array($method, $route->getVerbs())) {
-                continue;
-            }
-
             // Matched route will return new route instance with matched parameters
             $matched = $route->match($request);
 

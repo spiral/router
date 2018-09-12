@@ -58,6 +58,10 @@ abstract class AbstractRoute implements RouteInterface
      */
     public function match(Request $request): ?RouteInterface
     {
+        if (!in_array(strtoupper($request->getMethod()), $this->getVerbs())) {
+            return null;
+        }
+
         $matches = $this->handler->match($request->getUri(), $this->defaults);
         if ($matches === null) {
             return null;
