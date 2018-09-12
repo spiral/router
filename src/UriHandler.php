@@ -71,22 +71,6 @@ class UriHandler
     }
 
     /**
-     * @param string $pattern
-     */
-    public function setPattern(string $pattern)
-    {
-        $this->pattern = $pattern;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPattern(): string
-    {
-        return $this->pattern;
-    }
-
-    /**
      * @param mixed $prefix
      */
     public function setPrefix($prefix): void
@@ -116,16 +100,6 @@ class UriHandler
     public function isCompiled(): bool
     {
         return !empty($this->compiled);
-    }
-
-    /**
-     * Wipe compiled values on clone.
-     */
-    public function __clone()
-    {
-        $this->compiled = null;
-        $this->template = null;
-        $this->options = [];
     }
 
     /**
