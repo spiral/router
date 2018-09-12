@@ -28,10 +28,12 @@ abstract class AbstractRoute implements RouteInterface
 
     /**
      * @param string $pattern
+     * @param array  $defaults
      */
-    public function __construct(string $pattern)
+    public function __construct(string $pattern, array $defaults = [])
     {
         $this->handler = new UriHandler($pattern, new Slugify());
+        $this->defaults = $defaults;
     }
 
     /**
@@ -40,7 +42,6 @@ abstract class AbstractRoute implements RouteInterface
     public function withPrefix(string $prefix): RouteInterface
     {
         $route = clone $this;
-        $route->handler = clone $this->handler;
         $route->handler->setPrefix($prefix);
 
         return $route;
@@ -63,7 +64,6 @@ abstract class AbstractRoute implements RouteInterface
     public function withHost(bool $matchHost = true): RouteInterface
     {
         $route = clone $this;
-        $route->handler = clone $this->handler;
         $route->handler->setMatchHost($matchHost);
 
         return $route;
@@ -112,5 +112,13 @@ abstract class AbstractRoute implements RouteInterface
     public function uri($parameters = []): UriInterface
     {
         return $this->handler->uri($parameters, array_merge($this->defaults, $this->matches));
+    }
+
+    /**
+     * Clones underlying Uri handler.
+     */
+    public function __clone()
+    {
+        $this->handler = clone $this->handler;
     }
 }

@@ -48,7 +48,7 @@ class UriHandler
      */
     public function __construct(string $pattern, SlugifyInterface $slugify)
     {
-        $this->pattern = $pattern;
+        $this->pattern = ltrim($pattern, '/');
         $this->slugify = $slugify;
     }
 

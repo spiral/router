@@ -8,9 +8,78 @@
 
 namespace Spiral\Routing;
 
-use Spiral\Routing\Traits\ContainerTrait;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Spiral\Core\Exceptions\Container\ContainerException;
+use Spiral\Http\CallableHandler;
+use Spiral\Routing\Exceptions\RouteException;
+use Spiral\Routing\Traits\PipelineTrait;
 
+/**
+ * Default route provides ability to route request to a given callable handler.
+ */
 class Route extends AbstractRoute implements ContainerizedInterface
 {
-    use ContainerTrait;
+    use PipelineTrait;
+
+    /** @var string|callable|RequestHandlerInterface */
+    private $target;
+
+    /** @var RequestHandlerInterface|null */
+    private $handler;
+
+    /**
+     * @param string                                  $pattern
+     * @param array                                   $defaults
+     * @param string|callable|RequestHandlerInterface $target Route target. Can be in a form of controller:action
+     */
+    public function __construct(string $pattern, array $defaults = [], $target)
+    {
+        parent::__construct($pattern, $defaults);
+        $this->target = $target;
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     *
+     * @throws RouteException
+     */
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        if (empty($this->handler)) {
+            $this->handler = $this->makeHandler();
+        }
+
+        return $this->makePipeline()->process($request, $this->handler);
+    }
+
+    /**
+     * @return RequestHandlerInterface
+     *
+     * @throws RouteException
+     */
+    protected function makeHandler(): RequestHandlerInterface
+    {
+        if ($this->target instanceof RequestHandlerInterface) {
+            return $this->target;
+        }
+
+        if (!$this->hasContainer()) {
+            throw new RouteException("Unable to configure route pipeline without associated container.");
+        }
+
+        try {
+            if (is_object($this->target) || is_array($this->target)) {
+                $target = $this->target;
+            } else {
+                $target = $this->container->get($this->target);
+            }
+
+            return new CallableHandler($target, $this->container->get(RequestHandlerInterface::class));
+        } catch (ContainerException $e) {
+            throw new RouteException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
 }

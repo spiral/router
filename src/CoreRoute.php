@@ -8,7 +8,10 @@
 
 namespace Spiral\Routing;
 
-class ControllerRoute extends AbstractRoute
+class CoreRoute
 {
-
+    public function __invoke()
+    {
+        // TODO: Implement __invoke() method.
+    }
 }

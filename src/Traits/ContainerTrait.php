@@ -9,6 +9,7 @@
 namespace Spiral\Routing\Traits;
 
 use Psr\Container\ContainerInterface;
+use Spiral\Routing\ContainerizedInterface;
 
 trait ContainerTrait
 {
@@ -19,9 +20,9 @@ trait ContainerTrait
      * Associated route with given container.
      *
      * @param ContainerInterface $container
-     * @return self
+     * @return ContainerizedInterface|$this
      */
-    public function withContainer(ContainerInterface $container): self
+    public function withContainer(ContainerInterface $container): ContainerizedInterface
     {
         $route = clone $this;
         $route->container = $container;
