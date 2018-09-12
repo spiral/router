@@ -73,6 +73,14 @@ interface RouteInterface extends RequestHandlerInterface
     public function getDefaults(): array;
 
     /**
+     * List of keys associated with allowed values. Required for proper route matching
+     * for Uri generation.
+     *
+     * @return array
+     */
+    public function getConstrains(): array;
+
+    /**
      * Match route against given request, must return matched route instance or return null if
      * route does not match.
      *

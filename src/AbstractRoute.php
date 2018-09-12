@@ -56,6 +56,14 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * @inheritdoc
      */
+    public function getConstrains(): array
+    {
+        return $this->uriHandler->getConstrains();
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function match(Request $request): ?RouteInterface
     {
         if (!in_array(strtoupper($request->getMethod()), $this->getVerbs())) {
