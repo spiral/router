@@ -25,7 +25,6 @@ final class Controller extends Action
     {
         parent::__construct($controller, []);
         if (!empty($defaultAction)) {
-            // todo: generate controller alias or do it in Group?
             $this->setDefaults(['action' => $defaultAction]);
         }
     }
