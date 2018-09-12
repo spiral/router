@@ -14,12 +14,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Core\Exceptions\Container\NotFoundException;
 use Spiral\Core\ScopeInterface;
-use Spiral\Router\ContainerizedInterface;
 use Spiral\Router\Exceptions\RouteNotFoundException;
 use Spiral\Router\Exceptions\RouterException;
 
 /**
  * Manages set of routes.
+ *
+ * @todo better Uri generation
  */
 class Router implements RouterInterface
 {

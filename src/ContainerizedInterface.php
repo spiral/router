@@ -9,7 +9,6 @@
 namespace Spiral\Router;
 
 use Psr\Container\ContainerInterface;
-use Spiral\Router\RouteInterface;
 
 interface ContainerizedInterface extends RouteInterface
 {
