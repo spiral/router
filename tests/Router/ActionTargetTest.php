@@ -30,4 +30,20 @@ class ActionTargetTest extends TestCase
         $route = new Route("/home", new Action(TestController::class, ["test", "other"]));
         $route->match(new ServerRequest());
     }
+
+    /**
+     * @expectedException \Spiral\Router\Exceptions\InvalidArgumentException
+     */
+    public function testControllerException()
+    {
+        new Action("something", ["test", "other"]);
+    }
+
+    /**
+     * @expectedException \Spiral\Router\Exceptions\InvalidArgumentException
+     */
+    public function testActionException()
+    {
+        new Action(TestController::class, $this);
+    }
 }
