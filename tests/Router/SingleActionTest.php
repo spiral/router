@@ -100,6 +100,6 @@ class SingleActionTest extends BaseTest
             new Route('/test', new Action(TestController::class, 'test'))
         );
 
-        $response = $router->handle(new ServerRequest([], [], new Uri('/other')));
+        $router->handle(new ServerRequest([], [], new Uri('/other')));
     }
 }

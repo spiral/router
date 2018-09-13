@@ -10,7 +10,6 @@ namespace Spiral\Router\Targets;
 
 use Spiral\Router\AbstractTarget;
 use Spiral\Router\Exceptions\InvalidArgumentException;
-use Spiral\Router\Exceptions\TargetException;
 
 /**
  * Targets to specific controller action or actions.
@@ -78,10 +77,6 @@ final class Action extends AbstractTarget
         $action = $this->action;
         if (is_string($action)) {
             return $action;
-        }
-
-        if (empty($matches['action']) || (!empty($action) && !in_array($matches['action'], $action))) {
-            throw new TargetException("Invalid action target, action not allowed.");
         }
 
         return $matches['action'];
