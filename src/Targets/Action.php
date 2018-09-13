@@ -33,7 +33,7 @@ final class Action extends AbstractTarget
      *
      * @param string       $controller Controller class name.
      * @param string|array $action     One or multiple allowed actions.
-     * @param int          $options    Action behaviour options, see OPTION_ constants.
+     * @param int          $options    Action behaviour options.
      */
     public function __construct(string $controller, $action, int $options = 0)
     {

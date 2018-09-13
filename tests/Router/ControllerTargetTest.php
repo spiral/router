@@ -18,17 +18,15 @@ class ControllerTargetTest extends TestCase
 {
     public function testDefaultAction()
     {
-        $route = new Route("/home[/<action>]", new Controller(TestController::class, "test"));
-        $this->assertSame(['action' => 'test'], $route->getDefaults());
-
-        $route = new Route('<controller>[/<action>[/<id>]]', new Namespaced('Spiral\Router\Fixtures'));
+        $route = new Route("/home[/<action>]", new Controller(TestController::class));
+        $this->assertSame(['action' => null], $route->getDefaults());
     }
 
     public function testActionSelector()
     {
         $route = new Route(
             "/test[/<action>]",
-            new Controller(TestController::class, 'test')
+            new Controller(TestController::class)
         );
 
         $this->assertNull($route->match(new ServerRequest()));
@@ -39,12 +37,12 @@ class ControllerTargetTest extends TestCase
             $match = $route->match(new ServerRequest([], [], new Uri('/test')))
         );
 
-        $this->assertSame(['action' => 'test'], $match->getMatches());
+        $this->assertSame(['action' => null], $match->getMatches());
 
         $this->assertNotNull(
             $match = $route->match(new ServerRequest([], [], new Uri('/test/')))
         );
-        $this->assertSame(['action' => 'test'], $match->getMatches());
+        $this->assertSame(['action' => null], $match->getMatches());
 
         $this->assertNotNull(
             $match = $route->match(new ServerRequest([], [], new Uri('/test/test')))

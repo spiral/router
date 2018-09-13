@@ -8,6 +8,7 @@
 
 namespace Spiral\Router;
 
+use Doctrine\Common\Inflector\Inflector;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -18,13 +19,7 @@ use Spiral\Router\Exceptions\TargetException;
 abstract class AbstractTarget implements TargetInterface
 {
     // Automatically prepend HTTP verb to all action names.
-    const OPTION_RESTFUL = 1;
-
-    // Handle action names in `action_name` format.
-    const OPTION_UNDERSCORE = 2;
-
-    // Handle action names in `action-name` format.
-    const OPTION_HYPHEN = 4;
+    const RESTFUL = 1;
 
     /** @var array */
     private $defaults = [];
@@ -51,7 +46,7 @@ abstract class AbstractTarget implements TargetInterface
         $this->defaults = $defaults;
         $this->constrains = $constrains;
 
-        if ($options & self::OPTION_RESTFUL) {
+        if ($options & self::RESTFUL) {
             $this->setVerbActions(true);
         }
     }
@@ -117,7 +112,7 @@ abstract class AbstractTarget implements TargetInterface
     {
         return $this->coreHandler($container)->withContext(
             $this->resolveController($matches),
-            $this->resolveAction($matches),
+            Inflector::camelize($this->resolveAction($matches)),
             $matches
         )->withVerbActions($this->verbActions);
     }
@@ -150,6 +145,8 @@ abstract class AbstractTarget implements TargetInterface
      *
      * @param array $matches
      * @return string
+     *
+     * @throws TargetException
      */
     abstract protected function resolveController(array $matches): string;
 
@@ -158,6 +155,8 @@ abstract class AbstractTarget implements TargetInterface
      *
      * @param array $matches
      * @return string
+     *
+     * @throws TargetException
      */
     abstract protected function resolveAction(array $matches): ?string;
 }

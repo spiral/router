@@ -13,9 +13,7 @@ use Spiral\Router\AbstractTarget;
 /**
  * Targets to all actions in specific controller. Variation of Action without action constrain.
  *
- * Examples:
- * new Controller(HomeController::class);
- * new Controller(HomeController::class, 'index'); // default action
+ * Example: new Controller(HomeController::class);
  */
 final class Controller extends AbstractTarget
 {
@@ -23,18 +21,12 @@ final class Controller extends AbstractTarget
     private $controller;
 
     /**
-     * @param string      $controller
-     * @param string|null $defaultAction
-     * @param int         $options
+     * @param string $controller
+     * @param int    $options
      */
-    public function __construct(string $controller, string $defaultAction = null, int $options = 0)
+    public function __construct(string $controller, int $options = 0)
     {
-        // always constrained to have action parameter
-        parent::__construct([], ['action' => null], $options);
-
-        if (!empty($defaultAction)) {
-            $this->setDefaults(['action' => $defaultAction]);
-        }
+        parent::__construct(['action' => null], ['action' => null], $options);
     }
 
     /**
@@ -46,8 +38,7 @@ final class Controller extends AbstractTarget
     }
 
     /**
-     * @param array $matches
-     * @return string
+     * @inheritdoc
      */
     protected function resolveAction(array $matches): ?string
     {
