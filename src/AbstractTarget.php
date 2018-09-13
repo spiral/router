@@ -91,22 +91,6 @@ abstract class AbstractTarget implements TargetInterface
     }
 
     /**
-     * @param array $defaults
-     */
-    protected function setDefaults(array $defaults): void
-    {
-        $this->defaults = $defaults;
-    }
-
-    /**
-     * @param array $constrains
-     */
-    protected function setConstrains(array $constrains): void
-    {
-        $this->constrains = $constrains;
-    }
-
-    /**
      * @param ContainerInterface $container
      *
      * @return CoreHandler
