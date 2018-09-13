@@ -39,7 +39,10 @@ class SingleActionTest extends BaseTest
         );
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame("hello world", (string)$response->getBody());
 
+        $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame("hello world", (string)$response->getBody());
     }
