@@ -68,14 +68,14 @@ class ControllerTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteNotFoundException
+     * @expectedException \Spiral\Http\Exceptions\ClientExceptions\NotFoundException
      */
-    public function testWrongActionRoute()
+    public function testClientException()
     {
         $router = $this->makeRouter();
         $router->addRoute(
             'action',
-            new Route('/<action>/<id>', new Controller(TestController::class))
+            new Route('/<action>[/<id>]', new Controller(TestController::class))
         );
 
         $router->handle(new ServerRequest([], [], new Uri('/other')));

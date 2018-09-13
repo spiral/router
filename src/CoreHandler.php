@@ -107,6 +107,7 @@ class CoreHandler implements RequestHandlerInterface
                 [Request::class => $request, Response::class => $response]
             );
         } catch (ControllerException $e) {
+            ob_get_clean();
             throw $this->mapException($e);
         } catch (\Throwable $e) {
             ob_get_clean();
