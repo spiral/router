@@ -23,6 +23,15 @@ class ActionTargetTest extends TestCase
         $this->assertSame(['action' => 'test'], $route->getDefaults());
     }
 
+    public function testConstrains()
+    {
+        $route = new Route("/home", new Action(TestController::class, "test"));
+        $this->assertSame([], $route->getConstrains());
+
+        $route = new Route("/<action>", new Action(TestController::class, ["test", "other"]));
+        $this->assertSame(['action' => ["test", "other"]], $route->getConstrains());
+    }
+
     /**
      * @expectedException \Spiral\Router\Exceptions\ConstrainException
      */
