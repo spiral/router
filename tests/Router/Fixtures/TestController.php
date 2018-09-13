@@ -21,4 +21,9 @@ class TestController extends Controller
     {
         return $id;
     }
+
+    public function echoAction()
+    {
+        echo "echoed";
+    }
 }

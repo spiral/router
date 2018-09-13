@@ -75,6 +75,19 @@ class SingleActionTest extends BaseTest
         $this->assertSame("hello world", (string)$response->getBody());
     }
 
+    public function testEchoed()
+    {
+        $router = $this->makeRouter();
+        $router->addRoute(
+            'action',
+            new Route('/test', new Action(TestController::class, 'echo'))
+        );
+
+        $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame("echoed", (string)$response->getBody());
+    }
+
     /**
      * @expectedException \Spiral\Router\Exceptions\RouteException
      */
