@@ -19,8 +19,6 @@ use Spiral\Router\Exceptions\RouterException;
 
 /**
  * Manages set of routes.
- *
- * @todo better Uri generation
  */
 class Router implements RouterInterface
 {
@@ -166,50 +164,36 @@ class Router implements RouterInterface
     }
 
     /**
-     * Helper function used to reconfigure default route (usually controller route) with set of
-     * parameters related to selected controller and action.
+     * Locates appropriate route by name. Support dynamic route allocation using following pattern:
+     * Named route:   `name/controller:action`
+     * Default route: `controller:action`
+     * Only action:   `name/action`
      *
      * @param string $route
-     *
      * @return RouteInterface
+     *
      * @throws RouteNotFoundException
      */
     protected function castRoute(string $route): RouteInterface
     {
-        //Will be handled via default route where route name is specified as controller::action
-        if (strpos($route, ':') === false) {
+        if (!preg_match(
+            '/^(?:(?P<name>[^\/]+)\/)?(?:(?P<controller>[^:]+):+)?(?P<action>[a-z_\-]+)$/i',
+            $route,
+            $matches
+        )) {
             throw new RouteNotFoundException(
-                "Unable to locate route or use default route with 'controller:action' pattern"
+                "Unable to locate route or use default route with 'name/controller:action' pattern."
             );
         }
 
-        //We can fetch controller and action names from url
-        list($controller, $action) = explode(
-            ':',
-            str_replace(['/', '::'], ':', $route)
-        );
-
-        foreach ($this->routes as $name => $route) {
-            if ($name == $controller) {
-                // todo: perform match !!!
-
-                $options = array_merge($route->getDefaults(), $route->getDefaults());
-                if (isset($options['action'])) {
-                    // todo: find route by constrains and defaults (!)
-
-                    // found route by action
-                }
-            }
+        if (!empty($matches['name'])) {
+            $route = $this->getRoute($matches['name']);
+        } elseif (!empty($this->default)) {
+            $route = $this->default;
+        } else {
+            throw new RouteNotFoundException("Unable to locate route candidate for `{$route}`.");
         }
 
-        if (empty($this->default)) {
-            throw new RouteNotFoundException("Default route is missing");
-        }
-
-        //Let's create new route for a controller and action
-        return $this->default->withDefaults([
-            'controller' => $controller,
-            'action'     => $action
-        ]);
+        return $route->withDefaults(['controller' => $matches['controller'], 'action' => $matches['action']]);
     }
 }
