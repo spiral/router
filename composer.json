@@ -1,7 +1,7 @@
 {
   "name": "spiral/router",
   "type": "library",
-  "description": "Routes, RESTFull, URI generation",
+  "description": "Routes, RESTFull, URI generation, Adaptive Patterns",
   "license": "MIT",
   "authors": [
     {
