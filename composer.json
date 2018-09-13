@@ -30,7 +30,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Spiral\\Router\\": "tests/Router/"
+      "Spiral\\Router\\Tests\\": "tests/Router/"
     }
   }
 }

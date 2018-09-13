@@ -6,11 +6,14 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Router\Fixtures;
+namespace Spiral\Router\Tests\Fixtures;
 
 use Spiral\Core\Controller;
 
 class TestController extends Controller
 {
-    
+    public function testAction()
+    {
+        return "hello world";
+    }
 }

@@ -6,10 +6,11 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Router;
+namespace Spiral\Router\Tests\Targets;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Http\Uri;
+use Spiral\Router\Route;
 use Spiral\Router\Targets\Namespaced;
 use Zend\Diactoros\ServerRequest;
 

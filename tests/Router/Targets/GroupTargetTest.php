@@ -6,12 +6,13 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Router;
+namespace Spiral\Router\Tests\Targets;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Http\Uri;
-use Spiral\Router\Fixtures\TestController;
+use Spiral\Router\Route;
 use Spiral\Router\Targets\Group;
+use Spiral\Router\Tests\Fixtures\TestController;
 use Zend\Diactoros\ServerRequest;
 
 class GroupTargetTest extends TestCase

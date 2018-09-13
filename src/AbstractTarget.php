@@ -45,10 +45,7 @@ abstract class AbstractTarget implements TargetInterface
     {
         $this->defaults = $defaults;
         $this->constrains = $constrains;
-
-        if ($options & self::RESTFUL) {
-            $this->setVerbActions(true);
-        }
+        $this->verbActions = $options & self::RESTFUL;
     }
 
     /**
@@ -107,14 +104,6 @@ abstract class AbstractTarget implements TargetInterface
     protected function setConstrains(array $constrains): void
     {
         $this->constrains = $constrains;
-    }
-
-    /**
-     * @param bool $verbActions
-     */
-    protected function setVerbActions(bool $verbActions = true)
-    {
-        $this->verbActions = $verbActions;
     }
 
     /**

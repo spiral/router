@@ -53,6 +53,7 @@ class Route extends AbstractRoute implements ContainerizedInterface
      */
     public function __construct(string $pattern, $target, array $defaults = [])
     {
+        $this->target = $target;
         if ($target instanceof TargetInterface) {
             $this->defaults = array_merge($defaults, $target->getDefaults());
             $this->uriHandler = new UriHandler($pattern, new Slugify(), $target->getConstrains());

@@ -12,7 +12,6 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-use Spiral\Core\Exceptions\Container\NotFoundException;
 use Spiral\Core\ScopeInterface;
 use Spiral\Router\Exceptions\RouteNotFoundException;
 use Spiral\Router\Exceptions\RouterException;
@@ -47,14 +46,14 @@ class Router implements RouterInterface
     /**
      * @inheritdoc
      *
-     * @throws NotFoundException
+     * @throws RouteNotFoundException
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $route = $this->matchRoute($request);
 
         if (empty($route)) {
-            throw new NotFoundException();
+            throw new RouteNotFoundException();
         }
 
         return $this->container->get(ScopeInterface::class)->runScope(
