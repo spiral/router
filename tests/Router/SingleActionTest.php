@@ -30,7 +30,7 @@ class SingleActionTest extends BaseTest
         $router->handle(new ServerRequest());
     }
 
-    public function testSingleActionRoute()
+    public function testRoute()
     {
         $router = $this->makeRouter();
         $router->addRoute(
@@ -43,6 +43,34 @@ class SingleActionTest extends BaseTest
         $this->assertSame("hello world", (string)$response->getBody());
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame("hello world", (string)$response->getBody());
+    }
+
+    /**
+     * @expectedException \Spiral\Router\Exceptions\RouteNotFoundException
+     */
+    public function testVerbRoute()
+    {
+        $router = $this->makeRouter();
+        $router->addRoute(
+            'action',
+            (new Route('/test', new Action(TestController::class, 'test')))->withVerbs('POST')
+        );
+
+        $router->handle(new ServerRequest([], [], new Uri('/test')));
+
+    }
+
+    public function testVerbRouteValid()
+    {
+        $router = $this->makeRouter();
+        $router->addRoute(
+            'action',
+            (new Route('/test', new Action(TestController::class, 'test')))->withVerbs('POST')
+        );
+
+        $response = $router->handle(new ServerRequest([], [], new Uri('/test'), 'POST'));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame("hello world", (string)$response->getBody());
     }
