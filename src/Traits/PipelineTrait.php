@@ -77,10 +77,6 @@ trait PipelineTrait
      */
     protected function makePipeline(): Pipeline
     {
-        if (!$this->hasContainer()) {
-            throw new RouteException("Unable to configure route pipeline without associated container.");
-        }
-
         try {
             $this->pipeline = $this->container->get(Pipeline::class);
 
