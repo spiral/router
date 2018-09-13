@@ -42,7 +42,6 @@ trait PipelineTrait
     public function withMiddleware(...$middleware): RouteInterface
     {
         $route = clone $this;
-        $route->pipeline = null;
 
         // array fallback
         if (count($middleware) == 1 && is_array($middleware[0])) {
@@ -60,7 +59,11 @@ trait PipelineTrait
                 throw new RouteException("Invalid middleware `{$name}`.");
             }
 
-            $route->middleware[] = $middleware;
+            $route->middleware[] = $item;
+        }
+
+        if (!empty($route->pipeline)) {
+            $route->pipeline = $route->makePipeline();
         }
 
         return $route;
@@ -74,10 +77,6 @@ trait PipelineTrait
      */
     protected function makePipeline(): Pipeline
     {
-        if (!empty($this->pipeline)) {
-            return $this->pipeline;
-        }
-
         if (!$this->hasContainer()) {
             throw new RouteException("Unable to configure route pipeline without associated container.");
         }

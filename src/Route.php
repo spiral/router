@@ -34,7 +34,8 @@ use Spiral\Router\Traits\PipelineTrait;
  * new Route("/<controller>/<action>/<id>", new Namespaced("\App\Controllers");
  * new Route("/signup/<action>", new Controller(\App\Controllers\SignupController::class);
  * new Route("://<domain>/info", new Action(\App\Controllers|ProfileController::class, "info");
- * new Route("/<controller>/<action>/<id>", new Group(["profile" => \App\Controllers|ProfileController::class]);
+ * new Route("/<controller>/<action>/<id>", new Group(["profile" =>
+ * \App\Controllers|ProfileController::class]);
  */
 class Route extends AbstractRoute implements ContainerizedInterface
 {
@@ -79,6 +80,8 @@ class Route extends AbstractRoute implements ContainerizedInterface
             $route->target = clone $route->target;
         }
 
+        $route->pipeline = $route->makePipeline();
+
         return $route;
     }
 
@@ -95,7 +98,7 @@ class Route extends AbstractRoute implements ContainerizedInterface
             $this->requestHandler = $this->requestHandler();
         }
 
-        return $this->makePipeline()->process(
+        return $this->pipeline->process(
             $request->withAttribute(self::ROUTE_ATTRIBUTE, $this),
             $this->requestHandler
         );
