@@ -8,8 +8,6 @@
 
 namespace Spiral\Router\Targets;
 
-use Psr\Container\ContainerInterface;
-use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Spiral\Router\AbstractTarget;
 use Spiral\Router\Exceptions\InvalidArgumentException;
 use Spiral\Router\Exceptions\TargetException;
@@ -22,7 +20,7 @@ use Spiral\Router\Exceptions\TargetException;
  * new Action(HomeController::class, "index");
  * new Action(SingUpController::class, ["login", "logout"]); // creates <action> constrain
  */
-class Action extends AbstractTarget
+final class Action extends AbstractTarget
 {
     /** @var string */
     private $controller;
@@ -35,13 +33,10 @@ class Action extends AbstractTarget
      *
      * @param string       $controller Controller class name.
      * @param string|array $action     One or multiple allowed actions.
+     * @param int          $options    Action behaviour options, see OPTION_ constants.
      */
-    public function __construct(string $controller, $action)
+    public function __construct(string $controller, $action, int $options = 0)
     {
-        if (!class_exists($controller)) {
-            throw new InvalidArgumentException("Undefined class `{$controller}`");
-        }
-
         if (!is_string($action) && !is_array($action)) {
             throw new InvalidArgumentException(sprintf(
                 "Action parameter must type string or array, `%s` given.",
@@ -62,20 +57,25 @@ class Action extends AbstractTarget
     /**
      * @inheritdoc
      */
-    public function makeHandler(ContainerInterface $container, array $matches): Handler
+    protected function resolveController(array $matches): string
+    {
+        return $this->controller;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function resolveAction(array $matches): string
     {
         $action = $this->action;
-        if (!is_string($action)) {
-            if (
-                empty($matches['action'])
-                || (!empty($action) && !in_array($matches['action'], $action))
-            ) {
-                throw new TargetException("Invalid action target, action not allowed.");
-            }
-
-            $action = $matches['action'];
+        if (is_string($action)) {
+            return $action;
         }
 
-        return $this->coreHandler($container)->withContext($this->controller, $action, $matches);
+        if (empty($matches['action']) || (!empty($action) && !in_array($matches['action'], $action))) {
+            throw new TargetException("Invalid action target, action not allowed.");
+        }
+
+        return $matches['action'];
     }
 }

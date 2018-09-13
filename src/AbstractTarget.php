@@ -11,11 +11,21 @@ namespace Spiral\Router;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Spiral\Core\CoreInterface;
 use Spiral\Router\Exceptions\TargetException;
 
 abstract class AbstractTarget implements TargetInterface
 {
+    // Automatically prepend HTTP verb to all action names.
+    const OPTION_RESTFUL = 1;
+
+    // Handle action names in `action_name` format.
+    const OPTION_UNDERSCORE = 2;
+
+    // Handle action names in `action-name` format.
+    const OPTION_HYPHEN = 4;
+
     /** @var array */
     private $defaults = [];
 
@@ -28,14 +38,22 @@ abstract class AbstractTarget implements TargetInterface
     /** @var CoreHandler */
     private $handler;
 
+    /** @var bool */
+    private $verbActions;
+
     /**
      * @param array $defaults
      * @param array $constrains
+     * @param int   $options
      */
-    public function __construct(array $defaults, array $constrains)
+    public function __construct(array $defaults, array $constrains, int $options = 0)
     {
         $this->defaults = $defaults;
         $this->constrains = $constrains;
+
+        if ($options & self::OPTION_RESTFUL) {
+            $this->setVerbActions(true);
+        }
     }
 
     /**
@@ -85,6 +103,26 @@ abstract class AbstractTarget implements TargetInterface
     }
 
     /**
+     * @param bool $verbActions
+     */
+    protected function setVerbActions(bool $verbActions = true)
+    {
+        $this->verbActions = $verbActions;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function makeHandler(ContainerInterface $container, array $matches): Handler
+    {
+        return $this->coreHandler($container)->withContext(
+            $this->resolveController($matches),
+            $this->resolveAction($matches),
+            $matches
+        )->withVerbActions($this->verbActions);
+    }
+
+    /**
      * @param ContainerInterface $container
      *
      * @return CoreHandler
@@ -106,4 +144,20 @@ abstract class AbstractTarget implements TargetInterface
             throw new TargetException($e->getMessage(), $e->getCode(), $e);
         }
     }
+
+    /**
+     * Return target controller action.
+     *
+     * @param array $matches
+     * @return string
+     */
+    abstract protected function resolveAction(array $matches): string;
+
+    /**
+     * Return controller class name.
+     *
+     * @param array $matches
+     * @return string
+     */
+    abstract protected function resolveController(array $matches): string;
 }

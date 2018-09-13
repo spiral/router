@@ -40,6 +40,7 @@ abstract class AbstractRoute implements RouteInterface
     public function withPrefix(string $prefix): RouteInterface
     {
         $route = clone $this;
+        $route->uriHandler = clone $route->uriHandler;
         $route->uriHandler->setPrefix($prefix);
 
         return $route;

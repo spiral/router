@@ -34,6 +34,9 @@ class CoreHandler implements RequestHandlerInterface
     /** @var string|null */
     private $action;
 
+    /** @var bool */
+    private $verbActions;
+
     /** @var array|null */
     private $parameters;
 
@@ -62,7 +65,21 @@ class CoreHandler implements RequestHandlerInterface
         $handler = clone $this;
         $handler->controller = $controller;
         $handler->action = $action;
-        $this->parameters = $parameters;
+        $handler->parameters = $parameters;
+
+        return $handler;
+    }
+
+    /**
+     * Disable or enable HTTP prefix for actions.
+     *
+     * @param bool $verbActions
+     * @return CoreHandler
+     */
+    public function withVerbActions(bool $verbActions): CoreHandler
+    {
+        $handler = clone $this;
+        $handler->verbActions = $verbActions;
 
         return $handler;
     }
@@ -85,7 +102,7 @@ class CoreHandler implements RequestHandlerInterface
         try {
             $result = $this->core->callAction(
                 $this->controller,
-                $this->action,
+                $this->getAction($request),
                 $this->parameters,
                 [Request::class => $request, Response::class => $response]
             );
@@ -105,6 +122,19 @@ class CoreHandler implements RequestHandlerInterface
             $result,
             ob_get_clean() . $output
         );
+    }
+
+    /**
+     * @param Request $request
+     * @return string
+     */
+    private function getAction(Request $request): string
+    {
+        if ($this->verbActions) {
+            return strtolower($request->getMethod()) . ucfirst($this->action);
+        }
+
+        return $this->action;
     }
 
     /**

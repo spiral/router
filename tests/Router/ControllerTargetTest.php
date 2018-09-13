@@ -6,44 +6,32 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Router\Tests;
+namespace Spiral\Router;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Http\Uri;
 use Spiral\Router\Fixtures\TestController;
-use Spiral\Router\Route;
-use Spiral\Router\Targets\Action;
+use Spiral\Router\Targets\Controller;
 use Zend\Diactoros\ServerRequest;
 
-class ActionTargetTest extends TestCase
+class ControllerTargetTest extends TestCase
 {
     public function testDefaultAction()
     {
-        $route = new Route("/home", new Action(TestController::class, "test"));
+        $route = new Route("/home[/<action>]", new Controller(TestController::class, "test"));
         $this->assertSame(['action' => 'test'], $route->getDefaults());
-    }
-
-    /**
-     * @expectedException \Spiral\Router\Exceptions\ConstrainException
-     */
-    public function testConstrainedAction()
-    {
-        $route = new Route("/home", new Action(TestController::class, ["test", "other"]));
-        $route->match(new ServerRequest());
     }
 
     public function testActionSelector()
     {
         $route = new Route(
             "/test[/<action>]",
-            new Action(TestController::class, ["test", "other"])
+            new Controller(TestController::class, 'test')
         );
 
-        $route = $route->withDefaults(['action' => 'test']);
-
         $this->assertNull($route->match(new ServerRequest()));
-        $this->assertNull($route->match(new ServerRequest([], [], new Uri('/test/something'))));
-        $this->assertNull($route->match(new ServerRequest([], [], new Uri('/test/tester'))));
+        $this->assertNotNull($route->match(new ServerRequest([], [], new Uri('/test/something'))));
+        $this->assertNotNull($route->match(new ServerRequest([], [], new Uri('/test/tester'))));
 
         $this->assertNotNull(
             $match = $route->match(new ServerRequest([], [], new Uri('/test')))
@@ -66,13 +54,5 @@ class ActionTargetTest extends TestCase
         );
 
         $this->assertSame(['action' => 'other'], $match->getMatches());
-    }
-
-    /**
-     * @expectedException \Spiral\Router\Exceptions\InvalidArgumentException
-     */
-    public function testActionException()
-    {
-        new Action(TestController::class, $this);
     }
 }

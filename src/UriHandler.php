@@ -18,10 +18,10 @@ use Spiral\Router\Exceptions\ConstrainException;
  */
 class UriHandler
 {
-    private const DEFAULT_SEGMENT  = '[^\/]+';
+    private const DEFAULT_SEGMENT = '[^\/]+';
     private const PATTERN_REPLACES = ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.'];
     private const SEGMENT_REPLACES = ['/' => '\\/', '.' => '\.'];
-    private const URI_FIXERS       = [
+    private const URI_FIXERS = [
         '[]'  => '',
         '[/]' => '',
         '['   => '',
@@ -228,7 +228,8 @@ class UriHandler
     private function compile()
     {
         $options = $replaces = [];
-        $pattern = ltrim($this->pattern, ':/');
+        $pattern = rtrim(ltrim($this->pattern, ':/'), '/');
+
         if (preg_match_all('/<(\w+):?(.*?)?>/', $pattern, $matches)) {
             $variables = array_combine($matches[1], $matches[2]);
 
@@ -245,7 +246,7 @@ class UriHandler
         foreach ($this->constrains as $key => $values) {
             if (!array_key_exists($key, $options)) {
                 throw new ConstrainException(sprintf(
-                    "Route `%s` does not define required option `%s`.",
+                    "Route `%s` does not define routing parameter `<%s>`.",
                     $this->pattern,
                     $key
                 ));
