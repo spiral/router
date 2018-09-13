@@ -26,6 +26,7 @@ final class Controller extends AbstractTarget
      */
     public function __construct(string $controller, int $options = 0)
     {
+        $this->controller = $controller;
         parent::__construct(
             ['action' => null],
             ['action' => null],
