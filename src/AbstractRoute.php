@@ -100,12 +100,4 @@ abstract class AbstractRoute implements RouteInterface
             array_merge($this->defaults, $this->matches ?? [])
         );
     }
-
-    /**
-     * Clones underlying Uri handler.
-     */
-    public function __clone()
-    {
-        $this->uriHandler = clone $this->uriHandler;
-    }
 }
