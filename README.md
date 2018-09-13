@@ -1,4 +1,4 @@
-Routes, RESTFul, URI generation, Adaptive
+Routes, RESTFul, URI generation, Adaptive Patterns
 ================================
 [![Latest Stable Version](https://poser.pugx.org/spiral/router/version)](https://packagist.org/packages/spiral/router)
 [![Build Status](https://travis-ci.org/spiral/router.svg?branch=master)](https://travis-ci.org/spiral/router)
