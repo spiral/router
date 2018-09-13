@@ -10,15 +10,14 @@ namespace Spiral\Router;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Http\Uri;
-use Spiral\Router\Fixtures\TestController;
-use Spiral\Router\Targets\Group;
+use Spiral\Router\Targets\Namespaced;
 use Zend\Diactoros\ServerRequest;
 
-class GroupTargetTest extends TestCase
+class NamespacedTargetTest extends TestCase
 {
     public function testDefaultAction()
     {
-        $route = new Route("/<controller>/<action>", new Group(['test' => TestController::class]));
+        $route = new Route("/<controller>/<action>", new Namespaced('Spiral\Router\Fixtures'));
         $this->assertSame(['controller' => null, 'action' => null], $route->getDefaults());
     }
 
@@ -27,7 +26,7 @@ class GroupTargetTest extends TestCase
      */
     public function testConstrainedController()
     {
-        $route = new Route("/<action>", new Group(['test' => TestController::class]));
+        $route = new Route("/<action>", new Namespaced('Spiral\Router\Fixtures'));
         $route->match(new ServerRequest());
     }
 
@@ -36,7 +35,7 @@ class GroupTargetTest extends TestCase
      */
     public function testConstrainedAction()
     {
-        $route = new Route("/<controller>", new Group(['test' => TestController::class]));
+        $route = new Route("/<controller>", new Namespaced('Spiral\Router\Fixtures'));
         $route->match(new ServerRequest());
     }
 
@@ -44,7 +43,7 @@ class GroupTargetTest extends TestCase
     {
         $route = new Route(
             "/<controller>[/<action>]",
-            new Group(['test' => TestController::class])
+            new Namespaced('Spiral\Router\Fixtures')
         );
 
         $route = $route->withDefaults(['controller' => 'test']);
@@ -63,12 +62,10 @@ class GroupTargetTest extends TestCase
 
         $this->assertSame(['controller' => 'test', 'action' => 'action'], $match->getMatches());
 
-        $this->assertNull(
+        $this->assertNotNull(
             $match = $route->match(new ServerRequest([], [], new Uri('/other/action/')))
         );
 
-        $this->assertNull(
-            $match = $route->match(new ServerRequest([], [], new Uri('/other')))
-        );
+        $this->assertSame(['controller' => 'other', 'action' => 'action'], $match->getMatches());
     }
 }

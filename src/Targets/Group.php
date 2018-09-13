@@ -28,13 +28,11 @@ final class Group extends AbstractTarget
     public function __construct(array $controllers, int $options = 0)
     {
         $this->controllers = $controllers;
-        parent::__construct([
-            'controller' => null,
-            'action'     => null
-        ], [
-            'controller' => array_keys($controllers),
-            'action'     => null
-        ], $options);
+        parent::__construct(
+            ['controller' => null, 'action' => null],
+            ['controller' => array_keys($controllers), 'action' => null],
+            $options
+        );
     }
 
     /**

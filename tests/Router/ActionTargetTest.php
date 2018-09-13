@@ -32,7 +32,7 @@ class ActionTargetTest extends TestCase
         $route->match(new ServerRequest());
     }
 
-    public function testActionSelector()
+    public function testMatch()
     {
         $route = new Route(
             "/test[/<action>]",

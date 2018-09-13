@@ -22,7 +22,7 @@ class ControllerTargetTest extends TestCase
         $this->assertSame(['action' => null], $route->getDefaults());
     }
 
-    public function testActionSelector()
+    public function testMatch()
     {
         $route = new Route(
             "/test[/<action>]",

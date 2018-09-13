@@ -35,7 +35,11 @@ final class Namespaced extends AbstractTarget
         $this->namespace = rtrim($this->namespace, '\\');
         $this->postfix = ucfirst($postfix);
 
-        parent::__construct([], ['controller' => null, 'action' => null], $options);
+        parent::__construct(
+            ['controller' => null, 'action' => null],
+            ['controller' => null, 'action' => null],
+            $options
+        );
     }
 
     /**
