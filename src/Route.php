@@ -10,6 +10,7 @@ namespace Spiral\Router;
 
 use Cocur\Slugify\Slugify;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -61,6 +62,24 @@ class Route extends AbstractRoute implements ContainerizedInterface
     }
 
     /**
+     * Associated route with given container.
+     *
+     * @param ContainerInterface $container
+     *
+     * @return ContainerizedInterface|$this
+     */
+    public function withContainer(ContainerInterface $container): ContainerizedInterface
+    {
+        $route = clone $this;
+        $route->container = $container;
+        if ($route->target instanceof TargetInterface) {
+            $route->target = clone $route->target;
+        }
+
+        return $route;
+    }
+
+    /**
      * @param ServerRequestInterface $request
      *
      * @return ResponseInterface
@@ -91,7 +110,7 @@ class Route extends AbstractRoute implements ContainerizedInterface
         }
 
         if ($this->target instanceof TargetInterface) {
-            return $this->target->makeHandler($this->container, $this->matches);
+            return $this->target->getHandler($this->container, $this->matches);
         }
 
         if ($this->target instanceof RequestHandlerInterface) {

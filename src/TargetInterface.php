@@ -45,5 +45,5 @@ interface TargetInterface
      *
      * @throws \Spiral\Router\Exceptions\TargetException
      */
-    public function makeHandler(ContainerInterface $container, array $matches): Handler;
+    public function getHandler(ContainerInterface $container, array $matches): Handler;
 }

@@ -82,6 +82,18 @@ abstract class AbstractTarget implements TargetInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getHandler(ContainerInterface $container, array $matches): Handler
+    {
+        return $this->coreHandler($container)->withContext(
+            $this->resolveController($matches),
+            Inflector::camelize($this->resolveAction($matches)),
+            $matches
+        )->withVerbActions($this->verbActions);
+    }
+
+    /**
      * @param array $defaults
      */
     protected function setDefaults(array $defaults): void
@@ -103,18 +115,6 @@ abstract class AbstractTarget implements TargetInterface
     protected function setVerbActions(bool $verbActions = true)
     {
         $this->verbActions = $verbActions;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function makeHandler(ContainerInterface $container, array $matches): Handler
-    {
-        return $this->coreHandler($container)->withContext(
-            $this->resolveController($matches),
-            Inflector::camelize($this->resolveAction($matches)),
-            $matches
-        )->withVerbActions($this->verbActions);
     }
 
     /**
