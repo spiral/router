@@ -127,6 +127,10 @@ class Route extends AbstractRoute implements ContainerizedInterface
                 $target = $this->container->get($this->target);
             }
 
+            if ($target instanceof RequestHandlerInterface) {
+                return $target;
+            }
+
             return new CallableHandler(
                 $target,
                 $this->container->get(ResponseFactoryInterface::class)

@@ -8,13 +8,17 @@
 
 namespace Spiral\Router\Tests;
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Http\Uri;
 use Spiral\Router\Route;
+use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequest;
 
 class CallableTest extends BaseTest
 {
-    public function testRoute()
+    public function testFunctionRoute()
     {
         $router = $this->makeRouter();
         $router->addRoute(
@@ -27,5 +31,75 @@ class CallableTest extends BaseTest
         $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame("hello world", (string)$response->getBody());
+    }
+
+    public function testObjectRoute()
+    {
+        $router = $this->makeRouter();
+        $router->addRoute(
+            'action',
+            new Route('/something', new Call())
+        );
+
+        $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame("invoked", (string)$response->getBody());
+    }
+
+    public function testObjectViaContainerRoute()
+    {
+        $router = $this->makeRouter();
+        $router->addRoute(
+            'action',
+            new Route('/something', Call::class)
+        );
+
+        $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame("invoked", (string)$response->getBody());
+    }
+
+    public function testHandlerRoute()
+    {
+        $router = $this->makeRouter();
+        $router->addRoute(
+            'action',
+            new Route('/something', new Handler())
+        );
+
+        $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame("handler", (string)$response->getBody());
+    }
+
+    public function testHandlerViaContainerRoute()
+    {
+        $router = $this->makeRouter();
+        $router->addRoute(
+            'action',
+            new Route('/something', Handler::class)
+        );
+
+        $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame("handler", (string)$response->getBody());
+    }
+}
+
+class Call
+{
+    public function __invoke()
+    {
+        return 'invoked';
+    }
+}
+
+class Handler implements RequestHandlerInterface
+{
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        $response = new Response();
+        $response->getBody()->write("handler");
+        return $response;
     }
 }
