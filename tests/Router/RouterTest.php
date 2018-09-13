@@ -47,6 +47,6 @@ class RouterTest extends BaseTest
     public function testCastError()
     {
         $router = $this->makeRouter();
-        $router->uri('invalid');
+        $router->uri('inva@lid');
     }
 }
