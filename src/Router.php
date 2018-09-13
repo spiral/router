@@ -102,6 +102,11 @@ class Router implements RouterInterface
      */
     public function getRoutes(): array
     {
+        if (!empty($this->default)) {
+            return $this->routes + [null => $this->default];
+
+        }
+
         return $this->routes;
     }
 
