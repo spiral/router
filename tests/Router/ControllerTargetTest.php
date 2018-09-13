@@ -50,6 +50,11 @@ class ControllerTargetTest extends TestCase
         $this->assertSame(['action' => 'test'], $match->getMatches());
 
         $this->assertNotNull(
+            $match = $route->match(new ServerRequest([], [], new Uri('/test/test/')))
+        );
+        $this->assertSame(['action' => 'test'], $match->getMatches());
+
+        $this->assertNotNull(
             $match = $route->match(new ServerRequest([], [], new Uri('/test/other')))
         );
 
