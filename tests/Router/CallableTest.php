@@ -84,6 +84,22 @@ class CallableTest extends BaseTest
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame("handler", (string)$response->getBody());
     }
+
+    /**
+     * @expectedException \Spiral\Router\Exceptions\RouteException
+     */
+    public function testInvalidTarget()
+    {
+        $router = $this->makeRouter();
+        $router->addRoute(
+            'action',
+            new Route('/something', "something")
+        );
+
+        $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame("handler", (string)$response->getBody());
+    }
 }
 
 class Call
