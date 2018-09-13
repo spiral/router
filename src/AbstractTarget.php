@@ -146,18 +146,18 @@ abstract class AbstractTarget implements TargetInterface
     }
 
     /**
-     * Return target controller action.
-     *
-     * @param array $matches
-     * @return string
-     */
-    abstract protected function resolveAction(array $matches): string;
-
-    /**
      * Return controller class name.
      *
      * @param array $matches
      * @return string
      */
     abstract protected function resolveController(array $matches): string;
+
+    /**
+     * Return target controller action.
+     *
+     * @param array $matches
+     * @return string
+     */
+    abstract protected function resolveAction(array $matches): ?string;
 }

@@ -48,9 +48,9 @@ final class Action extends AbstractTarget
         $this->action = $action;
 
         if (is_string($action)) {
-            parent::__construct(compact('action'), []);
+            parent::__construct(compact('action'), [], $options);
         } else {
-            parent::__construct([], compact('action'));
+            parent::__construct([], compact('action'), $options);
         }
     }
 

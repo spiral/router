@@ -191,6 +191,8 @@ class Router implements RouterInterface
 
         foreach ($this->routes as $name => $route) {
             if ($name == $controller) {
+                // todo: perform match !!!
+
                 $options = array_merge($route->getDefaults(), $route->getDefaults());
                 if (isset($options['action'])) {
                     // todo: find route by constrains and defaults (!)

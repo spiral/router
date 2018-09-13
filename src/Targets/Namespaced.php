@@ -10,10 +10,7 @@ namespace Spiral\Router\Targets;
 
 use Spiral\Router\AbstractTarget;
 
-final class Group extends AbstractTarget
+final class Namespaced extends AbstractTarget
 {
-    public function __construct(array $controllers)
-    {
 
-    }
 }

@@ -9,7 +9,6 @@
 namespace Spiral\Router\Targets;
 
 use Spiral\Router\AbstractTarget;
-use Spiral\Router\Exceptions\TargetException;
 
 /**
  * Targets to all actions in specific controller. Variation of Action without action constrain.
@@ -31,7 +30,7 @@ final class Controller extends AbstractTarget
     public function __construct(string $controller, string $defaultAction = null, int $options = 0)
     {
         // always constrained to have action parameter
-        parent::__construct([], ['action' => null]);
+        parent::__construct([], ['action' => null], $options);
 
         if (!empty($defaultAction)) {
             $this->setDefaults(['action' => $defaultAction]);
@@ -50,12 +49,8 @@ final class Controller extends AbstractTarget
      * @param array $matches
      * @return string
      */
-    protected function resolveAction(array $matches): string
+    protected function resolveAction(array $matches): ?string
     {
-        if (empty($matches['action'])) {
-            throw new TargetException("Invalid action target, action is not set.");
-        }
-
         return $matches['action'];
     }
 }

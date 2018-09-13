@@ -20,6 +20,8 @@ class ControllerTargetTest extends TestCase
     {
         $route = new Route("/home[/<action>]", new Controller(TestController::class, "test"));
         $this->assertSame(['action' => 'test'], $route->getDefaults());
+
+        $route = new Route('<controller>[/<action>[/<id>]]', new Namespaced('Spiral\Router\Fixtures'));
     }
 
     public function testActionSelector()

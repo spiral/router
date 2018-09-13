@@ -60,7 +60,7 @@ class CoreHandler implements RequestHandlerInterface
      *
      * @return CoreHandler
      */
-    public function withContext(string $controller, string $action, array $parameters): CoreHandler
+    public function withContext(string $controller, ?string $action, array $parameters): CoreHandler
     {
         $handler = clone $this;
         $handler->controller = $controller;
@@ -128,7 +128,7 @@ class CoreHandler implements RequestHandlerInterface
      * @param Request $request
      * @return string
      */
-    private function getAction(Request $request): string
+    private function getAction(Request $request): ?string
     {
         if ($this->verbActions) {
             return strtolower($request->getMethod()) . ucfirst($this->action);

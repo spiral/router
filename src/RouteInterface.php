@@ -27,8 +27,7 @@ interface RouteInterface extends RequestHandlerInterface
     /**
      * Attach specific list of HTTP verbs to the route.
      *
-     * @param string[] ...$verbs
-     *
+     * @param string ...$verbs
      * @return RouteInterface|$this
      *
      * @throws RouteException
@@ -46,7 +45,6 @@ interface RouteInterface extends RequestHandlerInterface
      * Prefix must always include back slash at the end of prefix!
      *
      * @param string $prefix
-     *
      * @return RouteInterface|$this
      */
     public function withPrefix(string $prefix): RouteInterface;
@@ -60,7 +58,6 @@ interface RouteInterface extends RequestHandlerInterface
      * Returns new route instance with forced default values.
      *
      * @param array $defaults
-     *
      * @return RouteInterface|$this
      */
     public function withDefaults(array $defaults): RouteInterface;
@@ -85,7 +82,6 @@ interface RouteInterface extends RequestHandlerInterface
      * route does not match.
      *
      * @param Request $request
-     *
      * @return RouteInterface|$this|null
      *
      * @throws RouteException
@@ -103,7 +99,6 @@ interface RouteInterface extends RequestHandlerInterface
      * Generate valid route URL using set of routing parameters.
      *
      * @param array|\Traversable $parameters
-     *
      * @return UriInterface
      *
      * @throws RouteException
