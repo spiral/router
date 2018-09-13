@@ -16,4 +16,9 @@ class TestController extends Controller
     {
         return "hello world";
     }
+
+    public function idAction(string $id)
+    {
+        return $id;
+    }
 }
