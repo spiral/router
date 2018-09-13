@@ -43,4 +43,18 @@ class SingleActionTest extends BaseTest
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame("hello world", (string)$response->getBody());
     }
+
+    /**
+     * @expectedException \Spiral\Router\Exceptions\RouteNotFoundException
+     */
+    public function testWrongActionRoute()
+    {
+        $router = $this->makeRouter();
+        $router->addRoute(
+            'action',
+            new Route('/test', new Action(TestController::class, 'test'))
+        );
+
+        $response = $router->handle(new ServerRequest([], [], new Uri('/other')));
+    }
 }
