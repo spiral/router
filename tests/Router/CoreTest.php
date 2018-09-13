@@ -118,6 +118,38 @@ class CoreTest extends BaseTest
         $action = new Action(TestController::class, "weird");
         $r = $action->getHandler($this->container, [])->handle(new ServerRequest());
     }
+
+    /**
+     * @expectedException \Spiral\Router\Exceptions\HandlerException
+     */
+    public function testCoreException()
+    {
+        /** @var CoreHandler $core */
+        $core = $this->container->get(CoreHandler::class);
+        $core->handle(new ServerRequest());
+    }
+
+    public function testRESTFul()
+    {
+        $action = new Action(TestController::class, 'Target', Action::RESTFUL);
+        $r = $action->getHandler($this->container, [])->handle(new ServerRequest(
+            [],
+            [],
+            '',
+            'POST'
+        ));
+
+        $this->assertSame('POST', (string)$r->getBody());
+
+        $r = $action->getHandler($this->container, [])->handle(new ServerRequest(
+            [],
+            [],
+            '',
+            'DELETE'
+        ));
+
+        $this->assertSame('DELETE', (string)$r->getBody());
+    }
 }
 
 class TestCore implements CoreInterface

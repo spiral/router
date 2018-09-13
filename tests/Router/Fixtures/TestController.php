@@ -69,4 +69,14 @@ class TestController extends Controller
     {
         throw new ControllerException("", 99);
     }
+
+    public function postTargetAction()
+    {
+        return 'POST';
+    }
+
+    public function deleteTargetAction()
+    {
+        return 'DELETE';
+    }
 }
