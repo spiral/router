@@ -31,7 +31,7 @@ class MultipleActionsTest extends BaseTest
         $router->handle(new ServerRequest());
     }
 
-    public function testSingleActionRoute()
+    public function testRoute()
     {
         $router = $this->makeRouter();
         $router->addRoute(

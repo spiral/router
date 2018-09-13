@@ -12,6 +12,8 @@ use Spiral\Core\Controller;
 
 class TestController extends Controller
 {
+    protected $defaultAction = 'test';
+
     public function testAction()
     {
         return "hello world";

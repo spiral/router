@@ -12,6 +12,7 @@ use Cocur\Slugify\SlugifyInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Http\Uri;
 use Spiral\Router\Exceptions\ConstrainException;
+use Spiral\Router\Exceptions\UriHandlerException;
 
 /**
  * UriMatcher provides ability to match and generate uris based on given parameters.
@@ -147,6 +148,12 @@ class UriHandler
             $defaults,
             $this->fetchOptions($parameters, $query)
         );
+
+        foreach ($this->constrains as $key => $values) {
+            if (empty($parameters[$key])) {
+                throw new UriHandlerException("Unable to generate Uri, parameter `{$key}` is missing.");
+            }
+        }
 
         //Uri without empty blocks (pretty stupid implementation)
         $path = $this->interpolate($this->template, $parameters);

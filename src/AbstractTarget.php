@@ -83,9 +83,10 @@ abstract class AbstractTarget implements TargetInterface
      */
     public function getHandler(ContainerInterface $container, array $matches): Handler
     {
+        $action = $this->resolveAction($matches);
         return $this->coreHandler($container)->withContext(
             $this->resolveController($matches),
-            Inflector::camelize($this->resolveAction($matches)),
+            !empty($action) ? Inflector::camelize($action) : null,
             $matches
         )->withVerbActions($this->verbActions);
     }
