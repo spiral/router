@@ -11,6 +11,7 @@ namespace Spiral\Router;
 use Cocur\Slugify\Slugify;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -128,7 +129,7 @@ class Route extends AbstractRoute implements ContainerizedInterface
 
             return new CallableHandler(
                 $target,
-                $this->container->get(RequestHandlerInterface::class)
+                $this->container->get(ResponseFactoryInterface::class)
             );
         } catch (ContainerExceptionInterface $e) {
             throw new RouteException($e->getMessage(), $e->getCode(), $e);
