@@ -178,10 +178,11 @@ class UriHandler
 
         $result = [];
         foreach ($parameters as $key => $parameter) {
-            //This segment fetched keys from given parameters either by name or by position
             if (is_numeric($key) && isset($allowed[$key])) {
+                // this segment fetched keys from given parameters either by name or by position
                 $key = $allowed[$key];
             } elseif (!array_key_exists($key, $this->options) && is_array($parameters)) {
+                // all additional parameters given in array form can be glued to query string
                 $query[$key] = $parameter;
                 continue;
             }

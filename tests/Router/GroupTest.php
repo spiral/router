@@ -82,6 +82,9 @@ class GroupTest extends BaseTest
 
         $uri = $router->uri('group/test:id', ['id' => 100]);
         $this->assertSame('/test/id/100', $uri->getPath());
+
+        $uri = $router->getRoute('group')->uri(['test', 'id', 100]);
+        $this->assertSame('/test/id/100', $uri->getPath());
     }
 
     /**
