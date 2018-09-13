@@ -276,7 +276,7 @@ class UriHandler
             try {
                 //Object as string
                 $value = is_object($value) ? (string)$value : $value;
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $value = '';
             }
 
