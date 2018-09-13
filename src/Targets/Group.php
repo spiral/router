@@ -9,7 +9,6 @@
 namespace Spiral\Router\Targets;
 
 use Spiral\Router\AbstractTarget;
-use Spiral\Router\Exceptions\TargetException;
 
 /**
  * Provides ability to invoke from a given controller set:
@@ -40,14 +39,6 @@ final class Group extends AbstractTarget
      */
     protected function resolveController(array $matches): string
     {
-        if (empty($matches['controller'])) {
-            throw new TargetException("Unable to evaluate target, no controller is given.");
-        }
-
-        if (!isset($this->controllers[$matches['controller']])) {
-            throw new TargetException(sprintf("Invalid controller `%s`.", $matches['controller']));
-        }
-
         return $this->controllers[$matches['controller']];
     }
 

@@ -32,7 +32,7 @@ final class Namespaced extends AbstractTarget
      */
     public function __construct(string $namespace, string $postfix = 'Controller', int $options = 0)
     {
-        $this->namespace = rtrim($this->namespace, '\\');
+        $this->namespace = rtrim($namespace, '\\');
         $this->postfix = ucfirst($postfix);
 
         parent::__construct(
@@ -47,15 +47,16 @@ final class Namespaced extends AbstractTarget
      */
     protected function resolveController(array $matches): string
     {
-        if (empty($matches['controller'])) {
-            throw new TargetException("Invalid namespace target, no controller name is given.");
-        }
-
-        if (!preg_match('/[^a-z_0-9]+/i', $matches['controller'])) {
+        if (preg_match('/[^a-z_0-9\-]/i', $matches['controller'])) {
             throw new TargetException("Invalid namespace target, controller name not allowed.");
         }
 
-        return sprintf("%s\\%s%s", $this->namespace, Inflector::classify($matches['controller']), $this->postfix);
+        return sprintf(
+            "%s\\%s%s",
+            $this->namespace,
+            Inflector::classify($matches['controller']),
+            $this->postfix
+        );
     }
 
     /**
