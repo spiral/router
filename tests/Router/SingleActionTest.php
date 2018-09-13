@@ -75,6 +75,18 @@ class SingleActionTest extends BaseTest
         $this->assertSame("hello world", (string)$response->getBody());
     }
 
+    /**
+     * @expectedException \Spiral\Router\Exceptions\RouteException
+     */
+    public function testVerbException()
+    {
+        $router = $this->makeRouter();
+        $router->addRoute(
+            'action',
+            (new Route('/test', new Action(TestController::class, 'test')))->withVerbs('other')
+        );
+    }
+
     public function testParametrizedActionRoute()
     {
         $router = $this->makeRouter();
