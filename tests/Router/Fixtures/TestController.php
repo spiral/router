@@ -9,6 +9,8 @@
 namespace Spiral\Router\Tests\Fixtures;
 
 use Spiral\Core\Controller;
+use Spiral\Core\Exceptions\ControllerException;
+use Zend\Diactoros\Response;
 
 class TestController extends Controller
 {
@@ -26,6 +28,45 @@ class TestController extends Controller
 
     public function echoAction()
     {
+        ob_start();
         echo "echoed";
+    }
+
+    public function errAction()
+    {
+        throw new \Error("error.controller");
+    }
+
+    public function rspAction()
+    {
+        $r = new Response();
+        $r->getBody()->write("rsp");
+
+        echo "buf";
+
+        return $r;
+    }
+
+    public function jsonAction()
+    {
+        return [
+            'status' => 301,
+            'msg'    => 'redirect'
+        ];
+    }
+
+    public function forbiddenAction()
+    {
+        throw new ControllerException("", ControllerException::FORBIDDEN);
+    }
+
+    public function notFoundAction()
+    {
+        throw new ControllerException("", ControllerException::NOT_FOUND);
+    }
+
+    public function weirdAction()
+    {
+        throw new ControllerException("", 99);
     }
 }

@@ -20,7 +20,10 @@ use Zend\Diactoros\Response;
 
 abstract class BaseTest extends TestCase
 {
-    private $container;
+    /**
+     * @var Container
+     */
+    protected $container;
 
     public function setUp()
     {
