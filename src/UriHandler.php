@@ -19,11 +19,11 @@ use Spiral\Router\Exceptions\UriHandlerException;
  */
 class UriHandler
 {
-    private const HOST_PREFIX = '//';
-    private const DEFAULT_SEGMENT = '[^\/]+';
+    private const HOST_PREFIX      = '//';
+    private const DEFAULT_SEGMENT  = '[^\/]+';
     private const PATTERN_REPLACES = ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.'];
     private const SEGMENT_REPLACES = ['/' => '\\/', '.' => '\.'];
-    private const URI_FIXERS = [
+    private const URI_FIXERS       = [
         '[]'  => '',
         '[/]' => '',
         '['   => '',
@@ -244,7 +244,12 @@ class UriHandler
         $template = preg_replace('/<(\w+):?.*?>/', '<\1>', $pattern);
         $options = array_fill_keys($options, null);
 
-        foreach ($this->constrains as $key => $values) {
+        foreach ($this->constrains as $key => $value) {
+            if ($value instanceof Autofill) {
+                // only forces value replacement, not required to be presented as parameter
+                continue;
+            }
+
             if (!array_key_exists($key, $options)) {
                 throw new ConstrainException(sprintf(
                     "Route `%s` does not define routing parameter `<%s>`.",
@@ -310,8 +315,7 @@ class UriHandler
             return join('|', $values);
         }
 
-        // get segment pattern from given constrain
-        return strtr($segment, $this->constrains[$name]);
+        return $this->filterSegment($this->constrains[$name]);
     }
 
     /**

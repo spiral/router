@@ -84,6 +84,7 @@ abstract class AbstractTarget implements TargetInterface
     public function getHandler(ContainerInterface $container, array $matches): Handler
     {
         $action = $this->resolveAction($matches);
+
         return $this->coreHandler($container)->withContext(
             $this->resolveController($matches),
             !empty($action) ? Inflector::camelize($action) : null,
@@ -118,6 +119,7 @@ abstract class AbstractTarget implements TargetInterface
      * Return controller class name.
      *
      * @param array $matches
+     *
      * @return string
      *
      * @throws TargetException
@@ -128,6 +130,7 @@ abstract class AbstractTarget implements TargetInterface
      * Return target controller action.
      *
      * @param array $matches
+     *
      * @return string
      *
      * @throws TargetException

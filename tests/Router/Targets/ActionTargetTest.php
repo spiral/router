@@ -10,6 +10,7 @@ namespace Spiral\Router\Tests\Targets;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Http\Uri;
+use Spiral\Router\Autofill;
 use Spiral\Router\Route;
 use Spiral\Router\Targets\Action;
 use Spiral\Router\Tests\Fixtures\TestController;
@@ -26,7 +27,7 @@ class ActionTargetTest extends TestCase
     public function testConstrains()
     {
         $route = new Route("/home", new Action(TestController::class, "test"));
-        $this->assertSame([], $route->getConstrains());
+        $this->assertEquals(['action' => new Autofill('test')], $route->getConstrains());
 
         $route = new Route("/<action>", new Action(TestController::class, ["test", "other"]));
         $this->assertSame(['action' => ["test", "other"]], $route->getConstrains());

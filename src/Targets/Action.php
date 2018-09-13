@@ -9,6 +9,7 @@
 namespace Spiral\Router\Targets;
 
 use Spiral\Router\AbstractTarget;
+use Spiral\Router\Autofill;
 use Spiral\Router\Exceptions\InvalidArgumentException;
 
 /**
@@ -49,7 +50,7 @@ final class Action extends AbstractTarget
         if (is_string($action)) {
             parent::__construct(
                 compact('action'),
-                [],
+                ['action' => new Autofill($action)],
                 $options
             );
         } else {

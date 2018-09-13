@@ -9,6 +9,7 @@
 namespace Spiral\Router\Tests;
 
 use Spiral\Http\Uri;
+use Spiral\Router\Exceptions\RouteNotFoundException;
 use Spiral\Router\Route;
 use Spiral\Router\Targets\Action;
 use Spiral\Router\Tests\Fixtures\TestController;
@@ -86,6 +87,27 @@ class SingleActionTest extends BaseTest
         $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame("echoed", (string)$response->getBody());
+    }
+
+    public function testAutoFill()
+    {
+        $router = $this->makeRouter();
+        $router->addRoute(
+            'action',
+            new Route('/<action>', new Action(TestController::class, 'echo'))
+        );
+
+        $response = $router->handle(new ServerRequest([], [], new Uri('/echo')));
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame("echoed", (string)$response->getBody());
+
+        $e = null;
+        try {
+            $router->handle(new ServerRequest([], [], new Uri('/test')));
+        } catch (RouteNotFoundException $e) {
+        }
+
+        $this->assertNotNull($e, 'Autofill not fired');
     }
 
     /**
