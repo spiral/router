@@ -60,6 +60,21 @@ class SingleActionTest extends BaseTest
         $this->assertSame("100", (string)$response->getBody());
     }
 
+    public function testUriGeneration()
+    {
+        $router = $this->makeRouter();
+        $router->addRoute(
+            'action',
+            new Route('/test/<id>', new Action(TestController::class, 'id'))
+        );
+
+        $uri = $router->uri('action');
+        $this->assertSame('/test', $uri->getPath());
+
+        $uri = $router->uri('action', ['id' => 100]);
+        $this->assertSame('/test/100', $uri->getPath());
+    }
+
     /**
      * @expectedException \Spiral\Router\Exceptions\RouteNotFoundException
      */
