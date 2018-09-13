@@ -124,13 +124,14 @@ class MiddlewareTest extends BaseTest
         $this->assertSame("Value*,Value*", $response->getHeaderLine('Header'));
     }
 
+    /**
+     * @expectedException \Spiral\Router\Exceptions\RouteException
+     */
     public function testPipelineException()
     {
         $r = (new Route('/<controller>[/<action>[/<id>]]', new Group([
             'test' => TestController::class
         ])))->withMiddleware([new HeaderMiddleware(), HeaderMiddleware::class]);
-
-        $r = $r->withContainer($this->container);
 
         $r = $r->match(new ServerRequest([], [], new Uri('/test')));
         $response = $r->handle(new ServerRequest([], [], new Uri('/test')));
