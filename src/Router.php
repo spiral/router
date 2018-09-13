@@ -39,7 +39,7 @@ class Router implements RouterInterface
      */
     public function __construct(string $basePath, ContainerInterface $container)
     {
-        $this->basePath = $basePath;
+        $this->basePath = '/' . ltrim($basePath, '/');
         $this->container = $container;
     }
 
