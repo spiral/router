@@ -67,26 +67,6 @@ class GroupTest extends BaseTest
         $router->handle(new ServerRequest([], [], new Uri('/other')));
     }
 
-    public function testUriGeneration()
-    {
-        $router = $this->makeRouter();
-        $router->addRoute(
-            'group',
-            new Route('/<controller>[/<action>[/<id>]]', new Group([
-                'test' => TestController::class
-            ]))
-        );
-
-        $uri = $router->uri('group/test:test');
-        $this->assertSame('/test/test', $uri->getPath());
-
-        $uri = $router->uri('group/test:id', ['id' => 100]);
-        $this->assertSame('/test/id/100', $uri->getPath());
-
-        $uri = $router->getRoute('group')->uri(['test', 'id', 100]);
-        $this->assertSame('/test/id/100', $uri->getPath());
-    }
-
     /**
      * @expectedException \Spiral\Router\Exceptions\UriHandlerException
      */
