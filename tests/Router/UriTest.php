@@ -71,4 +71,27 @@ class UriTest extends BaseTest
         $this->assertSame('/test/id/100-hello-world', $uri->getPath());
     }
 
+    public function testSlugDefault()
+    {
+        $router = $this->makeRouter();
+        $router->setDefault(
+            new Route('/<controller>[/<action>[/<id>[-<title>]]]', new Group([
+                'test' => TestController::class
+            ]))
+        );
+
+        $uri = $router->uri('test:id', ['id' => 100, 'title' => 'Hello World']);
+        $this->assertSame('/test/id/100-hello-world', $uri->getPath());
+    }
+
+    /**
+     * @expectedException \Spiral\Router\Exceptions\RouteNotFoundException
+     */
+    public function testSlugNoDefault()
+    {
+        $router = $this->makeRouter();
+
+        $uri = $router->uri('test:id', ['id' => 100, 'title' => 'Hello World']);
+        $this->assertSame('/test/id/100-hello-world', $uri->getPath());
+    }
 }
