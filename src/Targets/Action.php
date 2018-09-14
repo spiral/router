@@ -49,14 +49,14 @@ final class Action extends AbstractTarget
 
         if (is_string($action)) {
             parent::__construct(
-                compact('action'),
+                ['action' => $action],
                 ['action' => new Autofill($action)],
                 $options
             );
         } else {
             parent::__construct(
                 ['action' => null],
-                compact('action'),
+                ['action' => $action],
                 $options
             );
         }
