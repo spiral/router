@@ -19,11 +19,11 @@ use Spiral\Router\Exceptions\UriHandlerException;
  */
 class UriHandler
 {
-    private const HOST_PREFIX      = '//';
-    private const DEFAULT_SEGMENT  = '[^\/]+';
+    private const HOST_PREFIX = '//';
+    private const DEFAULT_SEGMENT = '[^\/]+';
     private const PATTERN_REPLACES = ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.'];
     private const SEGMENT_REPLACES = ['/' => '\\/', '.' => '\.'];
-    private const URI_FIXERS       = [
+    private const URI_FIXERS = [
         '[]'  => '',
         '[/]' => '',
         '['   => '',
@@ -277,15 +277,7 @@ class UriHandler
         $replaces = [];
         foreach ($values as $key => $value) {
             $value = (is_array($value) || $value instanceof \Closure) ? '' : $value;
-
-            try {
-                //Object as string
-                $value = is_object($value) ? (string)$value : $value;
-            } catch (\Throwable $e) {
-                $value = '';
-            }
-
-            $replaces["<{$key}>"] = $value;
+            $replaces["<{$key}>"] = is_object($value) ? (string)$value : $value;
         }
 
         return strtr($string, $replaces + self::URI_FIXERS);
