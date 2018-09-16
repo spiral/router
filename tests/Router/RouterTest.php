@@ -42,7 +42,7 @@ class RouterTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteNotFoundException
+     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
      */
     public function testCastError()
     {

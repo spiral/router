@@ -17,7 +17,7 @@ use Zend\Diactoros\ServerRequest;
 class GroupTest extends BaseTest
 {
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteNotFoundException
+     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
      */
     public function testRouteException()
     {
@@ -52,7 +52,7 @@ class GroupTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteNotFoundException
+     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
      */
     public function testRouteOther()
     {

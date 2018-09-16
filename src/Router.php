@@ -13,8 +13,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Core\ScopeInterface;
-use Spiral\Router\Exceptions\RouteNotFoundException;
+use Spiral\Router\Exceptions\UndefinedRouteException;
 use Spiral\Router\Exceptions\RouterException;
+use Spiral\Router\Exceptions\RouteNotFoundException;
 
 /**
  * Manages set of routes.
@@ -53,7 +54,7 @@ class Router implements RouterInterface
         $route = $this->matchRoute($request);
 
         if (empty($route)) {
-            throw new RouteNotFoundException();
+            throw new RouteNotFoundException($request->getUri());
         }
 
         return $this->container->get(ScopeInterface::class)->runScope(
@@ -94,7 +95,7 @@ class Router implements RouterInterface
             return $this->routes[$name];
         }
 
-        throw new RouteNotFoundException("Undefined route `{$name}`");
+        throw new UndefinedRouteException("Undefined route `{$name}`");
     }
 
     /**
@@ -117,7 +118,7 @@ class Router implements RouterInterface
     {
         try {
             return $this->getRoute($route)->uri($parameters);
-        } catch (RouteNotFoundException $e) {
+        } catch (UndefinedRouteException $e) {
             //In some cases route name can be provided as controller:action pair, we can try to
             //generate such route automatically based on our default/fallback route
             return $this->castRoute($route)->uri($parameters);
@@ -176,7 +177,7 @@ class Router implements RouterInterface
      * @param string $route
      * @return RouteInterface
      *
-     * @throws RouteNotFoundException
+     * @throws UndefinedRouteException
      */
     protected function castRoute(string $route): RouteInterface
     {
@@ -185,7 +186,7 @@ class Router implements RouterInterface
             $route,
             $matches
         )) {
-            throw new RouteNotFoundException(
+            throw new UndefinedRouteException(
                 "Unable to locate route or use default route with 'name/controller:action' pattern."
             );
         }
@@ -195,9 +196,12 @@ class Router implements RouterInterface
         } elseif (!empty($this->default)) {
             $route = $this->default;
         } else {
-            throw new RouteNotFoundException("Unable to locate route candidate for `{$route}`.");
+            throw new UndefinedRouteException("Unable to locate route candidate for `{$route}`.");
         }
 
-        return $route->withDefaults(['controller' => $matches['controller'], 'action' => $matches['action']]);
+        return $route->withDefaults([
+            'controller' => $matches['controller'],
+            'action'     => $matches['action']
+        ]);
     }
 }

@@ -11,7 +11,7 @@ namespace Spiral\Router;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Router\Exceptions\RouteException;
-use Spiral\Router\Exceptions\RouteNotFoundException;
+use Spiral\Router\Exceptions\UndefinedRouteException;
 use Spiral\Router\Exceptions\RouterException;
 
 interface RouterInterface extends RequestHandlerInterface
@@ -38,7 +38,7 @@ interface RouterInterface extends RequestHandlerInterface
      *
      * @return RouteInterface
      *
-     * @throws RouteNotFoundException
+     * @throws UndefinedRouteException
      */
     public function getRoute(string $name): RouteInterface;
 
@@ -60,7 +60,7 @@ interface RouterInterface extends RequestHandlerInterface
      * @return UriInterface
      *
      * @throws RouteException
-     * @throws RouteNotFoundException
+     * @throws UndefinedRouteException
      */
     public function uri(string $route, $parameters = []): UriInterface;
 }

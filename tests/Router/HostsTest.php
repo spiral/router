@@ -16,7 +16,7 @@ use Zend\Diactoros\ServerRequest;
 class HostsTest extends BaseTest
 {
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteNotFoundException
+     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
      */
     public function testRouteException()
     {

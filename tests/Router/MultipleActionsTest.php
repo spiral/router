@@ -18,7 +18,7 @@ use Zend\Diactoros\ServerRequest;
 class MultipleActionsTest extends BaseTest
 {
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteNotFoundException
+     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
      */
     public function testRouteException()
     {

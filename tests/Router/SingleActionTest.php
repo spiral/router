@@ -9,7 +9,7 @@
 namespace Spiral\Router\Tests;
 
 use Spiral\Http\Uri;
-use Spiral\Router\Exceptions\RouteNotFoundException;
+use Spiral\Router\Exceptions\UndefinedRouteException;
 use Spiral\Router\Route;
 use Spiral\Router\Targets\Action;
 use Spiral\Router\Tests\Fixtures\TestController;
@@ -18,7 +18,7 @@ use Zend\Diactoros\ServerRequest;
 class SingleActionTest extends BaseTest
 {
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteNotFoundException
+     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
      */
     public function testRouteException()
     {
@@ -49,7 +49,7 @@ class SingleActionTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteNotFoundException
+     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
      */
     public function testVerbRoute()
     {
@@ -104,7 +104,7 @@ class SingleActionTest extends BaseTest
         $e = null;
         try {
             $router->handle(new ServerRequest([], [], new Uri('/test')));
-        } catch (RouteNotFoundException $e) {
+        } catch (UndefinedRouteException $e) {
         }
 
         $this->assertNotNull($e, 'Autofill not fired');
@@ -136,7 +136,7 @@ class SingleActionTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteNotFoundException
+     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
      */
     public function testParametrizedActionRouteNotFound()
     {
@@ -165,7 +165,7 @@ class SingleActionTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteNotFoundException
+     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
      */
     public function testWrongActionRoute()
     {
