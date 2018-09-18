@@ -13,13 +13,13 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Core\CoreInterface;
-use Spiral\Core\Exceptions\ControllerException;
-use Spiral\Http\Exceptions\ClientException;
-use Spiral\Http\Exceptions\ClientExceptions\BadRequestException;
-use Spiral\Http\Exceptions\ClientExceptions\ForbiddenException;
-use Spiral\Http\Exceptions\ClientExceptions\NotFoundException;
+use Spiral\Core\Exception\ControllerException;
+use Spiral\Http\Exception\ClientException;
+use Spiral\Http\Exception\ClientException\BadRequestException;
+use Spiral\Http\Exception\ClientException\ForbiddenException;
+use Spiral\Http\Exception\ClientException\NotFoundException;
 use Spiral\Http\Traits\JsonTrait;
-use Spiral\Router\Exceptions\HandlerException;
+use Spiral\Router\Exception\HandlerException;
 
 class CoreHandler implements RequestHandlerInterface
 {

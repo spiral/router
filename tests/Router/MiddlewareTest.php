@@ -14,7 +14,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Http\Uri;
 use Spiral\Router\Route;
-use Spiral\Router\Targets\Group;
+use Spiral\Router\Target\Group;
 use Spiral\Router\Tests\Fixtures\TestController;
 use Zend\Diactoros\ServerRequest;
 
@@ -85,7 +85,7 @@ class MiddlewareTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteException
+     * @expectedException \Spiral\Router\Exception\RouteException
      */
     public function testInvalid()
     {
@@ -105,7 +105,7 @@ class MiddlewareTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteException
+     * @expectedException \Spiral\Router\Exception\RouteException
      */
     public function testInvalid2()
     {
@@ -125,7 +125,7 @@ class MiddlewareTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteException
+     * @expectedException \Spiral\Router\Exception\RouteException
      */
     public function testPipelineException()
     {
@@ -141,7 +141,7 @@ class MiddlewareTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteException
+     * @expectedException \Spiral\Router\Exception\RouteException
      */
     public function testPipelineExceptionMiddleware()
     {

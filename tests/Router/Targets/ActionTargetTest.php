@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use Spiral\Http\Uri;
 use Spiral\Router\Autofill;
 use Spiral\Router\Route;
-use Spiral\Router\Targets\Action;
+use Spiral\Router\Target\Action;
 use Spiral\Router\Tests\Fixtures\TestController;
 use Zend\Diactoros\ServerRequest;
 
@@ -34,7 +34,7 @@ class ActionTargetTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\ConstrainException
+     * @expectedException \Spiral\Router\Exception\ConstrainException
      */
     public function testConstrainedAction()
     {
@@ -84,7 +84,7 @@ class ActionTargetTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\InvalidArgumentException
+     * @expectedException \Spiral\Router\Exception\InvalidArgumentException
      */
     public function testActionException()
     {

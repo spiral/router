@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Router\Exceptions;
+namespace Spiral\Router\Exception;
 
-class ConstrainException extends RouteException
+class RouteException extends RouterException
 {
 
 }

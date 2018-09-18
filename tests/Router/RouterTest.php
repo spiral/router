@@ -13,7 +13,7 @@ use Spiral\Router\Route;
 class RouterTest extends BaseTest
 {
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouterException
+     * @expectedException \Spiral\Router\Exception\RouterException
      */
     public function testDuplicate()
     {
@@ -42,7 +42,7 @@ class RouterTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
+     * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
     public function testCastError()
     {

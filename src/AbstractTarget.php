@@ -14,7 +14,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Spiral\Core\CoreInterface;
-use Spiral\Router\Exceptions\TargetException;
+use Spiral\Router\Exception\TargetException;
 
 abstract class AbstractTarget implements TargetInterface
 {

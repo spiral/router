@@ -11,7 +11,7 @@ namespace Spiral\Router\Tests\Targets;
 use PHPUnit\Framework\TestCase;
 use Spiral\Http\Uri;
 use Spiral\Router\Route;
-use Spiral\Router\Targets\Controller;
+use Spiral\Router\Target\Controller;
 use Spiral\Router\Tests\Fixtures\TestController;
 use Zend\Diactoros\ServerRequest;
 

@@ -11,7 +11,7 @@ namespace Spiral\Router\Tests\Targets;
 use PHPUnit\Framework\TestCase;
 use Spiral\Http\Uri;
 use Spiral\Router\Route;
-use Spiral\Router\Targets\Namespaced;
+use Spiral\Router\Target\Namespaced;
 use Zend\Diactoros\ServerRequest;
 
 class NamespacedTargetTest extends TestCase
@@ -23,7 +23,7 @@ class NamespacedTargetTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\ConstrainException
+     * @expectedException \Spiral\Router\Exception\ConstrainException
      */
     public function testConstrainedController()
     {
@@ -32,7 +32,7 @@ class NamespacedTargetTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\ConstrainException
+     * @expectedException \Spiral\Router\Exception\ConstrainException
      */
     public function testConstrainedAction()
     {

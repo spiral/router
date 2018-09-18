@@ -13,9 +13,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Core\ScopeInterface;
-use Spiral\Router\Exceptions\UndefinedRouteException;
-use Spiral\Router\Exceptions\RouterException;
-use Spiral\Router\Exceptions\RouteNotFoundException;
+use Spiral\Router\Exception\UndefinedRouteException;
+use Spiral\Router\Exception\RouterException;
+use Spiral\Router\Exception\RouteNotFoundException;
 
 /**
  * Manages set of routes.

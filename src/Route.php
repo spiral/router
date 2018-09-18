@@ -16,7 +16,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Http\CallableHandler;
-use Spiral\Router\Exceptions\RouteException;
+use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Traits\PipelineTrait;
 
 /**

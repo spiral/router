@@ -6,11 +6,11 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Router\Targets;
+namespace Spiral\Router\Target;
 
 use Spiral\Router\AbstractTarget;
 use Spiral\Router\Autofill;
-use Spiral\Router\Exceptions\InvalidArgumentException;
+use Spiral\Router\Exception\InvalidArgumentException;
 
 /**
  * Targets to specific controller action or actions.

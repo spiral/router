@@ -6,11 +6,11 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Router\Targets;
+namespace Spiral\Router\Target;
 
 use Doctrine\Common\Inflector\Inflector;
 use Spiral\Router\AbstractTarget;
-use Spiral\Router\Exceptions\TargetException;
+use Spiral\Router\Exception\TargetException;
 
 /**
  * Provides ability to invoke any controller from given namespace.

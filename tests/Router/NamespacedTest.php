@@ -10,13 +10,13 @@ namespace Spiral\Router\Tests;
 
 use Spiral\Http\Uri;
 use Spiral\Router\Route;
-use Spiral\Router\Targets\Namespaced;
+use Spiral\Router\Target\Namespaced;
 use Zend\Diactoros\ServerRequest;
 
 class NamespacedTest extends BaseTest
 {
     /**
-     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
+     * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
     public function testRouteException()
     {
@@ -57,7 +57,7 @@ class NamespacedTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\TargetException
+     * @expectedException \Spiral\Router\Exception\TargetException
      */
     public function testBypass()
     {

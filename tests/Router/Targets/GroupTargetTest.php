@@ -11,7 +11,7 @@ namespace Spiral\Router\Tests\Targets;
 use PHPUnit\Framework\TestCase;
 use Spiral\Http\Uri;
 use Spiral\Router\Route;
-use Spiral\Router\Targets\Group;
+use Spiral\Router\Target\Group;
 use Spiral\Router\Tests\Fixtures\TestController;
 use Zend\Diactoros\ServerRequest;
 
@@ -24,7 +24,7 @@ class GroupTargetTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\ConstrainException
+     * @expectedException \Spiral\Router\Exception\ConstrainException
      */
     public function testConstrainedController()
     {
@@ -33,7 +33,7 @@ class GroupTargetTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\ConstrainException
+     * @expectedException \Spiral\Router\Exception\ConstrainException
      */
     public function testConstrainedAction()
     {

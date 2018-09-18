@@ -43,7 +43,7 @@ interface TargetInterface
      *
      * @return Handler
      *
-     * @throws \Spiral\Router\Exceptions\TargetException
+     * @throws \Spiral\Router\Exception\TargetException
      */
     public function getHandler(ContainerInterface $container, array $matches): Handler;
 }

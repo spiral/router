@@ -11,8 +11,8 @@ namespace Spiral\Router;
 use Cocur\Slugify\SlugifyInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Http\Uri;
-use Spiral\Router\Exceptions\ConstrainException;
-use Spiral\Router\Exceptions\UriHandlerException;
+use Spiral\Router\Exception\ConstrainException;
+use Spiral\Router\Exception\UriHandlerException;
 
 /**
  * UriMatcher provides ability to match and generate uris based on given parameters.

@@ -6,10 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Router\Exceptions;
+namespace Spiral\Router\Exception;
 
-
-class UriHandlerException extends \RuntimeException
+class UndefinedRouteException extends RouterException
 {
 
 }

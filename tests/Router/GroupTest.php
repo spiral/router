@@ -10,14 +10,14 @@ namespace Spiral\Router\Tests;
 
 use Spiral\Http\Uri;
 use Spiral\Router\Route;
-use Spiral\Router\Targets\Group;
+use Spiral\Router\Target\Group;
 use Spiral\Router\Tests\Fixtures\TestController;
 use Zend\Diactoros\ServerRequest;
 
 class GroupTest extends BaseTest
 {
     /**
-     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
+     * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
     public function testRouteException()
     {
@@ -52,7 +52,7 @@ class GroupTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
+     * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
     public function testRouteOther()
     {
@@ -68,7 +68,7 @@ class GroupTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\UriHandlerException
+     * @expectedException \Spiral\Router\Exception\UriHandlerException
      */
     public function testUriInvalid()
     {
@@ -84,7 +84,7 @@ class GroupTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\UriHandlerException
+     * @expectedException \Spiral\Router\Exception\UriHandlerException
      */
     public function testUriInvalidNoAction()
     {
@@ -100,7 +100,7 @@ class GroupTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Http\Exceptions\ClientExceptions\NotFoundException
+     * @expectedException \Spiral\Http\Exception\ClientException\NotFoundException
      */
     public function testClientException()
     {

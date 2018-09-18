@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Router\Targets;
+namespace Spiral\Router\Target;
 
 use Spiral\Router\AbstractTarget;
 

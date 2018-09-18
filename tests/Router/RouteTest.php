@@ -23,7 +23,7 @@ class RouteTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteException
+     * @expectedException \Spiral\Router\Exception\RouteException
      */
     public function testContainerException()
     {

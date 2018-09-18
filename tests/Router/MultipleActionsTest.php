@@ -11,14 +11,14 @@ namespace Spiral\Router\Tests;
 
 use Spiral\Http\Uri;
 use Spiral\Router\Route;
-use Spiral\Router\Targets\Action;
+use Spiral\Router\Target\Action;
 use Spiral\Router\Tests\Fixtures\TestController;
 use Zend\Diactoros\ServerRequest;
 
 class MultipleActionsTest extends BaseTest
 {
     /**
-     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
+     * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
     public function testRouteException()
     {

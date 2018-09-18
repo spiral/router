@@ -11,14 +11,14 @@ namespace Spiral\Router\Tests;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Router\CoreHandler;
-use Spiral\Router\Targets\Action;
+use Spiral\Router\Target\Action;
 use Spiral\Router\Tests\Fixtures\TestController;
 use Zend\Diactoros\ServerRequest;
 
 class CoreTest extends BaseTest
 {
     /**
-     * @expectedException \Spiral\Router\Exceptions\TargetException
+     * @expectedException \Spiral\Router\Exception\TargetException
      */
     public function testMissingBinding()
     {
@@ -93,7 +93,7 @@ class CoreTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Http\Exceptions\ClientExceptions\ForbiddenException
+     * @expectedException \Spiral\Http\Exception\ClientException\ForbiddenException
      */
     public function testForbidden()
     {
@@ -102,7 +102,7 @@ class CoreTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Http\Exceptions\ClientExceptions\NotFoundException
+     * @expectedException \Spiral\Http\Exception\ClientException\NotFoundException
      */
     public function testNotFound()
     {
@@ -111,7 +111,7 @@ class CoreTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Http\Exceptions\ClientExceptions\BadRequestException
+     * @expectedException \Spiral\Http\Exception\ClientException\BadRequestException
      */
     public function testBadRequest()
     {
@@ -120,7 +120,7 @@ class CoreTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\HandlerException
+     * @expectedException \Spiral\Router\Exception\HandlerException
      */
     public function testCoreException()
     {

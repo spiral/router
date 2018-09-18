@@ -11,14 +11,14 @@ namespace Spiral\Router\Tests;
 
 use Spiral\Http\Uri;
 use Spiral\Router\Route;
-use Spiral\Router\Targets\Controller;
+use Spiral\Router\Target\Controller;
 use Spiral\Router\Tests\Fixtures\TestController;
 use Zend\Diactoros\ServerRequest;
 
 class ControllerTest extends BaseTest
 {
     /**
-     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
+     * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
     public function testRouteException()
     {
@@ -68,7 +68,7 @@ class ControllerTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Http\Exceptions\ClientExceptions\NotFoundException
+     * @expectedException \Spiral\Http\Exception\ClientException\NotFoundException
      */
     public function testClientException()
     {

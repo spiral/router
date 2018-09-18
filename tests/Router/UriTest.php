@@ -9,7 +9,7 @@
 namespace Spiral\Router\Tests;
 
 use Spiral\Router\Route;
-use Spiral\Router\Targets\Group;
+use Spiral\Router\Target\Group;
 use Spiral\Router\Tests\Fixtures\TestController;
 
 class UriTest extends BaseTest
@@ -85,7 +85,7 @@ class UriTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
+     * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
     public function testSlugNoDefault()
     {

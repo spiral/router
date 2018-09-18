@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Router\Exceptions;
+namespace Spiral\Router\Exception;
 
-class RouteException extends RouterException
+class RouterException extends \RuntimeException
 {
 
 }

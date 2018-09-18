@@ -9,16 +9,16 @@
 namespace Spiral\Router\Tests;
 
 use Spiral\Http\Uri;
-use Spiral\Router\Exceptions\UndefinedRouteException;
+use Spiral\Router\Exception\UndefinedRouteException;
 use Spiral\Router\Route;
-use Spiral\Router\Targets\Action;
+use Spiral\Router\Target\Action;
 use Spiral\Router\Tests\Fixtures\TestController;
 use Zend\Diactoros\ServerRequest;
 
 class SingleActionTest extends BaseTest
 {
     /**
-     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
+     * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
     public function testRouteException()
     {
@@ -49,7 +49,7 @@ class SingleActionTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
+     * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
     public function testVerbRoute()
     {
@@ -111,7 +111,7 @@ class SingleActionTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteException
+     * @expectedException \Spiral\Router\Exception\RouteException
      */
     public function testVerbException()
     {
@@ -136,7 +136,7 @@ class SingleActionTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
+     * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
     public function testParametrizedActionRouteNotFound()
     {
@@ -165,7 +165,7 @@ class SingleActionTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\UndefinedRouteException
+     * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
     public function testWrongActionRoute()
     {

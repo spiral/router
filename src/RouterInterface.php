@@ -10,9 +10,9 @@ namespace Spiral\Router;
 
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Spiral\Router\Exceptions\RouteException;
-use Spiral\Router\Exceptions\UndefinedRouteException;
-use Spiral\Router\Exceptions\RouterException;
+use Spiral\Router\Exception\RouteException;
+use Spiral\Router\Exception\UndefinedRouteException;
+use Spiral\Router\Exception\RouterException;
 
 interface RouterInterface extends RequestHandlerInterface
 {

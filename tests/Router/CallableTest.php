@@ -86,7 +86,7 @@ class CallableTest extends BaseTest
     }
 
     /**
-     * @expectedException \Spiral\Router\Exceptions\RouteException
+     * @expectedException \Spiral\Router\Exception\RouteException
      */
     public function testInvalidTarget()
     {

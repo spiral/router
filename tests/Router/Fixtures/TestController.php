@@ -9,7 +9,7 @@
 namespace Spiral\Router\Tests\Fixtures;
 
 use Spiral\Core\Controller;
-use Spiral\Core\Exceptions\ControllerException;
+use Spiral\Core\Exception\ControllerException;
 use Zend\Diactoros\Response;
 
 class TestController extends Controller
