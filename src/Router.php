@@ -58,7 +58,7 @@ class Router implements RouterInterface
         }
 
         return $this->container->get(ScopeInterface::class)->runScope(
-            [RouteInterface::class => $this],
+            [RouteInterface::class => $route],
             function () use ($route, $request) {
                 return $route->handle($request);
             }
