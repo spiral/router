@@ -37,7 +37,6 @@ class HostsTest extends BaseTest
             new Action(TestController::class, 'test')
         ));
 
-
         $this->assertNotNull(
             $r = $router->handle(new ServerRequest([], [], 'http://domain.com/'))
         );

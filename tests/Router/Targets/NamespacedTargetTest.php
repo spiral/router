@@ -69,4 +69,40 @@ class NamespacedTargetTest extends TestCase
 
         $this->assertSame(['controller' => 'other', 'action' => 'action'], $match->getMatches());
     }
+
+    /**
+     * @dataProvider defaultProvider
+     *
+     * @param string $pattern
+     * @param string $uri
+     * @param array  $defaults
+     */
+    public function testDefaults(string $pattern, string $uri, array $defaults)
+    {
+        $route = new Route($pattern, new Namespaced('Spiral\Router\Fixtures'), $defaults);
+        $request = new ServerRequest([], [], new Uri($uri));
+
+        $match = $route->match($request);
+        $this->assertNotNull($match);
+    }
+
+    public function defaultProvider(): array
+    {
+        return [
+            ['<controller>[/<action>]', '/home', ['controller' => 'home', 'action' => 'test']],
+            ['<controller>[/<action>]', '/home/test', ['controller' => 'home', 'action' => 'test']],
+            ['/<controller>[/<action>]', '/home', ['controller' => 'home', 'action' => 'test']],
+            ['/<controller>[/<action>]', '/home/test', ['controller' => 'home', 'action' => 'test']],
+
+            ['[<controller>[/<action>]]', '/home', ['controller' => 'home', 'action' => 'test']],
+            ['[<controller>[/<action>]]', '/home/test', ['controller' => 'home', 'action' => 'test']],
+            ['[<controller>[/<action>]]', '/', ['controller' => 'home', 'action' => 'test']],
+            ['[<controller>[/<action>]]', '', ['controller' => 'home', 'action' => 'test']],
+
+            ['[/<controller>[/<action>]]', '/home', ['controller' => 'home', 'action' => 'test']],
+            ['[/<controller>[/<action>]]', '/home/test', ['controller' => 'home', 'action' => 'test']],
+            ['[/<controller>[/<action>]]', '/', ['controller' => 'home', 'action' => 'test']],
+            ['[/<controller>[/<action>]]', '', ['controller' => 'home', 'action' => 'test']],
+        ];
+    }
 }

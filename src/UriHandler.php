@@ -19,11 +19,11 @@ use Spiral\Router\Exception\UriHandlerException;
  */
 class UriHandler
 {
-    private const HOST_PREFIX = '//';
-    private const DEFAULT_SEGMENT = '[^\/]+';
+    private const HOST_PREFIX      = '//';
+    private const DEFAULT_SEGMENT  = '[^\/]+';
     private const PATTERN_REPLACES = ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.'];
     private const SEGMENT_REPLACES = ['/' => '\\/', '.' => '\.'];
-    private const URI_FIXERS = [
+    private const URI_FIXERS       = [
         '[]'  => '',
         '[/]' => '',
         '['   => '',
@@ -230,6 +230,11 @@ class UriHandler
     {
         $options = $replaces = [];
         $pattern = rtrim(ltrim($this->pattern, ':/'), '/');
+
+        // correct [/ first occurrence]
+        if (strpos($pattern, '[/') === 0) {
+            $pattern = '[' . substr($pattern, 2);
+        }
 
         if (preg_match_all('/<(\w+):?(.*?)?>/', $pattern, $matches)) {
             $variables = array_combine($matches[1], $matches[2]);
