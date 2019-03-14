@@ -84,6 +84,10 @@ class NamespacedTargetTest extends TestCase
 
         $match = $route->match($request);
         $this->assertNotNull($match);
+
+        $values = $match->getMatches();
+        $this->assertNotNull($values['controller']);
+        $this->assertNotNull($values['action']);
     }
 
     public function defaultProvider(): array
