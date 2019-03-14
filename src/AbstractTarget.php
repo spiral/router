@@ -19,7 +19,7 @@ use Spiral\Router\Exception\TargetException;
 abstract class AbstractTarget implements TargetInterface
 {
     // Automatically prepend HTTP verb to all action names.
-    const RESTFUL = 1;
+    public const RESTFUL = 1;
 
     /** @var array */
     private $defaults = [];
