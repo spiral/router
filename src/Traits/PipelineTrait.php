@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Router\Traits;
 
@@ -34,7 +35,6 @@ trait PipelineTrait
      * $route->withMiddleware([ProxyMiddleware::class, OtherMiddleware::class]);
      *
      * @param MiddlewareInterface|string|array ...$middleware
-     *
      * @return RouteInterface|$this
      *
      * @throws RouteException
@@ -73,6 +73,7 @@ trait PipelineTrait
      * Get associated route pipeline.
      *
      * @return Pipeline
+     *
      * @throws RouteException
      */
     protected function makePipeline(): Pipeline

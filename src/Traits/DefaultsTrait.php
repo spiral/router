@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Router\Traits;
 
@@ -19,7 +20,6 @@ trait DefaultsTrait
      * Returns new route instance with forced default values.
      *
      * @param array $defaults
-     *
      * @return RouteInterface|$this
      */
     public function withDefaults(array $defaults): RouteInterface

@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Router;
 
@@ -13,14 +14,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Spiral\Core\ScopeInterface;
-use Spiral\Router\Exception\UndefinedRouteException;
-use Spiral\Router\Exception\RouterException;
+use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Exception\RouteNotFoundException;
+use Spiral\Router\Exception\RouterException;
+use Spiral\Router\Exception\UndefinedRouteException;
 
 /**
  * Manages set of routes.
  */
-class Router implements RouterInterface
+final class Router implements RouterInterface
 {
     /** @var string */
     private $basePath = '/';
@@ -48,10 +50,15 @@ class Router implements RouterInterface
      * @inheritdoc
      *
      * @throws RouteNotFoundException
+     * @throws RouterException
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $route = $this->matchRoute($request);
+        try {
+            $route = $this->matchRoute($request);
+        } catch (RouteException $e) {
+            throw new RouterException("Invalid route definition", $e->getCode(), $e);
+        }
 
         if (empty($route)) {
             throw new RouteNotFoundException($request->getUri());
@@ -129,7 +136,7 @@ class Router implements RouterInterface
      * Find route matched for given request.
      *
      * @param ServerRequestInterface $request
-     *
+
      * @return null|RouteInterface
      */
     protected function matchRoute(ServerRequestInterface $request): ?RouteInterface
@@ -155,7 +162,7 @@ class Router implements RouterInterface
      * Configure route with needed dependencies.
      *
      * @param RouteInterface $route
-     *
+
      * @return RouteInterface
      */
     protected function configure(RouteInterface $route): RouteInterface

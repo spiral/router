@@ -5,8 +5,9 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
-namespace Spiral\Router;
+namespace Spiral\Router\Target;
 
 use Doctrine\Common\Inflector\Inflector;
 use Psr\Container\ContainerExceptionInterface;
@@ -14,7 +15,9 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Spiral\Core\CoreInterface;
+use Spiral\Router\CoreHandler;
 use Spiral\Router\Exception\TargetException;
+use Spiral\Router\TargetInterface;
 
 abstract class AbstractTarget implements TargetInterface
 {
@@ -45,7 +48,7 @@ abstract class AbstractTarget implements TargetInterface
     {
         $this->defaults = $defaults;
         $this->constrains = $constrains;
-        $this->verbActions = $options & self::RESTFUL;
+        $this->verbActions = ($options & self::RESTFUL) === self::RESTFUL;
     }
 
     /**
@@ -66,7 +69,6 @@ abstract class AbstractTarget implements TargetInterface
 
     /**
      * @param CoreInterface $core
-     *
      * @return TargetInterface|$this
      */
     public function withCore(CoreInterface $core): TargetInterface
@@ -94,7 +96,6 @@ abstract class AbstractTarget implements TargetInterface
 
     /**
      * @param ContainerInterface $container
-     *
      * @return CoreHandler
      */
     protected function coreHandler(ContainerInterface $container): CoreHandler
@@ -119,7 +120,6 @@ abstract class AbstractTarget implements TargetInterface
      * Return controller class name.
      *
      * @param array $matches
-     *
      * @return string
      *
      * @throws TargetException
@@ -130,7 +130,6 @@ abstract class AbstractTarget implements TargetInterface
      * Return target controller action.
      *
      * @param array $matches
-     *
      * @return string
      *
      * @throws TargetException

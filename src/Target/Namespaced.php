@@ -5,11 +5,11 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Router\Target;
 
 use Doctrine\Common\Inflector\Inflector;
-use Spiral\Router\AbstractTarget;
 use Spiral\Router\Exception\TargetException;
 
 /**

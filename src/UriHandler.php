@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Router;
 
@@ -17,7 +18,7 @@ use Spiral\Router\Exception\UriHandlerException;
 /**
  * UriMatcher provides ability to match and generate uris based on given parameters.
  */
-class UriHandler
+final class UriHandler
 {
     private const HOST_PREFIX      = '//';
     private const DEFAULT_SEGMENT  = '[^\/]+';
@@ -110,7 +111,6 @@ class UriHandler
      *
      * @param UriInterface $uri
      * @param array        $defaults
-     *
      * @return array|null
      */
     public function match(UriInterface $uri, array $defaults): ?array
@@ -134,7 +134,6 @@ class UriHandler
      *
      * @param array|\Traversable $parameters
      * @param array              $defaults
-     *
      * @return UriInterface
      */
     public function uri($parameters = [], array $defaults = []): UriInterface
@@ -169,7 +168,6 @@ class UriHandler
      *
      * @param \Traversable|array $parameters
      * @param array|null         $query Query parameters.
-     *
      * @return array
      */
     private function fetchOptions($parameters, &$query): array
@@ -203,7 +201,6 @@ class UriHandler
      * Part of uri path which is being matched.
      *
      * @param UriInterface $uri
-     *
      * @return string
      */
     private function fetchTarget(UriInterface $uri): string
@@ -274,7 +271,6 @@ class UriHandler
      *
      * @param string $string
      * @param array  $values
-     *
      * @return string
      */
     private function interpolate(string $string, array $values): string
@@ -293,7 +289,6 @@ class UriHandler
      *
      * @param string $name
      * @param string $segment
-     *
      * @return string
      */
     private function prepareSegment(string $name, string $segment): string
@@ -312,12 +307,11 @@ class UriHandler
             return join('|', $values);
         }
 
-        return $this->filterSegment($this->constrains[$name]);
+        return $this->filterSegment((string)$this->constrains[$name]);
     }
 
     /**
      * @param string $segment
-     *
      * @return string
      */
     private function filterSegment(string $segment): string

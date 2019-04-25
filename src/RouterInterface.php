@@ -5,14 +5,15 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Router;
 
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Router\Exception\RouteException;
-use Spiral\Router\Exception\UndefinedRouteException;
 use Spiral\Router\Exception\RouterException;
+use Spiral\Router\Exception\UndefinedRouteException;
 
 interface RouterInterface extends RequestHandlerInterface
 {
@@ -35,7 +36,6 @@ interface RouterInterface extends RequestHandlerInterface
      * Get route by it's name.
      *
      * @param string $name
-     *
      * @return RouteInterface
      *
      * @throws UndefinedRouteException
@@ -56,7 +56,6 @@ interface RouterInterface extends RequestHandlerInterface
      *
      * @param string             $route      Route name.
      * @param array|\Traversable $parameters Routing parameters.
-     *
      * @return UriInterface
      *
      * @throws RouteException

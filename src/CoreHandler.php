@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Router;
 
@@ -21,7 +22,7 @@ use Spiral\Http\Exception\ClientException\NotFoundException;
 use Spiral\Http\Traits\JsonTrait;
 use Spiral\Router\Exception\HandlerException;
 
-class CoreHandler implements RequestHandlerInterface
+final class CoreHandler implements RequestHandlerInterface
 {
     use JsonTrait;
 
@@ -57,7 +58,6 @@ class CoreHandler implements RequestHandlerInterface
      * @param string $controller
      * @param string $action
      * @param array  $parameters
-     *
      * @return CoreHandler
      */
     public function withContext(string $controller, ?string $action, array $parameters): CoreHandler
@@ -144,7 +144,6 @@ class CoreHandler implements RequestHandlerInterface
      * @param Response $response Initial pipeline response.
      * @param mixed    $result   Generated endpoint output.
      * @param string   $output   Buffer output.
-     *
      * @return Response
      */
     private function wrapResponse(Response $response, $result = null, string $output = ''): Response
@@ -173,7 +172,6 @@ class CoreHandler implements RequestHandlerInterface
      * Converts core specific ControllerException into HTTP ClientException.
      *
      * @param ControllerException $exception
-     *
      * @return ClientException
      */
     private function mapException(ControllerException $exception): ClientException

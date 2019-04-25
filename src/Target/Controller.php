@@ -5,10 +5,9 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Router\Target;
-
-use Spiral\Router\AbstractTarget;
 
 /**
  * Targets to all actions in specific controller. Variation of Action without action constrain.

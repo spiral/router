@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Router;
 
@@ -17,6 +18,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Http\CallableHandler;
 use Spiral\Router\Exception\RouteException;
+use Spiral\Router\Exception\TargetException;
 use Spiral\Router\Traits\PipelineTrait;
 
 /**
@@ -37,7 +39,7 @@ use Spiral\Router\Traits\PipelineTrait;
  * new Route("/<controller>/<action>/<id>", new Group(["profile" =>
  * \App\Controllers|ProfileController::class]);
  */
-class Route extends AbstractRoute implements ContainerizedInterface
+final class Route extends AbstractRoute implements ContainerizedInterface
 {
     use PipelineTrait;
 
@@ -69,7 +71,6 @@ class Route extends AbstractRoute implements ContainerizedInterface
      * Associated route with given container.
      *
      * @param ContainerInterface $container
-     *
      * @return ContainerizedInterface|$this
      */
     public function withContainer(ContainerInterface $container): ContainerizedInterface
@@ -87,7 +88,6 @@ class Route extends AbstractRoute implements ContainerizedInterface
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      *
      * @throws RouteException
@@ -116,7 +116,11 @@ class Route extends AbstractRoute implements ContainerizedInterface
         }
 
         if ($this->target instanceof TargetInterface) {
-            return $this->target->getHandler($this->container, $this->matches);
+            try {
+                return $this->target->getHandler($this->container, $this->matches);
+            } catch (TargetException $e) {
+                throw new RouteException("Invalid target resolution", $e->getCode(), $e);
+            }
         }
 
         if ($this->target instanceof RequestHandlerInterface) {

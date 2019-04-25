@@ -5,6 +5,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+declare(strict_types=1);
 
 namespace Spiral\Router;
 
@@ -40,7 +41,6 @@ interface TargetInterface
      *
      * @param ContainerInterface $container
      * @param array              $matches
-     *
      * @return Handler
      *
      * @throws \Spiral\Router\Exception\TargetException
