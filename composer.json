@@ -11,6 +11,7 @@
   ],
   "require": {
     "php": "^7.1",
+    "ext-json": "*",
     "spiral/core": "^1.0",
     "spiral/hmvc": "^1.0",
     "spiral/http": "^1.0",
