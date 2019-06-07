@@ -159,7 +159,7 @@ final class CoreHandler implements RequestHandlerInterface
         if (is_array($result) || $result instanceof \JsonSerializable) {
             $response = $this->writeJson($response, $result);
         } else {
-            $response->getBody()->write($result);
+            $response->getBody()->write((string)$result);
         }
 
         //Always glue buffered output
