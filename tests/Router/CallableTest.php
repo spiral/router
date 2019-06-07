@@ -11,10 +11,10 @@ namespace Spiral\Router\Tests;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Spiral\Http\Uri;
 use Spiral\Router\Route;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Uri;
 
 class CallableTest extends BaseTest
 {

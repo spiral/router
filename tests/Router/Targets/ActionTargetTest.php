@@ -9,28 +9,36 @@
 namespace Spiral\Router\Tests\Targets;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Http\Uri;
 use Spiral\Router\Autofill;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Action;
+use Spiral\Router\Tests\Diactoros\UriFactory;
 use Spiral\Router\Tests\Fixtures\TestController;
+use Spiral\Router\UriHandler;
 use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Uri;
 
 class ActionTargetTest extends TestCase
 {
     public function testDefaultAction()
     {
         $route = new Route("/home", new Action(TestController::class, "test"));
+        $route = $route->withUriHandler(new UriHandler(new UriFactory()));
+
         $this->assertSame(['action' => 'test'], $route->getDefaults());
     }
 
     public function testConstrains()
     {
         $route = new Route("/home", new Action(TestController::class, "test"));
-        $this->assertEquals(['action' => new Autofill('test')], $route->getConstrains());
+        $route = $route->withUriHandler(new UriHandler(new UriFactory()));
+
+        $this->assertEquals(['action' => new Autofill('test')], $route->getUriHandler()->getConstrains());
 
         $route = new Route("/<action>", new Action(TestController::class, ["test", "other"]));
-        $this->assertSame(['action' => ["test", "other"]], $route->getConstrains());
+        $route = $route->withUriHandler(new UriHandler(new UriFactory()));
+
+        $this->assertSame(['action' => ["test", "other"]], $route->getUriHandler()->getConstrains());
     }
 
     /**
@@ -39,6 +47,8 @@ class ActionTargetTest extends TestCase
     public function testConstrainedAction()
     {
         $route = new Route("/home", new Action(TestController::class, ["test", "other"]));
+        $route = $route->withUriHandler(new UriHandler(new UriFactory()));
+
         $route->match(new ServerRequest());
     }
 
@@ -48,6 +58,7 @@ class ActionTargetTest extends TestCase
             "/test[/<action>]",
             new Action(TestController::class, ["test", "other"])
         );
+        $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $route = $route->withDefaults(['action' => 'test']);
 

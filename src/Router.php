@@ -33,16 +33,21 @@ final class Router implements RouterInterface
     /** @var RouteInterface */
     private $default = null;
 
+    /** @var UriHandler */
+    private $uriHandler;
+
     /** @var ContainerInterface */
     private $container;
 
     /**
      * @param string             $basePath
+     * @param UriHandler         $uriHandler
      * @param ContainerInterface $container
      */
-    public function __construct(string $basePath, ContainerInterface $container)
+    public function __construct(string $basePath, UriHandler $uriHandler, ContainerInterface $container)
     {
         $this->basePath = '/' . ltrim($basePath, '/');
+        $this->uriHandler = $uriHandler;
         $this->container = $container;
     }
 
@@ -136,7 +141,6 @@ final class Router implements RouterInterface
      * Find route matched for given request.
      *
      * @param ServerRequestInterface $request
-
      * @return null|RouteInterface
      */
     protected function matchRoute(ServerRequestInterface $request): ?RouteInterface
@@ -162,7 +166,6 @@ final class Router implements RouterInterface
      * Configure route with needed dependencies.
      *
      * @param RouteInterface $route
-
      * @return RouteInterface
      */
     protected function configure(RouteInterface $route): RouteInterface
@@ -172,7 +175,7 @@ final class Router implements RouterInterface
             $route = $route->withContainer($this->container);
         }
 
-        return $route->withPrefix($this->basePath);
+        return $route->withUriHandler($this->uriHandler->withPrefix($this->basePath));
     }
 
     /**

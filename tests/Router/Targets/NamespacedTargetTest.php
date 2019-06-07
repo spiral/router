@@ -9,16 +9,20 @@
 namespace Spiral\Router\Tests\Targets;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Http\Uri;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Namespaced;
+use Spiral\Router\Tests\Diactoros\UriFactory;
+use Spiral\Router\UriHandler;
 use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Uri;
 
 class NamespacedTargetTest extends TestCase
 {
     public function testDefaultAction()
     {
         $route = new Route("/<controller>/<action>", new Namespaced('Spiral\Router\Fixtures'));
+        $route = $route->withUriHandler(new UriHandler(new UriFactory()));
+
         $this->assertSame(['controller' => null, 'action' => null], $route->getDefaults());
     }
 
@@ -28,6 +32,8 @@ class NamespacedTargetTest extends TestCase
     public function testConstrainedController()
     {
         $route = new Route("/<action>", new Namespaced('Spiral\Router\Fixtures'));
+        $route = $route->withUriHandler(new UriHandler(new UriFactory()));
+
         $route->match(new ServerRequest());
     }
 
@@ -37,6 +43,8 @@ class NamespacedTargetTest extends TestCase
     public function testConstrainedAction()
     {
         $route = new Route("/<controller>", new Namespaced('Spiral\Router\Fixtures'));
+        $route = $route->withUriHandler(new UriHandler(new UriFactory()));
+
         $route->match(new ServerRequest());
     }
 
@@ -46,6 +54,7 @@ class NamespacedTargetTest extends TestCase
             "/<controller>[/<action>]",
             new Namespaced('Spiral\Router\Fixtures')
         );
+        $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $route = $route->withDefaults(['controller' => 'test']);
 
@@ -80,6 +89,8 @@ class NamespacedTargetTest extends TestCase
     public function testDefaults(string $pattern, string $uri, array $defaults)
     {
         $route = new Route($pattern, new Namespaced('Spiral\Router\Fixtures'), $defaults);
+        $route = $route->withUriHandler(new UriHandler(new UriFactory()));
+
         $request = new ServerRequest([], [], new Uri($uri));
 
         $match = $route->match($request);

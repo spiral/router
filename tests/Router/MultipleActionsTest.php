@@ -8,12 +8,11 @@
 
 namespace Spiral\Router\Tests;
 
-
-use Spiral\Http\Uri;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Action;
 use Spiral\Router\Tests\Fixtures\TestController;
 use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Uri;
 
 class MultipleActionsTest extends BaseTest
 {

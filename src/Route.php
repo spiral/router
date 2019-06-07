@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Spiral\Router;
 
-use Cocur\Slugify\Slugify;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -58,13 +57,28 @@ final class Route extends AbstractRoute implements ContainerizedInterface
      */
     public function __construct(string $pattern, $target, array $defaults = [])
     {
-        $this->target = $target;
         if ($target instanceof TargetInterface) {
-            $this->defaults = array_merge($target->getDefaults(), $defaults);
-            $this->uriHandler = new UriHandler($pattern, new Slugify(), $target->getConstrains());
+            parent::__construct($pattern, array_merge($target->getDefaults(), $defaults));
         } else {
             parent::__construct($pattern, $defaults);
         }
+
+        $this->target = $target;
+    }
+
+    /**
+     * @param UriHandler $uriHandler
+     * @return RouteInterface
+     */
+    public function withUriHandler(UriHandler $uriHandler): RouteInterface
+    {
+        /** @var self $route */
+        $route = parent::withUriHandler($uriHandler);
+        if ($this->target instanceof TargetInterface) {
+            $route->uriHandler = $route->uriHandler->withConstrains($this->target->getConstrains());
+        }
+
+        return $route;
     }
 
     /**
@@ -77,6 +91,7 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     {
         $route = clone $this;
         $route->container = $container;
+
         if ($route->target instanceof TargetInterface) {
             $route->target = clone $route->target;
         }

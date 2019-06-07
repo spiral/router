@@ -9,17 +9,21 @@
 namespace Spiral\Router\Tests\Targets;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Http\Uri;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Group;
+use Spiral\Router\Tests\Diactoros\UriFactory;
 use Spiral\Router\Tests\Fixtures\TestController;
+use Spiral\Router\UriHandler;
 use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Uri;
 
 class GroupTargetTest extends TestCase
 {
     public function testDefaultAction()
     {
         $route = new Route("/<controller>/<action>", new Group(['test' => TestController::class]));
+        $route = $route->withUriHandler(new UriHandler(new UriFactory()));
+
         $this->assertSame(['controller' => null, 'action' => null], $route->getDefaults());
     }
 
@@ -29,6 +33,8 @@ class GroupTargetTest extends TestCase
     public function testConstrainedController()
     {
         $route = new Route("/<action>", new Group(['test' => TestController::class]));
+        $route = $route->withUriHandler(new UriHandler(new UriFactory()));
+
         $route->match(new ServerRequest());
     }
 
@@ -38,6 +44,7 @@ class GroupTargetTest extends TestCase
     public function testConstrainedAction()
     {
         $route = new Route("/<controller>", new Group(['test' => TestController::class]));
+        $route = $route->withUriHandler(new UriHandler(new UriFactory()));
         $route->match(new ServerRequest());
     }
 
@@ -47,6 +54,8 @@ class GroupTargetTest extends TestCase
             "/<controller>[/<action>]",
             new Group(['test' => TestController::class])
         );
+
+        $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $route = $route->withDefaults(['controller' => 'test']);
 

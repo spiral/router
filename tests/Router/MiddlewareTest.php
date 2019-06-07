@@ -12,11 +12,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Spiral\Http\Uri;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Group;
+use Spiral\Router\Tests\Diactoros\UriFactory;
 use Spiral\Router\Tests\Fixtures\TestController;
+use Spiral\Router\UriHandler;
 use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Uri;
 
 class MiddlewareTest extends BaseTest
 {
@@ -132,6 +134,7 @@ class MiddlewareTest extends BaseTest
         $r = (new Route('/<controller>[/<action>[/<id>]]', new Group([
             'test' => TestController::class
         ])))->withMiddleware([new HeaderMiddleware(), HeaderMiddleware::class]);
+        $r = $r->withUriHandler(new UriHandler(new UriFactory()));
 
         $r = $r->match(new ServerRequest([], [], new Uri('/test')));
         $response = $r->handle(new ServerRequest([], [], new Uri('/test')));
@@ -148,6 +151,7 @@ class MiddlewareTest extends BaseTest
         $r = (new Route('/<controller>[/<action>[/<id>]]', new Group([
             'test' => TestController::class
         ])))->withMiddleware([new HeaderMiddleware(), 'other']);
+        $r = $r->withUriHandler(new UriHandler(new UriFactory()));
 
         $r = $r->withContainer($this->container);
 

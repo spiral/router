@@ -8,10 +8,10 @@
 
 namespace Spiral\Router\Tests;
 
-use Spiral\Http\Uri;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Namespaced;
 use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Uri;
 
 class NamespacedTest extends BaseTest
 {

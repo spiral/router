@@ -26,6 +26,17 @@ interface RouteInterface extends RequestHandlerInterface
     public const VERBS = ['GET', 'POST', 'PUT', 'PATCH', 'OPTIONS', 'DELETE'];
 
     /**
+     * @param UriHandler $uriHandler
+     * @return RouteInterface
+     */
+    public function withUriHandler(UriHandler $uriHandler): RouteInterface;
+
+    /**
+     * @return UriHandler
+     */
+    public function getUriHandler(): UriHandler;
+
+    /**
      * Attach specific list of HTTP verbs to the route.
      *
      * @param string ...$verbs
@@ -43,19 +54,6 @@ interface RouteInterface extends RequestHandlerInterface
     public function getVerbs(): array;
 
     /**
-     * Prefix must always include back slash at the end of prefix!
-     *
-     * @param string $prefix
-     * @return RouteInterface|$this
-     */
-    public function withPrefix(string $prefix): RouteInterface;
-
-    /**
-     * @return string
-     */
-    public function getPrefix(): string;
-
-    /**
      * Returns new route instance with forced default values.
      *
      * @param array $defaults
@@ -69,14 +67,6 @@ interface RouteInterface extends RequestHandlerInterface
      * @return array
      */
     public function getDefaults(): array;
-
-    /**
-     * List of keys associated with allowed values. Required for proper route matching
-     * for Uri generation.
-     *
-     * @return array
-     */
-    public function getConstrains(): array;
 
     /**
      * Match route against given request, must return matched route instance or return null if

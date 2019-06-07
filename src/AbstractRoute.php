@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Spiral\Router;
 
-use Cocur\Slugify\Slugify;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\UriInterface;
 use Spiral\Router\Traits\DefaultsTrait;
@@ -22,6 +21,9 @@ abstract class AbstractRoute implements RouteInterface
     /** @var UriHandler */
     protected $uriHandler;
 
+    /** @var string */
+    protected $pattern;
+
     /** @var array|null */
     protected $matches = null;
 
@@ -31,18 +33,18 @@ abstract class AbstractRoute implements RouteInterface
      */
     public function __construct(string $pattern, array $defaults = [])
     {
-        $this->uriHandler = new UriHandler($pattern, new Slugify());
+        $this->pattern = $pattern;
         $this->defaults = $defaults;
     }
 
     /**
-     * @inheritdoc
+     * @param UriHandler $uriHandler
+     * @return RouteInterface
      */
-    public function withPrefix(string $prefix): RouteInterface
+    public function withUriHandler(UriHandler $uriHandler): RouteInterface
     {
         $route = clone $this;
-        $route->uriHandler = clone $route->uriHandler;
-        $route->uriHandler->setPrefix($prefix);
+        $route->uriHandler = $uriHandler->withPattern($this->pattern);
 
         return $route;
     }
@@ -50,17 +52,9 @@ abstract class AbstractRoute implements RouteInterface
     /**
      * @inheritdoc
      */
-    public function getPrefix(): string
+    public function getUriHandler(): UriHandler
     {
-        return $this->uriHandler->getPrefix();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getConstrains(): array
-    {
-        return $this->uriHandler->getConstrains();
+        return $this->uriHandler;
     }
 
     /**

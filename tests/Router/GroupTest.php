@@ -8,11 +8,11 @@
 
 namespace Spiral\Router\Tests;
 
-use Spiral\Http\Uri;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Group;
 use Spiral\Router\Tests\Fixtures\TestController;
 use Zend\Diactoros\ServerRequest;
+use Zend\Diactoros\Uri;
 
 class GroupTest extends BaseTest
 {

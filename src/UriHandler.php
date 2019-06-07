@@ -9,9 +9,10 @@ declare(strict_types=1);
 
 namespace Spiral\Router;
 
+use Cocur\Slugify\Slugify;
 use Cocur\Slugify\SlugifyInterface;
+use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface;
-use Spiral\Http\Uri;
 use Spiral\Router\Exception\ConstrainException;
 use Spiral\Router\Exception\UriHandlerException;
 
@@ -32,6 +33,9 @@ final class UriHandler
         '://' => '://',
         '//'  => '/'
     ];
+
+    /** @var UriFactoryInterface */
+    private $uriFactory;
 
     /** @var string */
     private $pattern;
@@ -61,16 +65,26 @@ final class UriHandler
     private $options = [];
 
     /**
-     * @param string           $pattern
-     * @param SlugifyInterface $slugify
-     * @param array            $constrains
+     * @param UriFactoryInterface $uriFactory
+     * @param SlugifyInterface    $slugify
      */
-    public function __construct(string $pattern, SlugifyInterface $slugify, array $constrains = [])
+    public function __construct(UriFactoryInterface $uriFactory, SlugifyInterface $slugify = null)
     {
-        $this->matchHost = strpos($pattern, self::HOST_PREFIX) === 0;
-        $this->pattern = $pattern;
-        $this->slugify = $slugify;
-        $this->constrains = $constrains;
+        $this->uriFactory = $uriFactory;
+        $this->slugify = $slugify ?? new Slugify();
+    }
+
+    /**
+     * @param array $constrains
+     * @return UriHandler
+     */
+    public function withConstrains(array $constrains): self
+    {
+        $uriHandler = clone $this;
+        $uriHandler->compiled = null;
+        $uriHandler->constrains = $constrains;
+
+        return $uriHandler;
     }
 
     /**
@@ -82,11 +96,16 @@ final class UriHandler
     }
 
     /**
-     * @param mixed $prefix
+     * @param string $prefix
+     * @return UriHandler
      */
-    public function setPrefix($prefix): void
+    public function withPrefix($prefix): self
     {
-        $this->prefix = $prefix;
+        $uriHandler = clone $this;
+        $uriHandler->compiled = null;
+        $uriHandler->prefix = $prefix;
+
+        return $uriHandler;
     }
 
     /**
@@ -98,11 +117,25 @@ final class UriHandler
     }
 
     /**
+     * @param string $pattern
+     * @return UriHandler
+     */
+    public function withPattern(string $pattern): self
+    {
+        $uriHandler = clone $this;
+        $uriHandler->pattern = $pattern;
+        $uriHandler->compiled = null;
+        $uriHandler->matchHost = strpos($pattern, self::HOST_PREFIX) === 0;
+
+        return $uriHandler;
+    }
+
+    /**
      * @return bool
      */
     public function isCompiled(): bool
     {
-        return !empty($this->compiled);
+        return $this->compiled !== null;
     }
 
     /**
@@ -158,7 +191,7 @@ final class UriHandler
         $path = $this->interpolate($this->template, $parameters);
 
         //Uri with added prefix
-        $uri = new Uri(($this->matchHost ? '' : $this->prefix) . trim($path, '/'));
+        $uri = $this->uriFactory->createUri(($this->matchHost ? '' : $this->prefix) . trim($path, '/'));
 
         return empty($query) ? $uri : $uri->withQuery(http_build_query($query));
     }
@@ -225,6 +258,10 @@ final class UriHandler
      */
     private function compile()
     {
+        if ($this->pattern === null) {
+            throw new UriHandlerException("Unable to compile UriHandler, pattern is not set");
+        }
+
         $options = $replaces = [];
         $pattern = rtrim(ltrim($this->pattern, ':/'), '/');
 
