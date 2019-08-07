@@ -51,9 +51,9 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     private $requestHandler;
 
     /**
-     * @param string                                  $pattern  Uri pattern.
-     * @param string|callable|RequestHandlerInterface $target   Callable route target.
-     * @param array                                   $defaults Default value set.
+     * @param string                                                    $pattern  Uri pattern.
+     * @param string|callable|RequestHandlerInterface|TargetInterface   $target   Callable route target.
+     * @param array                                                     $defaults Default value set.
      */
     public function __construct(string $pattern, $target, array $defaults = [])
     {
