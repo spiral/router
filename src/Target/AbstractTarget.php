@@ -74,8 +74,8 @@ abstract class AbstractTarget implements TargetInterface
     public function withCore(CoreInterface $core): TargetInterface
     {
         $target = clone $this;
-        $this->core = $core;
-        $this->handler = null;
+        $target->core = $core;
+        $target->handler = null;
 
         return $target;
     }
