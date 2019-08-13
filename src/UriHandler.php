@@ -40,10 +40,7 @@ final class UriHandler
     /** @var string */
     private $pattern;
 
-    /**
-     * @invisible
-     * @var SlugifyInterface
-     */
+    /** @var SlugifyInterface @internal */
     private $slugify;
 
     /** @var array */
