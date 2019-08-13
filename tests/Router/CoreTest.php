@@ -40,7 +40,7 @@ class CoreTest extends BaseTest
     {
         $action = new Action(TestController::class, "test");
 
-        $action->withCore(new TestCore($this->container->get(CoreInterface::class)));
+        $action = $action->withCore(new TestCore($this->container->get(CoreInterface::class)));
 
         $handler = $action->getHandler($this->container, []);
         $this->assertInstanceOf(CoreHandler::class, $handler);
