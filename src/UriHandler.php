@@ -327,8 +327,8 @@ final class UriHandler
      */
     private function prepareSegment(string $name, string $segment): string
     {
-        if (!empty($segment)) {
-            return $this->filterSegment($segment);
+        if ($segment !== '') {
+            return $segment;
         }
 
         if (!isset($this->constrains[$name])) {
