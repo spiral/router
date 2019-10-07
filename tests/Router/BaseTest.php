@@ -47,5 +47,4 @@ abstract class BaseTest extends TestCase
 
 class Core extends AbstractCore
 {
-
 }

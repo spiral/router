@@ -65,7 +65,7 @@ final class Router implements RouterInterface
             throw new RouterException("Invalid route definition", $e->getCode(), $e);
         }
 
-        if (empty($route)) {
+        if ($route === null) {
             throw new RouteNotFoundException($request->getUri());
         }
 
@@ -79,21 +79,28 @@ final class Router implements RouterInterface
 
     /**
      * @inheritdoc
+     *
+     * @deprecated see setRoute()
      */
-    public function addRoute(string $name, RouteInterface $route)
+    public function addRoute(string $name, RouteInterface $route): void
     {
-        if (isset($this->routes[$name])) {
-            throw new RouterException("Duplicate route `{$name}`.");
-        }
-
         //Each added route must inherit basePath prefix
+        $this->setRoute($name, $route);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setRoute(string $name, RouteInterface $route): void
+    {
+        // each route must inherit basePath prefix
         $this->routes[$name] = $this->configure($route);
     }
 
     /**
      * @inheritdoc
      */
-    public function setDefault(RouteInterface $route)
+    public function setDefault(RouteInterface $route): void
     {
         $this->default = $this->configure($route);
     }
@@ -117,7 +124,6 @@ final class Router implements RouterInterface
     {
         if (!empty($this->default)) {
             return $this->routes + [null => $this->default];
-
         }
 
         return $this->routes;
@@ -149,12 +155,12 @@ final class Router implements RouterInterface
             // Matched route will return new route instance with matched parameters
             $matched = $route->match($request);
 
-            if (!empty($matched)) {
+            if ($matched !== null) {
                 return $matched;
             }
         }
 
-        if (!empty($this->default)) {
+        if ($this->default !== null) {
             return $this->default->match($request);
         }
 
@@ -197,16 +203,16 @@ final class Router implements RouterInterface
             $matches
         )) {
             throw new UndefinedRouteException(
-                "Unable to locate route or use default route with 'name/controller:action' pattern."
+                "Unable to locate route or use default route with 'name/controller:action' pattern"
             );
         }
 
         if (!empty($matches['name'])) {
             $route = $this->getRoute($matches['name']);
-        } elseif (!empty($this->default)) {
+        } elseif ($this->default !== null) {
             $route = $this->default;
         } else {
-            throw new UndefinedRouteException("Unable to locate route candidate for `{$route}`.");
+            throw new UndefinedRouteException("Unable to locate route candidate for `{$route}`");
         }
 
         return $route->withDefaults([

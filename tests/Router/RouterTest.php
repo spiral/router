@@ -12,22 +12,11 @@ use Spiral\Router\Route;
 
 class RouterTest extends BaseTest
 {
-    /**
-     * @expectedException \Spiral\Router\Exception\RouterException
-     */
-    public function testDuplicate()
-    {
-        $router = $this->makeRouter();
-
-        $router->addRoute('name', new Route('/', Call::class));
-        $router->addRoute('name', new Route('/', Call::class));
-    }
-
     public function testGetRoutes()
     {
         $router = $this->makeRouter();
 
-        $router->addRoute('name', new Route('/', Call::class));
+        $router->setRoute('name', new Route('/', Call::class));
         $this->assertCount(1, $router->getRoutes());
     }
 
@@ -35,7 +24,7 @@ class RouterTest extends BaseTest
     {
         $router = $this->makeRouter();
 
-        $router->addRoute('name', new Route('/', Call::class));
+        $router->setRoute('name', new Route('/', Call::class));
         $router->setDefault(new Route('/', Call::class));
 
         $this->assertCount(2, $router->getRoutes());

@@ -10,5 +10,4 @@ namespace Spiral\Router\Exception;
 
 class RouteException extends RouterException
 {
-
 }

@@ -90,7 +90,7 @@ final class CoreHandler implements RequestHandlerInterface
     public function handle(Request $request): Response
     {
         if ($this->controller === null) {
-            throw new HandlerException("Controller and action pair is not set.");
+            throw new HandlerException("Controller and action pair is not set");
         }
 
         $outputLevel = ob_get_level();
@@ -142,14 +142,14 @@ final class CoreHandler implements RequestHandlerInterface
      * Convert endpoint result into valid response.
      *
      * @param Response $response Initial pipeline response.
-     * @param mixed    $result   Generated endpoint output.
-     * @param string   $output   Buffer output.
+     * @param mixed    $result Generated endpoint output.
+     * @param string   $output Buffer output.
      * @return Response
      */
     private function wrapResponse(Response $response, $result = null, string $output = ''): Response
     {
         if ($result instanceof Response) {
-            if (!empty($output) && $result->getBody()->isWritable()) {
+            if ($output !== '' && $result->getBody()->isWritable()) {
                 $result->getBody()->write($output);
             }
 
@@ -178,7 +178,6 @@ final class CoreHandler implements RequestHandlerInterface
     {
         switch ($exception->getCode()) {
             case ControllerException::BAD_ACTION:
-                //no break
             case ControllerException::NOT_FOUND:
                 return new NotFoundException($exception->getMessage());
             case ControllerException::FORBIDDEN:

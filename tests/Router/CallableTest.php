@@ -21,7 +21,7 @@ class CallableTest extends BaseTest
     public function testFunctionRoute()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/something', function () {
                 return "hello world";
@@ -36,7 +36,7 @@ class CallableTest extends BaseTest
     public function testObjectRoute()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/something', new Call())
         );
@@ -49,7 +49,7 @@ class CallableTest extends BaseTest
     public function testObjectViaContainerRoute()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/something', Call::class)
         );
@@ -62,7 +62,7 @@ class CallableTest extends BaseTest
     public function testHandlerRoute()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/something', new Handler())
         );
@@ -75,7 +75,7 @@ class CallableTest extends BaseTest
     public function testHandlerViaContainerRoute()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/something', Handler::class)
         );
@@ -91,7 +91,7 @@ class CallableTest extends BaseTest
     public function testInvalidTarget()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/something', "something")
         );

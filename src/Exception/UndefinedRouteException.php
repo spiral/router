@@ -11,5 +11,4 @@ namespace Spiral\Router\Exception;
 
 class UndefinedRouteException extends RouterException
 {
-
 }

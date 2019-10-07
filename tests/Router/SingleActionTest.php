@@ -23,7 +23,7 @@ class SingleActionTest extends BaseTest
     public function testRouteException()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/test', new Action(TestController::class, 'test'))
         );
@@ -34,7 +34,7 @@ class SingleActionTest extends BaseTest
     public function testRoute()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/test', new Action(TestController::class, 'test'))
         );
@@ -54,19 +54,18 @@ class SingleActionTest extends BaseTest
     public function testVerbRoute()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             (new Route('/test', new Action(TestController::class, 'test')))->withVerbs('POST')
         );
 
         $router->handle(new ServerRequest([], [], new Uri('/test')));
-
     }
 
     public function testVerbRouteValid()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             (new Route('/test', new Action(TestController::class, 'test')))->withVerbs('POST')
         );
@@ -79,7 +78,7 @@ class SingleActionTest extends BaseTest
     public function testEchoed()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/test', new Action(TestController::class, 'echo'))
         );
@@ -92,7 +91,7 @@ class SingleActionTest extends BaseTest
     public function testAutoFill()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/<action>', new Action(TestController::class, 'echo'))
         );
@@ -116,7 +115,7 @@ class SingleActionTest extends BaseTest
     public function testVerbException()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             (new Route('/test', new Action(TestController::class, 'test')))->withVerbs('other')
         );
@@ -125,7 +124,7 @@ class SingleActionTest extends BaseTest
     public function testParametrizedActionRoute()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/test/<id:\d+>', new Action(TestController::class, 'id'))
         );
@@ -141,7 +140,7 @@ class SingleActionTest extends BaseTest
     public function testParametrizedActionRouteNotFound()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/test/<id:\d+>', new Action(TestController::class, 'id'))
         );
@@ -152,7 +151,7 @@ class SingleActionTest extends BaseTest
     public function testUriGeneration()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/test/<id>', new Action(TestController::class, 'id'))
         );
@@ -170,7 +169,7 @@ class SingleActionTest extends BaseTest
     public function testWrongActionRoute()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/test', new Action(TestController::class, 'test'))
         );

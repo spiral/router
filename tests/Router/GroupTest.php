@@ -22,7 +22,7 @@ class GroupTest extends BaseTest
     public function testRouteException()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'group',
             new Route('/<controller>/<action>', new Group([
                 'test' => TestController::class
@@ -35,7 +35,7 @@ class GroupTest extends BaseTest
     public function testRoute()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class
@@ -57,7 +57,7 @@ class GroupTest extends BaseTest
     public function testRouteOther()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class
@@ -73,7 +73,7 @@ class GroupTest extends BaseTest
     public function testUriInvalid()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class
@@ -89,7 +89,7 @@ class GroupTest extends BaseTest
     public function testUriInvalidNoAction()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class
@@ -105,7 +105,7 @@ class GroupTest extends BaseTest
     public function testClientException()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class

@@ -22,15 +22,24 @@ interface RouterInterface extends RequestHandlerInterface
      * @param RouteInterface $route
      *
      * @throws RouterException
+     * @deprecated see setRoute()
      */
-    public function addRoute(string $name, RouteInterface $route);
+    public function addRoute(string $name, RouteInterface $route): void;
+
+    /**
+     * Set route.
+     *
+     * @param string         $name
+     * @param RouteInterface $route
+     */
+    public function setRoute(string $name, RouteInterface $route): void;
 
     /**
      * Default route is needed as fallback if no other route matched the request.
      *
      * @param RouteInterface $route
      */
-    public function setDefault(RouteInterface $route);
+    public function setDefault(RouteInterface $route): void;
 
     /**
      * Get route by it's name.
@@ -54,7 +63,7 @@ interface RouterInterface extends RequestHandlerInterface
      * and action name separated by ":" - in this case router should find appropriate route and
      * create url using it.
      *
-     * @param string             $route      Route name.
+     * @param string             $route Route name.
      * @param array|\Traversable $parameters Routing parameters.
      * @return UriInterface
      *

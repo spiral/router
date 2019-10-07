@@ -11,5 +11,4 @@ namespace Spiral\Router\Exception;
 
 class HandlerException extends \RuntimeException
 {
-
 }

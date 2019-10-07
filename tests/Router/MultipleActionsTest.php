@@ -22,7 +22,7 @@ class MultipleActionsTest extends BaseTest
     public function testRouteException()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/<action>/<id>', new Action(TestController::class, ['test', 'id']))
         );
@@ -33,7 +33,7 @@ class MultipleActionsTest extends BaseTest
     public function testRoute()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/<action>[/<id>]', new Action(TestController::class, ['test', 'id']))
         );
@@ -50,7 +50,7 @@ class MultipleActionsTest extends BaseTest
     public function testUriGeneration()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'action',
             new Route('/<action>[/<id>]', new Action(TestController::class, ['test', 'id']))
         );

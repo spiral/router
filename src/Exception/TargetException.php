@@ -10,5 +10,4 @@ namespace Spiral\Router\Exception;
 
 class TargetException extends \RuntimeException
 {
-
 }

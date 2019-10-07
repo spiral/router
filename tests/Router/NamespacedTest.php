@@ -21,7 +21,7 @@ class NamespacedTest extends BaseTest
     public function testRouteException()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'group',
             new Route(
                 '/<controller>/<action>',
@@ -35,7 +35,7 @@ class NamespacedTest extends BaseTest
     public function testRoute()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'group',
             new Route(
                 '/<controller>[/<action>[/<id>]]',

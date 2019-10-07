@@ -26,7 +26,7 @@ class MiddlewareTest extends BaseTest
     {
         $router = $this->makeRouter();
 
-        $router->addRoute(
+        $router->setRoute(
             'group',
             (new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class
@@ -51,7 +51,7 @@ class MiddlewareTest extends BaseTest
     {
         $router = $this->makeRouter();
 
-        $router->addRoute(
+        $router->setRoute(
             'group',
             (new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class
@@ -68,7 +68,7 @@ class MiddlewareTest extends BaseTest
     {
         $router = $this->makeRouter();
 
-        $router->addRoute(
+        $router->setRoute(
             'group',
             (new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class
@@ -93,7 +93,7 @@ class MiddlewareTest extends BaseTest
     {
         $router = $this->makeRouter();
 
-        $router->addRoute(
+        $router->setRoute(
             'group',
             (new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class
@@ -113,7 +113,7 @@ class MiddlewareTest extends BaseTest
     {
         $router = $this->makeRouter();
 
-        $router->addRoute(
+        $router->setRoute(
             'group',
             (new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class

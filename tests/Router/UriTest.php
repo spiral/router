@@ -17,7 +17,7 @@ class UriTest extends BaseTest
     public function testCastRoute()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class
@@ -31,7 +31,7 @@ class UriTest extends BaseTest
     public function testQuery()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class
@@ -46,7 +46,7 @@ class UriTest extends BaseTest
     public function testDirect()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class
@@ -60,7 +60,7 @@ class UriTest extends BaseTest
     public function testSlug()
     {
         $router = $this->makeRouter();
-        $router->addRoute(
+        $router->setRoute(
             'group',
             new Route('/<controller>[/<action>[/<id>[-<title>]]]', new Group([
                 'test' => TestController::class
