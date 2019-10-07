@@ -159,13 +159,3 @@ class MiddlewareTest extends BaseTest
         $r->handle(new ServerRequest([], [], new Uri('/test')));
     }
 }
-
-class HeaderMiddleware implements MiddlewareInterface
-{
-    public function process(
-        ServerRequestInterface $request,
-        RequestHandlerInterface $handler
-    ): ResponseInterface {
-        return $handler->handle($request)->withAddedHeader("Header", "Value*");
-    }
-}

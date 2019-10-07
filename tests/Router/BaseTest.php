@@ -44,7 +44,3 @@ abstract class BaseTest extends TestCase
         ), $this->container);
     }
 }
-
-class Core extends AbstractCore
-{
-}

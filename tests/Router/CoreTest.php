@@ -151,22 +151,3 @@ class CoreTest extends BaseTest
         $this->assertSame('DELETE', (string)$r->getBody());
     }
 }
-
-class TestCore implements CoreInterface
-{
-    private $core;
-
-    public function __construct(CoreInterface $core)
-    {
-        $this->core = $core;
-    }
-
-    public function callAction(
-        string $controller,
-        string $action = null,
-        array $parameters = [],
-        array $scope = []
-    ) {
-        return "@wrapped." . $this->core->callAction($controller, $action, $parameters, $scope);
-    }
-}

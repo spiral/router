@@ -101,21 +101,3 @@ class CallableTest extends BaseTest
         $this->assertSame("handler", (string)$response->getBody());
     }
 }
-
-class Call
-{
-    public function __invoke()
-    {
-        return 'invoked';
-    }
-}
-
-class Handler implements RequestHandlerInterface
-{
-    public function handle(ServerRequestInterface $request): ResponseInterface
-    {
-        $response = new Response();
-        $response->getBody()->write("handler");
-        return $response;
-    }
-}
