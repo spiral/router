@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -48,11 +49,11 @@ final class Namespaced extends AbstractTarget
     protected function resolveController(array $matches): string
     {
         if (preg_match('/[^a-z_0-9\-]/i', $matches['controller'])) {
-            throw new TargetException("Invalid namespace target, controller name not allowed.");
+            throw new TargetException('Invalid namespace target, controller name not allowed.');
         }
 
         return sprintf(
-            "%s\\%s%s",
+            '%s\\%s%s',
             $this->namespace,
             Inflector::classify($matches['controller']),
             $this->postfix

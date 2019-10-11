@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -90,7 +91,7 @@ final class CoreHandler implements RequestHandlerInterface
     public function handle(Request $request): Response
     {
         if ($this->controller === null) {
-            throw new HandlerException("Controller and action pair is not set");
+            throw new HandlerException('Controller and action pair is not set');
         }
 
         $outputLevel = ob_get_level();

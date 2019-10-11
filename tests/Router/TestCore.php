@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -26,6 +27,6 @@ class TestCore implements CoreInterface
         array $parameters = [],
         array $scope = []
     ) {
-        return "@wrapped." . $this->core->callAction($controller, $action, $parameters, $scope);
+        return '@wrapped.' . $this->core->callAction($controller, $action, $parameters, $scope);
     }
 }

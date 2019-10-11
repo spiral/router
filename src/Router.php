@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -13,7 +14,6 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
-use Spiral\Core\ScopeInterface;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Exception\RouteNotFoundException;
 use Spiral\Router\Exception\RouterException;
@@ -24,6 +24,9 @@ use Spiral\Router\Exception\UndefinedRouteException;
  */
 final class Router implements RouterInterface
 {
+    // attribute to store active route in request
+    public const ROUTE_ATTRIBUTE = 'route';
+
     /** @var string */
     private $basePath = '/';
 
@@ -62,19 +65,14 @@ final class Router implements RouterInterface
         try {
             $route = $this->matchRoute($request);
         } catch (RouteException $e) {
-            throw new RouterException("Invalid route definition", $e->getCode(), $e);
+            throw new RouterException('Invalid route definition', $e->getCode(), $e);
         }
 
         if ($route === null) {
             throw new RouteNotFoundException($request->getUri());
         }
 
-        return $this->container->get(ScopeInterface::class)->runScope(
-            [RouteInterface::class => $route],
-            function () use ($route, $request) {
-                return $route->handle($request);
-            }
-        );
+        return $route->handle($request->withAttribute(self::ROUTE_ATTRIBUTE, $route));
     }
 
     /**
@@ -197,11 +195,13 @@ final class Router implements RouterInterface
      */
     protected function castRoute(string $route): RouteInterface
     {
-        if (!preg_match(
-            '/^(?:(?P<name>[^\/]+)\/)?(?:(?P<controller>[^:]+):+)?(?P<action>[a-z_\-]+)$/i',
-            $route,
-            $matches
-        )) {
+        if (
+            !preg_match(
+                '/^(?:(?P<name>[^\/]+)\/)?(?:(?P<controller>[^:]+):+)?(?P<action>[a-z_\-]+)$/i',
+                $route,
+                $matches
+            )
+        ) {
             throw new UndefinedRouteException(
                 "Unable to locate route or use default route with 'name/controller:action' pattern"
             );

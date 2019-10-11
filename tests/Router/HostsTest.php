@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -18,7 +21,7 @@ class HostsTest extends BaseTest
     /**
      * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
-    public function testRouteException()
+    public function testRouteException(): void
     {
         $router = $this->makeRouter();
         $router->setDefault(new Route(
@@ -29,7 +32,7 @@ class HostsTest extends BaseTest
         $match = $router->handle(new ServerRequest());
     }
 
-    public function testRoute()
+    public function testRoute(): void
     {
         $router = $this->makeRouter();
         $router->setDefault(new Route(

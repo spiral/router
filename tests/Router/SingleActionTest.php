@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -20,7 +23,7 @@ class SingleActionTest extends BaseTest
     /**
      * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
-    public function testRouteException()
+    public function testRouteException(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -31,7 +34,7 @@ class SingleActionTest extends BaseTest
         $router->handle(new ServerRequest());
     }
 
-    public function testRoute()
+    public function testRoute(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -41,17 +44,17 @@ class SingleActionTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("hello world", (string)$response->getBody());
+        $this->assertSame('hello world', (string)$response->getBody());
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("hello world", (string)$response->getBody());
+        $this->assertSame('hello world', (string)$response->getBody());
     }
 
     /**
      * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
-    public function testVerbRoute()
+    public function testVerbRoute(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -62,7 +65,7 @@ class SingleActionTest extends BaseTest
         $router->handle(new ServerRequest([], [], new Uri('/test')));
     }
 
-    public function testVerbRouteValid()
+    public function testVerbRouteValid(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -72,10 +75,10 @@ class SingleActionTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test'), 'POST'));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("hello world", (string)$response->getBody());
+        $this->assertSame('hello world', (string)$response->getBody());
     }
 
-    public function testEchoed()
+    public function testEchoed(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -85,10 +88,10 @@ class SingleActionTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("echoed", (string)$response->getBody());
+        $this->assertSame('echoed', (string)$response->getBody());
     }
 
-    public function testAutoFill()
+    public function testAutoFill(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -98,7 +101,7 @@ class SingleActionTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/echo')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("echoed", (string)$response->getBody());
+        $this->assertSame('echoed', (string)$response->getBody());
 
         $e = null;
         try {
@@ -112,7 +115,7 @@ class SingleActionTest extends BaseTest
     /**
      * @expectedException \Spiral\Router\Exception\RouteException
      */
-    public function testVerbException()
+    public function testVerbException(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -121,7 +124,7 @@ class SingleActionTest extends BaseTest
         );
     }
 
-    public function testParametrizedActionRoute()
+    public function testParametrizedActionRoute(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -131,13 +134,13 @@ class SingleActionTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test/100')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("100", (string)$response->getBody());
+        $this->assertSame('100', (string)$response->getBody());
     }
 
     /**
      * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
-    public function testParametrizedActionRouteNotFound()
+    public function testParametrizedActionRouteNotFound(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -148,7 +151,7 @@ class SingleActionTest extends BaseTest
         $router->handle(new ServerRequest([], [], new Uri('/test/abc')));
     }
 
-    public function testUriGeneration()
+    public function testUriGeneration(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -166,7 +169,7 @@ class SingleActionTest extends BaseTest
     /**
      * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
-    public function testWrongActionRoute()
+    public function testWrongActionRoute(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(

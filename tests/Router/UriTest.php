@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -14,7 +17,7 @@ use Spiral\Router\Tests\Fixtures\TestController;
 
 class UriTest extends BaseTest
 {
-    public function testCastRoute()
+    public function testCastRoute(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -28,7 +31,7 @@ class UriTest extends BaseTest
         $this->assertSame('/test/test', $uri->getPath());
     }
 
-    public function testQuery()
+    public function testQuery(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -43,7 +46,7 @@ class UriTest extends BaseTest
         $this->assertSame('data=hello', $uri->getQuery());
     }
 
-    public function testDirect()
+    public function testDirect(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -57,7 +60,7 @@ class UriTest extends BaseTest
         $this->assertSame('/test/id/100', $uri->getPath());
     }
 
-    public function testSlug()
+    public function testSlug(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -71,7 +74,7 @@ class UriTest extends BaseTest
         $this->assertSame('/test/id/100-hello-world', $uri->getPath());
     }
 
-    public function testSlugDefault()
+    public function testSlugDefault(): void
     {
         $router = $this->makeRouter();
         $router->setDefault(
@@ -87,7 +90,7 @@ class UriTest extends BaseTest
     /**
      * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
-    public function testSlugNoDefault()
+    public function testSlugNoDefault(): void
     {
         $router = $this->makeRouter();
 

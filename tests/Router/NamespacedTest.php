@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -18,7 +21,7 @@ class NamespacedTest extends BaseTest
     /**
      * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
-    public function testRouteException()
+    public function testRouteException(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -32,7 +35,7 @@ class NamespacedTest extends BaseTest
         $router->handle(new ServerRequest());
     }
 
-    public function testRoute()
+    public function testRoute(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -45,21 +48,21 @@ class NamespacedTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("hello world", (string)$response->getBody());
+        $this->assertSame('hello world', (string)$response->getBody());
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test/id/900')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("900", (string)$response->getBody());
+        $this->assertSame('900', (string)$response->getBody());
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/other/action')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("action!", (string)$response->getBody());
+        $this->assertSame('action!', (string)$response->getBody());
     }
 
     /**
      * @expectedException \Spiral\Router\Exception\TargetException
      */
-    public function testBypass()
+    public function testBypass(): void
     {
         $n = new Namespaced('Spiral\Router\Tests\Fixtures');
 

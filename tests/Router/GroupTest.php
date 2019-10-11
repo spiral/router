@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -19,7 +22,7 @@ class GroupTest extends BaseTest
     /**
      * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
-    public function testRouteException()
+    public function testRouteException(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -32,7 +35,7 @@ class GroupTest extends BaseTest
         $router->handle(new ServerRequest());
     }
 
-    public function testRoute()
+    public function testRoute(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -44,17 +47,17 @@ class GroupTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("hello world", (string)$response->getBody());
+        $this->assertSame('hello world', (string)$response->getBody());
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test/id/900')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("900", (string)$response->getBody());
+        $this->assertSame('900', (string)$response->getBody());
     }
 
     /**
      * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
-    public function testRouteOther()
+    public function testRouteOther(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -70,7 +73,7 @@ class GroupTest extends BaseTest
     /**
      * @expectedException \Spiral\Router\Exception\UriHandlerException
      */
-    public function testUriInvalid()
+    public function testUriInvalid(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -86,7 +89,7 @@ class GroupTest extends BaseTest
     /**
      * @expectedException \Spiral\Router\Exception\UriHandlerException
      */
-    public function testUriInvalidNoAction()
+    public function testUriInvalidNoAction(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -102,7 +105,7 @@ class GroupTest extends BaseTest
     /**
      * @expectedException \Spiral\Http\Exception\ClientException\NotFoundException
      */
-    public function testClientException()
+    public function testClientException(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(

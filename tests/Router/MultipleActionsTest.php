@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -19,7 +22,7 @@ class MultipleActionsTest extends BaseTest
     /**
      * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
-    public function testRouteException()
+    public function testRouteException(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -30,7 +33,7 @@ class MultipleActionsTest extends BaseTest
         $router->handle(new ServerRequest());
     }
 
-    public function testRoute()
+    public function testRoute(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -40,14 +43,14 @@ class MultipleActionsTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("hello world", (string)$response->getBody());
+        $this->assertSame('hello world', (string)$response->getBody());
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/id/900')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("900", (string)$response->getBody());
+        $this->assertSame('900', (string)$response->getBody());
     }
 
-    public function testUriGeneration()
+    public function testUriGeneration(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(

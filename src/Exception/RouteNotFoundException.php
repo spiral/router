@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -26,7 +27,7 @@ class RouteNotFoundException extends UndefinedRouteException
     public function __construct(UriInterface $uri, int $code = 0, \Throwable $previous = null)
     {
         $this->uri = $uri;
-        parent::__construct(sprintf("Unable to route `%s`.", $uri), $code, $previous);
+        parent::__construct(sprintf('Unable to route `%s`.', $uri), $code, $previous);
     }
 
     /**

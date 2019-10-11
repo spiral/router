@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -19,7 +20,7 @@ class Handler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $response = new Response();
-        $response->getBody()->write("handler");
+        $response->getBody()->write('handler');
         return $response;
     }
 }

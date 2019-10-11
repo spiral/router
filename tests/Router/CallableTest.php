@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -18,22 +21,22 @@ use Zend\Diactoros\Uri;
 
 class CallableTest extends BaseTest
 {
-    public function testFunctionRoute()
+    public function testFunctionRoute(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
             new Route('/something', function () {
-                return "hello world";
+                return 'hello world';
             })
         );
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("hello world", (string)$response->getBody());
+        $this->assertSame('hello world', (string)$response->getBody());
     }
 
-    public function testObjectRoute()
+    public function testObjectRoute(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -43,10 +46,10 @@ class CallableTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("invoked", (string)$response->getBody());
+        $this->assertSame('invoked', (string)$response->getBody());
     }
 
-    public function testObjectViaContainerRoute()
+    public function testObjectViaContainerRoute(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -56,10 +59,10 @@ class CallableTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("invoked", (string)$response->getBody());
+        $this->assertSame('invoked', (string)$response->getBody());
     }
 
-    public function testHandlerRoute()
+    public function testHandlerRoute(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -69,10 +72,10 @@ class CallableTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("handler", (string)$response->getBody());
+        $this->assertSame('handler', (string)$response->getBody());
     }
 
-    public function testHandlerViaContainerRoute()
+    public function testHandlerViaContainerRoute(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
@@ -82,22 +85,22 @@ class CallableTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("handler", (string)$response->getBody());
+        $this->assertSame('handler', (string)$response->getBody());
     }
 
     /**
      * @expectedException \Spiral\Router\Exception\RouteException
      */
-    public function testInvalidTarget()
+    public function testInvalidTarget(): void
     {
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            new Route('/something', "something")
+            new Route('/something', 'something')
         );
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/something')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("handler", (string)$response->getBody());
+        $this->assertSame('handler', (string)$response->getBody());
     }
 }

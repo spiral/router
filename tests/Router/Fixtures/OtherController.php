@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -14,6 +17,6 @@ class OtherController extends Controller
 {
     public function actionAction()
     {
-        return "action!";
+        return 'action!';
     }
 }

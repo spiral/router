@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -20,6 +21,6 @@ class HeaderMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
     ): ResponseInterface {
-        return $handler->handle($request)->withAddedHeader("Header", "Value*");
+        return $handler->handle($request)->withAddedHeader('Header', 'Value*');
     }
 }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -20,43 +23,43 @@ use Zend\Diactoros\Uri;
 
 class ActionTargetTest extends TestCase
 {
-    public function testDefaultAction()
+    public function testDefaultAction(): void
     {
-        $route = new Route("/home", new Action(TestController::class, "test"));
+        $route = new Route('/home', new Action(TestController::class, 'test'));
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $this->assertSame(['action' => 'test'], $route->getDefaults());
     }
 
-    public function testConstrains()
+    public function testConstrains(): void
     {
-        $route = new Route("/home", new Action(TestController::class, "test"));
+        $route = new Route('/home', new Action(TestController::class, 'test'));
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $this->assertEquals(['action' => new Autofill('test')], $route->getUriHandler()->getConstrains());
 
-        $route = new Route("/<action>", new Action(TestController::class, ["test", "other"]));
+        $route = new Route('/<action>', new Action(TestController::class, ['test', 'other']));
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
-        $this->assertSame(['action' => ["test", "other"]], $route->getUriHandler()->getConstrains());
+        $this->assertSame(['action' => ['test', 'other']], $route->getUriHandler()->getConstrains());
     }
 
     /**
      * @expectedException \Spiral\Router\Exception\ConstrainException
      */
-    public function testConstrainedAction()
+    public function testConstrainedAction(): void
     {
-        $route = new Route("/home", new Action(TestController::class, ["test", "other"]));
+        $route = new Route('/home', new Action(TestController::class, ['test', 'other']));
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $route->match(new ServerRequest());
     }
 
-    public function testMatch()
+    public function testMatch(): void
     {
         $route = new Route(
-            "/test[/<action>]",
-            new Action(TestController::class, ["test", "other"])
+            '/test[/<action>]',
+            new Action(TestController::class, ['test', 'other'])
         );
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
@@ -97,7 +100,7 @@ class ActionTargetTest extends TestCase
     /**
      * @expectedException \Spiral\Router\Exception\InvalidArgumentException
      */
-    public function testActionException()
+    public function testActionException(): void
     {
         new Action(TestController::class, $this);
     }

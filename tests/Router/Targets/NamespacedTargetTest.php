@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -18,9 +21,9 @@ use Zend\Diactoros\Uri;
 
 class NamespacedTargetTest extends TestCase
 {
-    public function testDefaultAction()
+    public function testDefaultAction(): void
     {
-        $route = new Route("/<controller>/<action>", new Namespaced('Spiral\Router\Fixtures'));
+        $route = new Route('/<controller>/<action>', new Namespaced('Spiral\Router\Fixtures'));
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $this->assertSame(['controller' => null, 'action' => null], $route->getDefaults());
@@ -29,9 +32,9 @@ class NamespacedTargetTest extends TestCase
     /**
      * @expectedException \Spiral\Router\Exception\ConstrainException
      */
-    public function testConstrainedController()
+    public function testConstrainedController(): void
     {
-        $route = new Route("/<action>", new Namespaced('Spiral\Router\Fixtures'));
+        $route = new Route('/<action>', new Namespaced('Spiral\Router\Fixtures'));
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $route->match(new ServerRequest());
@@ -40,18 +43,18 @@ class NamespacedTargetTest extends TestCase
     /**
      * @expectedException \Spiral\Router\Exception\ConstrainException
      */
-    public function testConstrainedAction()
+    public function testConstrainedAction(): void
     {
-        $route = new Route("/<controller>", new Namespaced('Spiral\Router\Fixtures'));
+        $route = new Route('/<controller>', new Namespaced('Spiral\Router\Fixtures'));
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $route->match(new ServerRequest());
     }
 
-    public function testMatch()
+    public function testMatch(): void
     {
         $route = new Route(
-            "/<controller>[/<action>]",
+            '/<controller>[/<action>]',
             new Namespaced('Spiral\Router\Fixtures')
         );
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
@@ -86,7 +89,7 @@ class NamespacedTargetTest extends TestCase
      * @param string $uri
      * @param array  $defaults
      */
-    public function testDefaults(string $pattern, string $uri, array $defaults)
+    public function testDefaults(string $pattern, string $uri, array $defaults): void
     {
         $route = new Route($pattern, new Namespaced('Spiral\Router\Fixtures'), $defaults);
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));

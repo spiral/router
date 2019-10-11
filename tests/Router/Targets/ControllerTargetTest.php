@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -19,18 +22,18 @@ use Zend\Diactoros\Uri;
 
 class ControllerTargetTest extends TestCase
 {
-    public function testDefaultAction()
+    public function testDefaultAction(): void
     {
-        $route = new Route("/home[/<action>]", new Controller(TestController::class));
+        $route = new Route('/home[/<action>]', new Controller(TestController::class));
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $this->assertSame(['action' => null], $route->getDefaults());
     }
 
-    public function testMatch()
+    public function testMatch(): void
     {
         $route = new Route(
-            "/test[/<action>]",
+            '/test[/<action>]',
             new Controller(TestController::class)
         );
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));

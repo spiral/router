@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -19,9 +22,9 @@ use Zend\Diactoros\Uri;
 
 class GroupTargetTest extends TestCase
 {
-    public function testDefaultAction()
+    public function testDefaultAction(): void
     {
-        $route = new Route("/<controller>/<action>", new Group(['test' => TestController::class]));
+        $route = new Route('/<controller>/<action>', new Group(['test' => TestController::class]));
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $this->assertSame(['controller' => null, 'action' => null], $route->getDefaults());
@@ -30,9 +33,9 @@ class GroupTargetTest extends TestCase
     /**
      * @expectedException \Spiral\Router\Exception\ConstrainException
      */
-    public function testConstrainedController()
+    public function testConstrainedController(): void
     {
-        $route = new Route("/<action>", new Group(['test' => TestController::class]));
+        $route = new Route('/<action>', new Group(['test' => TestController::class]));
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $route->match(new ServerRequest());
@@ -41,17 +44,17 @@ class GroupTargetTest extends TestCase
     /**
      * @expectedException \Spiral\Router\Exception\ConstrainException
      */
-    public function testConstrainedAction()
+    public function testConstrainedAction(): void
     {
-        $route = new Route("/<controller>", new Group(['test' => TestController::class]));
+        $route = new Route('/<controller>', new Group(['test' => TestController::class]));
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
         $route->match(new ServerRequest());
     }
 
-    public function testMatch()
+    public function testMatch(): void
     {
         $route = new Route(
-            "/<controller>[/<action>]",
+            '/<controller>[/<action>]',
             new Group(['test' => TestController::class])
         );
 

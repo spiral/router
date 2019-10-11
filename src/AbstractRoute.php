@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -16,7 +17,8 @@ use Spiral\Router\Traits\VerbsTrait;
 
 abstract class AbstractRoute implements RouteInterface
 {
-    use VerbsTrait, DefaultsTrait;
+    use VerbsTrait;
+    use DefaultsTrait;
 
     /** @var UriHandler */
     protected $uriHandler;

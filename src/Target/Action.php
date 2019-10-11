@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -39,7 +40,7 @@ final class Action extends AbstractTarget
     {
         if (!is_string($action) && !is_array($action)) {
             throw new InvalidArgumentException(sprintf(
-                "Action parameter must type string or array, `%s` given.",
+                'Action parameter must type string or array, `%s` given.',
                 gettype($action)
             ));
         }

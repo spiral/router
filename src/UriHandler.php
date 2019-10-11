@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -253,10 +254,10 @@ final class UriHandler
     /**
      * Compile route matcher into regexp.
      */
-    private function compile()
+    private function compile(): void
     {
         if ($this->pattern === null) {
-            throw new UriHandlerException("Unable to compile UriHandler, pattern is not set");
+            throw new UriHandlerException('Unable to compile UriHandler, pattern is not set');
         }
 
         $options = $replaces = [];
@@ -288,7 +289,7 @@ final class UriHandler
 
             if (!array_key_exists($key, $options)) {
                 throw new ConstrainException(sprintf(
-                    "Route `%s` does not define routing parameter `<%s>`.",
+                    'Route `%s` does not define routing parameter `<%s>`.',
                     $this->pattern,
                     $key
                 ));

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -20,25 +23,25 @@ class CoreTest extends BaseTest
     /**
      * @expectedException \Spiral\Router\Exception\TargetException
      */
-    public function testMissingBinding()
+    public function testMissingBinding(): void
     {
-        $action = new Action(TestController::class, "test");
+        $action = new Action(TestController::class, 'test');
 
         $container = new Container();
         $action->getHandler($container, []);
     }
 
-    public function testAutoCore()
+    public function testAutoCore(): void
     {
-        $action = new Action(TestController::class, "test");
+        $action = new Action(TestController::class, 'test');
         $handler = $action->getHandler($this->container, []);
 
         $this->assertInstanceOf(CoreHandler::class, $handler);
     }
 
-    public function testWithAutoCore()
+    public function testWithAutoCore(): void
     {
-        $action = new Action(TestController::class, "test");
+        $action = new Action(TestController::class, 'test');
 
         $action = $action->withCore(new TestCore($this->container->get(CoreInterface::class)));
 
@@ -48,16 +51,16 @@ class CoreTest extends BaseTest
 
         $result = $handler->handle(new ServerRequest());
 
-        $this->assertSame("@wrapped.hello world", (string)$result->getBody());
+        $this->assertSame('@wrapped.hello world', (string)$result->getBody());
     }
 
     /**
      * @expectedException  \Error
      * @expectedExceptionMessage error.controller
      */
-    public function testErrAction()
+    public function testErrAction(): void
     {
-        $action = new Action(TestController::class, "err");
+        $action = new Action(TestController::class, 'err');
 
         $action = $action->withCore(new TestCore($this->container->get(CoreInterface::class)));
 
@@ -67,21 +70,21 @@ class CoreTest extends BaseTest
         $handler->handle(new ServerRequest());
     }
 
-    public function testRSP()
+    public function testRSP(): void
     {
-        $action = new Action(TestController::class, "rsp");
+        $action = new Action(TestController::class, 'rsp');
 
         $handler = $action->getHandler($this->container, []);
         $this->assertInstanceOf(CoreHandler::class, $handler);
 
         $result = $handler->handle(new ServerRequest());
 
-        $this->assertSame("rspbuf", (string)$result->getBody());
+        $this->assertSame('rspbuf', (string)$result->getBody());
     }
 
-    public function testJson()
+    public function testJson(): void
     {
-        $action = new Action(TestController::class, "json");
+        $action = new Action(TestController::class, 'json');
 
         $handler = $action->getHandler($this->container, []);
         $this->assertInstanceOf(CoreHandler::class, $handler);
@@ -95,41 +98,41 @@ class CoreTest extends BaseTest
     /**
      * @expectedException \Spiral\Http\Exception\ClientException\ForbiddenException
      */
-    public function testForbidden()
+    public function testForbidden(): void
     {
-        $action = new Action(TestController::class, "forbidden");
+        $action = new Action(TestController::class, 'forbidden');
         $r = $action->getHandler($this->container, [])->handle(new ServerRequest());
     }
 
     /**
      * @expectedException \Spiral\Http\Exception\ClientException\NotFoundException
      */
-    public function testNotFound()
+    public function testNotFound(): void
     {
-        $action = new Action(TestController::class, "not-found");
+        $action = new Action(TestController::class, 'not-found');
         $r = $action->getHandler($this->container, [])->handle(new ServerRequest());
     }
 
     /**
      * @expectedException \Spiral\Http\Exception\ClientException\BadRequestException
      */
-    public function testBadRequest()
+    public function testBadRequest(): void
     {
-        $action = new Action(TestController::class, "weird");
+        $action = new Action(TestController::class, 'weird');
         $r = $action->getHandler($this->container, [])->handle(new ServerRequest());
     }
 
     /**
      * @expectedException \Spiral\Router\Exception\HandlerException
      */
-    public function testCoreException()
+    public function testCoreException(): void
     {
         /** @var CoreHandler $core */
         $core = $this->container->get(CoreHandler::class);
         $core->handle(new ServerRequest());
     }
 
-    public function testRESTFul()
+    public function testRESTFul(): void
     {
         $action = new Action(TestController::class, 'Target', Action::RESTFUL);
         $r = $action->getHandler($this->container, [])->handle(new ServerRequest(

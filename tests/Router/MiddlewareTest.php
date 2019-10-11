@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -22,7 +25,7 @@ use Zend\Diactoros\Uri;
 
 class MiddlewareTest extends BaseTest
 {
-    public function testRoute()
+    public function testRoute(): void
     {
         $router = $this->makeRouter();
 
@@ -35,19 +38,19 @@ class MiddlewareTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("hello world", (string)$response->getBody());
-        $this->assertSame("Value*", $response->getHeaderLine('Header'));
+        $this->assertSame('hello world', (string)$response->getBody());
+        $this->assertSame('Value*', $response->getHeaderLine('Header'));
 
         $r = $router->getRoute('group')->withMiddleware(HeaderMiddleware::class);
 
         $r = $r->match(new ServerRequest([], [], new Uri('/test')));
         $response = $r->handle(new ServerRequest([], [], new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("hello world", (string)$response->getBody());
-        $this->assertSame("Value*,Value*", $response->getHeaderLine('Header'));
+        $this->assertSame('hello world', (string)$response->getBody());
+        $this->assertSame('Value*,Value*', $response->getHeaderLine('Header'));
     }
 
-    public function testRouteRuntime()
+    public function testRouteRuntime(): void
     {
         $router = $this->makeRouter();
 
@@ -60,11 +63,11 @@ class MiddlewareTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("hello world", (string)$response->getBody());
-        $this->assertSame("Value*", $response->getHeaderLine('Header'));
+        $this->assertSame('hello world', (string)$response->getBody());
+        $this->assertSame('Value*', $response->getHeaderLine('Header'));
     }
 
-    public function testRouteArray()
+    public function testRouteArray(): void
     {
         $router = $this->makeRouter();
 
@@ -77,19 +80,19 @@ class MiddlewareTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("hello world", (string)$response->getBody());
-        $this->assertSame("Value*,Value*", $response->getHeaderLine('Header'));
+        $this->assertSame('hello world', (string)$response->getBody());
+        $this->assertSame('Value*,Value*', $response->getHeaderLine('Header'));
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("hello world", (string)$response->getBody());
-        $this->assertSame("Value*,Value*", $response->getHeaderLine('Header'));
+        $this->assertSame('hello world', (string)$response->getBody());
+        $this->assertSame('Value*,Value*', $response->getHeaderLine('Header'));
     }
 
     /**
      * @expectedException \Spiral\Router\Exception\RouteException
      */
-    public function testInvalid()
+    public function testInvalid(): void
     {
         $router = $this->makeRouter();
 
@@ -102,14 +105,14 @@ class MiddlewareTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("hello world", (string)$response->getBody());
-        $this->assertSame("Value*,Value*", $response->getHeaderLine('Header'));
+        $this->assertSame('hello world', (string)$response->getBody());
+        $this->assertSame('Value*,Value*', $response->getHeaderLine('Header'));
     }
 
     /**
      * @expectedException \Spiral\Router\Exception\RouteException
      */
-    public function testInvalid2()
+    public function testInvalid2(): void
     {
         $router = $this->makeRouter();
 
@@ -122,14 +125,14 @@ class MiddlewareTest extends BaseTest
 
         $response = $router->handle(new ServerRequest([], [], new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("hello world", (string)$response->getBody());
-        $this->assertSame("Value*,Value*", $response->getHeaderLine('Header'));
+        $this->assertSame('hello world', (string)$response->getBody());
+        $this->assertSame('Value*,Value*', $response->getHeaderLine('Header'));
     }
 
     /**
      * @expectedException \Spiral\Router\Exception\RouteException
      */
-    public function testPipelineException()
+    public function testPipelineException(): void
     {
         $r = (new Route('/<controller>[/<action>[/<id>]]', new Group([
             'test' => TestController::class
@@ -139,14 +142,14 @@ class MiddlewareTest extends BaseTest
         $r = $r->match(new ServerRequest([], [], new Uri('/test')));
         $response = $r->handle(new ServerRequest([], [], new Uri('/test')));
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame("hello world", (string)$response->getBody());
-        $this->assertSame("Value*,Value*", $response->getHeaderLine('Header'));
+        $this->assertSame('hello world', (string)$response->getBody());
+        $this->assertSame('Value*,Value*', $response->getHeaderLine('Header'));
     }
 
     /**
      * @expectedException \Spiral\Router\Exception\RouteException
      */
-    public function testPipelineExceptionMiddleware()
+    public function testPipelineExceptionMiddleware(): void
     {
         $r = (new Route('/<controller>[/<action>[/<id>]]', new Group([
             'test' => TestController::class

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -12,7 +15,7 @@ use Spiral\Router\Route;
 
 class RouterTest extends BaseTest
 {
-    public function testGetRoutes()
+    public function testGetRoutes(): void
     {
         $router = $this->makeRouter();
 
@@ -20,7 +23,7 @@ class RouterTest extends BaseTest
         $this->assertCount(1, $router->getRoutes());
     }
 
-    public function testDefault()
+    public function testDefault(): void
     {
         $router = $this->makeRouter();
 
@@ -33,7 +36,7 @@ class RouterTest extends BaseTest
     /**
      * @expectedException \Spiral\Router\Exception\UndefinedRouteException
      */
-    public function testCastError()
+    public function testCastError(): void
     {
         $router = $this->makeRouter();
         $router->uri('name/?broken');

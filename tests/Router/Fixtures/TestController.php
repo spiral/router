@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -18,7 +21,7 @@ class TestController extends Controller
 
     public function testAction()
     {
-        return "hello world";
+        return 'hello world';
     }
 
     public function idAction(string $id)
@@ -26,23 +29,23 @@ class TestController extends Controller
         return $id;
     }
 
-    public function echoAction()
+    public function echoAction(): void
     {
         ob_start();
-        echo "echoed";
+        echo 'echoed';
     }
 
-    public function errAction()
+    public function errAction(): void
     {
-        throw new \Error("error.controller");
+        throw new \Error('error.controller');
     }
 
     public function rspAction()
     {
         $r = new Response();
-        $r->getBody()->write("rsp");
+        $r->getBody()->write('rsp');
 
-        echo "buf";
+        echo 'buf';
 
         return $r;
     }
@@ -55,19 +58,19 @@ class TestController extends Controller
         ];
     }
 
-    public function forbiddenAction()
+    public function forbiddenAction(): void
     {
-        throw new ControllerException("", ControllerException::FORBIDDEN);
+        throw new ControllerException('', ControllerException::FORBIDDEN);
     }
 
-    public function notFoundAction()
+    public function notFoundAction(): void
     {
-        throw new ControllerException("", ControllerException::NOT_FOUND);
+        throw new ControllerException('', ControllerException::NOT_FOUND);
     }
 
-    public function weirdAction()
+    public function weirdAction(): void
     {
-        throw new ControllerException("", 99);
+        throw new ControllerException('', 99);
     }
 
     public function postTargetAction()

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -42,7 +43,7 @@ final class Route extends AbstractRoute implements ContainerizedInterface
 {
     use PipelineTrait;
 
-    const ROUTE_ATTRIBUTE = 'route';
+    public const ROUTE_ATTRIBUTE = 'route';
 
     /** @var string|callable|RequestHandlerInterface|TargetInterface */
     private $target;
@@ -127,14 +128,14 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     protected function requestHandler(): RequestHandlerInterface
     {
         if (!$this->hasContainer()) {
-            throw new RouteException("Unable to configure route pipeline without associated container.");
+            throw new RouteException('Unable to configure route pipeline without associated container.');
         }
 
         if ($this->target instanceof TargetInterface) {
             try {
                 return $this->target->getHandler($this->container, $this->matches);
             } catch (TargetException $e) {
-                throw new RouteException("Invalid target resolution", $e->getCode(), $e);
+                throw new RouteException('Invalid target resolution', $e->getCode(), $e);
             }
         }
 

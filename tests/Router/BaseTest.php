@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -28,7 +31,7 @@ abstract class BaseTest extends TestCase
      */
     protected $container;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->container = new Container();
         $this->container->bind(ResponseFactoryInterface::class, new ResponseFactory(new HttpConfig(['headers' => []])));

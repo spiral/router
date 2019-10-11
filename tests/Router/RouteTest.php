@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Spiral Framework.
  *
@@ -16,23 +19,23 @@ use Zend\Diactoros\ServerRequest;
 
 class RouteTest extends TestCase
 {
-    public function testPrefix()
+    public function testPrefix(): void
     {
-        $route = new Route("/action", Call::class);
+        $route = new Route('/action', Call::class);
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
-        $this->assertSame("", $route->getUriHandler()->getPrefix());
+        $this->assertSame('', $route->getUriHandler()->getPrefix());
 
         $route2 = $route->withUriHandler($route->getUriHandler()->withPrefix('/something'));
-        $this->assertSame("/something", $route2->getUriHandler()->getPrefix());
-        $this->assertSame("", $route->getUriHandler()->getPrefix());
+        $this->assertSame('/something', $route2->getUriHandler()->getPrefix());
+        $this->assertSame('', $route->getUriHandler()->getPrefix());
     }
 
     /**
      * @expectedException \Spiral\Router\Exception\RouteException
      */
-    public function testContainerException()
+    public function testContainerException(): void
     {
-        $route = new Route("/action", Call::class);
+        $route = new Route('/action', Call::class);
         $route->handle(new ServerRequest());
     }
 }
