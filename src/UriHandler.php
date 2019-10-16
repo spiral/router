@@ -47,6 +47,9 @@ final class UriHandler
     /** @var array */
     private $constrains = [];
 
+    /** @var array */
+    private $defaults = [];
+
     /** @var bool */
     private $matchHost = false;
 
@@ -74,13 +77,15 @@ final class UriHandler
 
     /**
      * @param array $constrains
+     * @param array $defaults
      * @return UriHandler
      */
-    public function withConstrains(array $constrains): self
+    public function withConstrains(array $constrains, array $defaults = []): self
     {
         $uriHandler = clone $this;
         $uriHandler->compiled = null;
         $uriHandler->constrains = $constrains;
+        $uriHandler->defaults = $defaults;
 
         return $uriHandler;
     }
@@ -287,7 +292,7 @@ final class UriHandler
                 continue;
             }
 
-            if (!array_key_exists($key, $options)) {
+            if (!array_key_exists($key, $options) && !isset($this->defaults[$key])) {
                 throw new ConstrainException(sprintf(
                     'Route `%s` does not define routing parameter `<%s>`.',
                     $this->pattern,

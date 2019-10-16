@@ -52,9 +52,9 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     private $requestHandler;
 
     /**
-     * @param string                                                    $pattern  Uri pattern.
-     * @param string|callable|RequestHandlerInterface|TargetInterface   $target   Callable route target.
-     * @param array                                                     $defaults Default value set.
+     * @param string                                                  $pattern Uri pattern.
+     * @param string|callable|RequestHandlerInterface|TargetInterface $target Callable route target.
+     * @param array                                                   $defaults Default value set.
      */
     public function __construct(string $pattern, $target, array $defaults = [])
     {
@@ -76,7 +76,10 @@ final class Route extends AbstractRoute implements ContainerizedInterface
         /** @var self $route */
         $route = parent::withUriHandler($uriHandler);
         if ($this->target instanceof TargetInterface) {
-            $route->uriHandler = $route->uriHandler->withConstrains($this->target->getConstrains());
+            $route->uriHandler = $route->uriHandler->withConstrains(
+                $this->target->getConstrains(),
+                $this->defaults
+            );
         }
 
         return $route;
