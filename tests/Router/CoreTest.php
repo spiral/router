@@ -48,7 +48,6 @@ class CoreTest extends BaseTest
         $handler = $action->getHandler($this->container, []);
         $this->assertInstanceOf(CoreHandler::class, $handler);
 
-
         $result = $handler->handle(new ServerRequest());
 
         $this->assertSame('@wrapped.hello world', (string)$result->getBody());

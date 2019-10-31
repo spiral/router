@@ -30,9 +30,14 @@ final class Namespaced extends AbstractTarget
      * @param string $namespace
      * @param string $postfix
      * @param int    $options
+     * @param string $defaultAction
      */
-    public function __construct(string $namespace, string $postfix = 'Controller', int $options = 0)
-    {
+    public function __construct(
+        string $namespace,
+        string $postfix = 'Controller',
+        int $options = 0,
+        string $defaultAction = 'index'
+    ) {
         $this->namespace = rtrim($namespace, '\\');
         $this->postfix = ucfirst($postfix);
 

@@ -21,12 +21,8 @@ class TestCore implements CoreInterface
         $this->core = $core;
     }
 
-    public function callAction(
-        string $controller,
-        string $action = null,
-        array $parameters = [],
-        array $scope = []
-    ) {
-        return '@wrapped.' . $this->core->callAction($controller, $action, $parameters, $scope);
+    public function callAction(string $controller, string $action = null, array $parameters = [])
+    {
+        return '@wrapped.' . $this->core->callAction($controller, $action, $parameters);
     }
 }
