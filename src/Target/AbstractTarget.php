@@ -6,16 +6,17 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Router\Target;
 
-use Doctrine\Common\Inflector\Inflector;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Spiral\Core\CoreInterface;
+use Spiral\Core\ScopeInterface;
 use Spiral\Router\CoreHandler;
 use Spiral\Router\Exception\TargetException;
 use Spiral\Router\TargetInterface;
@@ -40,16 +41,20 @@ abstract class AbstractTarget implements TargetInterface
     /** @var bool */
     private $verbActions;
 
+    private $defaultAction;
+
     /**
-     * @param array $defaults
-     * @param array $constrains
-     * @param int   $options
+     * @param array  $defaults
+     * @param array  $constrains
+     * @param int    $options
+     * @param string $defaultAction
      */
-    public function __construct(array $defaults, array $constrains, int $options = 0)
+    public function __construct(array $defaults, array $constrains, int $options = 0, string $defaultAction = 'index')
     {
         $this->defaults = $defaults;
         $this->constrains = $constrains;
         $this->verbActions = ($options & self::RESTFUL) === self::RESTFUL;
+        $this->defaultAction = $defaultAction;
     }
 
     /**
@@ -86,11 +91,9 @@ abstract class AbstractTarget implements TargetInterface
      */
     public function getHandler(ContainerInterface $container, array $matches): Handler
     {
-        $action = $this->resolveAction($matches);
-
         return $this->coreHandler($container)->withContext(
             $this->resolveController($matches),
-            !empty($action) ? Inflector::camelize($action) : null,
+            $this->resolveAction($matches) ?? $this->defaultAction,
             $matches
         )->withVerbActions($this->verbActions);
     }
@@ -101,13 +104,15 @@ abstract class AbstractTarget implements TargetInterface
      */
     protected function coreHandler(ContainerInterface $container): CoreHandler
     {
-        if (!empty($this->handler)) {
+        if ($this->handler !== null) {
             return $this->handler;
         }
 
         try {
+            // construct on demand
             $this->handler = new CoreHandler(
                 $this->core ?? $container->get(CoreInterface::class),
+                $container->get(ScopeInterface::class),
                 $container->get(ResponseFactoryInterface::class)
             );
 
@@ -131,7 +136,7 @@ abstract class AbstractTarget implements TargetInterface
      * Return target controller action.
      *
      * @param array $matches
-     * @return string
+     * @return string|null
      *
      * @throws TargetException
      */

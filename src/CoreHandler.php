@@ -6,6 +6,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Router;
@@ -16,6 +17,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ControllerException;
+use Spiral\Core\ScopeInterface;
 use Spiral\Http\Exception\ClientException;
 use Spiral\Http\Exception\ClientException\BadRequestException;
 use Spiral\Http\Exception\ClientException\ForbiddenException;
@@ -29,6 +31,9 @@ final class CoreHandler implements RequestHandlerInterface
 
     /** @var CoreInterface */
     private $core;
+
+    /** @var ScopeInterface */
+    private $scope;
 
     /** @var string|null */
     private $controller;
@@ -47,21 +52,26 @@ final class CoreHandler implements RequestHandlerInterface
 
     /**
      * @param CoreInterface            $core
+     * @param ScopeInterface           $scope
      * @param ResponseFactoryInterface $responseFactory
      */
-    public function __construct(CoreInterface $core, ResponseFactoryInterface $responseFactory)
-    {
+    public function __construct(
+        CoreInterface $core,
+        ScopeInterface $scope,
+        ResponseFactoryInterface $responseFactory
+    ) {
         $this->core = $core;
+        $this->scope = $scope;
         $this->responseFactory = $responseFactory;
     }
 
     /**
-     * @param string $controller
-     * @param string $action
-     * @param array  $parameters
+     * @param string      $controller
+     * @param string|null $action
+     * @param array       $parameters
      * @return CoreHandler
      */
-    public function withContext(string $controller, ?string $action, array $parameters): CoreHandler
+    public function withContext(string $controller, string $action, array $parameters): CoreHandler
     {
         $handler = clone $this;
         $handler->controller = $controller;
@@ -101,11 +111,19 @@ final class CoreHandler implements RequestHandlerInterface
 
         $response = $this->responseFactory->createResponse(200);
         try {
-            $result = $this->core->callAction(
-                $this->controller,
-                $this->getAction($request),
-                $this->parameters,
-                [Request::class => $request, Response::class => $response]
+            // run the core withing PSR-7 Request/Response scope
+            $result = $this->scope->runScope(
+                [
+                    Request::class  => $request,
+                    Response::class => $response
+                ],
+                function () use ($request) {
+                    return $this->core->callAction(
+                        $this->controller,
+                        $this->getAction($request),
+                        $this->parameters
+                    );
+                }
             );
         } catch (ControllerException $e) {
             ob_get_clean();
@@ -130,7 +148,7 @@ final class CoreHandler implements RequestHandlerInterface
      * @param Request $request
      * @return string
      */
-    private function getAction(Request $request): ?string
+    private function getAction(Request $request): string
     {
         if ($this->verbActions) {
             return strtolower($request->getMethod()) . ucfirst($this->action);
@@ -143,8 +161,8 @@ final class CoreHandler implements RequestHandlerInterface
      * Convert endpoint result into valid response.
      *
      * @param Response $response Initial pipeline response.
-     * @param mixed    $result Generated endpoint output.
-     * @param string   $output Buffer output.
+     * @param mixed    $result   Generated endpoint output.
+     * @param string   $output   Buffer output.
      * @return Response
      */
     private function wrapResponse(Response $response, $result = null, string $output = ''): Response

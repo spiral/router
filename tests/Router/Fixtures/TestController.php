@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Spiral Framework.
  *
@@ -9,38 +7,42 @@ declare(strict_types=1);
  * @author    Anton Titov (Wolfy-J)
  */
 
+declare(strict_types=1);
+
 namespace Spiral\Router\Tests\Fixtures;
 
-use Spiral\Core\Controller;
 use Spiral\Core\Exception\ControllerException;
 use Zend\Diactoros\Response;
 
-class TestController extends Controller
+class TestController
 {
-    protected $defaultAction = 'test';
-
-    public function testAction()
+    public function index()
     {
         return 'hello world';
     }
 
-    public function idAction(string $id)
+    public function test()
+    {
+        return 'hello world';
+    }
+
+    public function id(string $id)
     {
         return $id;
     }
 
-    public function echoAction(): void
+    public function echo(): void
     {
         ob_start();
         echo 'echoed';
     }
 
-    public function errAction(): void
+    public function err(): void
     {
         throw new \Error('error.controller');
     }
 
-    public function rspAction()
+    public function rsp()
     {
         $r = new Response();
         $r->getBody()->write('rsp');
@@ -50,7 +52,7 @@ class TestController extends Controller
         return $r;
     }
 
-    public function jsonAction()
+    public function json()
     {
         return [
             'status' => 301,
@@ -58,27 +60,27 @@ class TestController extends Controller
         ];
     }
 
-    public function forbiddenAction(): void
+    public function forbidden(): void
     {
         throw new ControllerException('', ControllerException::FORBIDDEN);
     }
 
-    public function notFoundAction(): void
+    public function notFound(): void
     {
         throw new ControllerException('', ControllerException::NOT_FOUND);
     }
 
-    public function weirdAction(): void
+    public function weird(): void
     {
         throw new ControllerException('', 99);
     }
 
-    public function postTargetAction()
+    public function postTarget()
     {
         return 'POST';
     }
 
-    public function deleteTargetAction()
+    public function deleteTarget()
     {
         return 'DELETE';
     }

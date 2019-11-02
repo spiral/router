@@ -1,13 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
+declare(strict_types=1);
 
 namespace Spiral\Router\Tests;
 
@@ -47,7 +47,6 @@ class CoreTest extends BaseTest
 
         $handler = $action->getHandler($this->container, []);
         $this->assertInstanceOf(CoreHandler::class, $handler);
-
 
         $result = $handler->handle(new ServerRequest());
 

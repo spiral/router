@@ -6,6 +6,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Router\Target;
@@ -21,16 +22,18 @@ final class Group extends AbstractTarget
     private $controllers;
 
     /**
-     * @param array $controllers
-     * @param int   $options
+     * @param array  $controllers
+     * @param int    $options
+     * @param string $defaultAction
      */
-    public function __construct(array $controllers, int $options = 0)
+    public function __construct(array $controllers, int $options = 0, string $defaultAction = 'index')
     {
         $this->controllers = $controllers;
         parent::__construct(
             ['controller' => null, 'action' => null],
             ['controller' => array_keys($controllers), 'action' => null],
-            $options
+            $options,
+            $defaultAction
         );
     }
 

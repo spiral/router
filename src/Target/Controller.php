@@ -6,6 +6,7 @@
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Router\Target;
@@ -23,14 +24,16 @@ final class Controller extends AbstractTarget
     /**
      * @param string $controller
      * @param int    $options
+     * @param string $defaultAction
      */
-    public function __construct(string $controller, int $options = 0)
+    public function __construct(string $controller, int $options = 0, string $defaultAction = 'index')
     {
         $this->controller = $controller;
         parent::__construct(
             ['action' => null],
             ['action' => null],
-            $options
+            $options,
+            $defaultAction
         );
     }
 
