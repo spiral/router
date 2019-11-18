@@ -28,6 +28,9 @@ final class Router implements RouterInterface
     // attribute to store active route in request
     public const ROUTE_ATTRIBUTE = 'route';
 
+    // attribute to store active route in request
+    public const ROUTE_MATCHES = 'matches';
+
     /** @var string */
     private $basePath = '/';
 
@@ -73,7 +76,11 @@ final class Router implements RouterInterface
             throw new RouteNotFoundException($request->getUri());
         }
 
-        return $route->handle($request->withAttribute(self::ROUTE_ATTRIBUTE, $route));
+        return $route->handle(
+            $request
+                ->withAttribute(self::ROUTE_ATTRIBUTE, $route)
+                ->withAttribute(self::ROUTE_MATCHES, $route->getMatches() ?? [])
+        );
     }
 
     /**
@@ -197,11 +204,11 @@ final class Router implements RouterInterface
     protected function castRoute(string $route): RouteInterface
     {
         if (
-            !preg_match(
-                '/^(?:(?P<name>[^\/]+)\/)?(?:(?P<controller>[^:]+):+)?(?P<action>[a-z_\-]+)$/i',
-                $route,
-                $matches
-            )
+        !preg_match(
+            '/^(?:(?P<name>[^\/]+)\/)?(?:(?P<controller>[^:]+):+)?(?P<action>[a-z_\-]+)$/i',
+            $route,
+            $matches
+        )
         ) {
             throw new UndefinedRouteException(
                 "Unable to locate route or use default route with 'name/controller:action' pattern"
