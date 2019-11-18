@@ -204,11 +204,11 @@ final class Router implements RouterInterface
     protected function castRoute(string $route): RouteInterface
     {
         if (
-        !preg_match(
-            '/^(?:(?P<name>[^\/]+)\/)?(?:(?P<controller>[^:]+):+)?(?P<action>[a-z_\-]+)$/i',
-            $route,
-            $matches
-        )
+            !preg_match(
+                '/^(?:(?P<name>[^\/]+)\/)?(?:(?P<controller>[^:]+):+)?(?P<action>[a-z_\-]+)$/i',
+                $route,
+                $matches
+            )
         ) {
             throw new UndefinedRouteException(
                 "Unable to locate route or use default route with 'name/controller:action' pattern"
