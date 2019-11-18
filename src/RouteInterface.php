@@ -25,7 +25,7 @@ interface RouteInterface extends RequestHandlerInterface
     /**
      * List of possible verbs for the route.
      */
-    public const VERBS = ['GET', 'POST', 'PUT', 'PATCH', 'OPTIONS', 'DELETE'];
+    public const VERBS = ['GET', 'POST', 'PUT', 'PATCH', 'OPTIONS', 'HEAD', 'DELETE'];
 
     /**
      * @param UriHandler $uriHandler
