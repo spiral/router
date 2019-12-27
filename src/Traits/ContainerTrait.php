@@ -25,6 +25,6 @@ trait ContainerTrait
      */
     public function hasContainer(): bool
     {
-        return !empty($this->container);
+        return $this->container !== null;
     }
 }

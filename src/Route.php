@@ -53,8 +53,8 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     private $requestHandler;
 
     /**
-     * @param string                                                  $pattern Uri pattern.
-     * @param string|callable|RequestHandlerInterface|TargetInterface $target Callable route target.
+     * @param string                                                  $pattern  Uri pattern.
+     * @param string|callable|RequestHandlerInterface|TargetInterface $target   Callable route target.
      * @param array                                                   $defaults Default value set.
      */
     public function __construct(string $pattern, $target, array $defaults = [])
@@ -132,7 +132,7 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     protected function requestHandler(): RequestHandlerInterface
     {
         if (!$this->hasContainer()) {
-            throw new RouteException('Unable to configure route pipeline without associated container.');
+            throw new RouteException('Unable to configure route pipeline without associated container');
         }
 
         if ($this->target instanceof TargetInterface) {

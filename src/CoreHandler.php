@@ -97,6 +97,8 @@ final class CoreHandler implements RequestHandlerInterface
 
     /**
      * @inheritdoc
+     *
+     * @throws \Throwable
      */
     public function handle(Request $request): Response
     {

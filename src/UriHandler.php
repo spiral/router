@@ -27,6 +27,11 @@ final class UriHandler
     private const DEFAULT_SEGMENT  = '[^\/]+';
     private const PATTERN_REPLACES = ['/' => '\\/', '[' => '(?:', ']' => ')?', '.' => '\.'];
     private const SEGMENT_REPLACES = ['/' => '\\/', '.' => '\.'];
+    private const SEGMENT_TYPES    = [
+        'int'     => '\d+',
+        'integer' => '\d+',
+        'uuid'    => '0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
+    ];
     private const URI_FIXERS       = [
         '[]'  => '',
         '[/]' => '',
@@ -70,10 +75,20 @@ final class UriHandler
      * @param UriFactoryInterface $uriFactory
      * @param SlugifyInterface    $slugify
      */
-    public function __construct(UriFactoryInterface $uriFactory, SlugifyInterface $slugify = null)
-    {
+    public function __construct(
+        UriFactoryInterface $uriFactory,
+        SlugifyInterface $slugify = null
+    ) {
         $this->uriFactory = $uriFactory;
         $this->slugify = $slugify ?? new Slugify();
+    }
+
+    /**
+     * @return string
+     */
+    public function getPattern(): string
+    {
+        return $this->pattern;
     }
 
     /**
@@ -249,12 +264,12 @@ final class UriHandler
         }
 
         if ($this->matchHost) {
-            $uri = $uri->getHost() . $path;
+            $uriString = $uri->getHost() . $path;
         } else {
-            $uri = substr($path, strlen($this->prefix));
+            $uriString = substr($path, strlen($this->prefix));
         }
 
-        return trim($uri, '/');
+        return trim($uriString, '/');
     }
 
     /**
@@ -294,11 +309,13 @@ final class UriHandler
             }
 
             if (!array_key_exists($key, $options) && !isset($this->defaults[$key])) {
-                throw new ConstrainException(sprintf(
-                    'Route `%s` does not define routing parameter `<%s>`.',
-                    $this->pattern,
-                    $key
-                ));
+                throw new ConstrainException(
+                    sprintf(
+                        'Route `%s` does not define routing parameter `<%s>`.',
+                        $this->pattern,
+                        $key
+                    )
+                );
             }
         }
 
@@ -335,7 +352,7 @@ final class UriHandler
     private function prepareSegment(string $name, string $segment): string
     {
         if ($segment !== '') {
-            return $segment;
+            return self::SEGMENT_TYPES[$segment] ?? $segment;
         }
 
         if (!isset($this->constrains[$name])) {
@@ -345,7 +362,7 @@ final class UriHandler
         if (is_array($this->constrains[$name])) {
             $values = array_map([$this, 'filterSegment'], $this->constrains[$name]);
 
-            return join('|', $values);
+            return implode('|', $values);
         }
 
         return $this->filterSegment((string)$this->constrains[$name]);

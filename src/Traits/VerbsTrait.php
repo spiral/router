@@ -32,12 +32,13 @@ trait VerbsTrait
     {
         foreach ($verbs as &$verb) {
             $verb = strtoupper($verb);
-            if (!in_array($verb, RouteInterface::VERBS)) {
-                throw new RouteException("Invalid HTTP verb `{$verb}`.");
+            if (!in_array($verb, RouteInterface::VERBS, true)) {
+                throw new RouteException("Invalid HTTP verb `{$verb}`");
             }
 
             unset($verb);
         }
+        unset($verb);
 
         $route = clone $this;
         $route->verbs = $verbs;

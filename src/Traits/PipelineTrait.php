@@ -24,7 +24,7 @@ trait PipelineTrait
     /** @var Pipeline */
     protected $pipeline;
 
-    /** @var MiddlewareInterface|string */
+    /** @var MiddlewareInterface|string[] */
     protected $middleware = [];
 
     /**
@@ -46,7 +46,7 @@ trait PipelineTrait
         $route = clone $this;
 
         // array fallback
-        if (count($middleware) == 1 && is_array($middleware[0])) {
+        if (count($middleware) === 1 && is_array($middleware[0])) {
             $middleware = $middleware[0];
         }
 
@@ -58,13 +58,13 @@ trait PipelineTrait
                     $name = gettype($item);
                 }
 
-                throw new RouteException("Invalid middleware `{$name}`.");
+                throw new RouteException("Invalid middleware `{$name}`");
             }
 
             $route->middleware[] = $item;
         }
 
-        if (!empty($route->pipeline)) {
+        if ($route->pipeline !== null) {
             $route->pipeline = $route->makePipeline();
         }
 

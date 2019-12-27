@@ -40,10 +40,12 @@ final class Action extends AbstractTarget
     public function __construct(string $controller, $action, int $options = 0)
     {
         if (!is_string($action) && !is_array($action)) {
-            throw new InvalidArgumentException(sprintf(
-                'Action parameter must type string or array, `%s` given.',
-                gettype($action)
-            ));
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Action parameter must type string or array, `%s` given',
+                    gettype($action)
+                )
+            );
         }
 
         $this->controller = $controller;

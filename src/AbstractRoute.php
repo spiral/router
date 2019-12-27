@@ -28,7 +28,7 @@ abstract class AbstractRoute implements RouteInterface
     protected $pattern;
 
     /** @var array|null */
-    protected $matches = null;
+    protected $matches;
 
     /**
      * @param string $pattern
@@ -65,7 +65,7 @@ abstract class AbstractRoute implements RouteInterface
      */
     public function match(Request $request): ?RouteInterface
     {
-        if (!in_array(strtoupper($request->getMethod()), $this->getVerbs())) {
+        if (!in_array(strtoupper($request->getMethod()), $this->getVerbs(), true)) {
             return null;
         }
 

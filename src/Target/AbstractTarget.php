@@ -41,6 +41,7 @@ abstract class AbstractTarget implements TargetInterface
     /** @var bool */
     private $verbActions;
 
+    /** @var string */
     private $defaultAction;
 
     /**

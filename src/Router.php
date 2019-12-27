@@ -216,16 +216,18 @@ final class Router implements RouterInterface
         }
 
         if (!empty($matches['name'])) {
-            $route = $this->getRoute($matches['name']);
+            $routeObject = $this->getRoute($matches['name']);
         } elseif ($this->default !== null) {
-            $route = $this->default;
+            $routeObject = $this->default;
         } else {
             throw new UndefinedRouteException("Unable to locate route candidate for `{$route}`");
         }
 
-        return $route->withDefaults([
-            'controller' => $matches['controller'],
-            'action'     => $matches['action']
-        ]);
+        return $routeObject->withDefaults(
+            [
+                'controller' => $matches['controller'],
+                'action'     => $matches['action']
+            ]
+        );
     }
 }
