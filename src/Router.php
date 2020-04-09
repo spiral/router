@@ -29,6 +29,9 @@ final class Router implements RouterInterface
     public const ROUTE_ATTRIBUTE = 'route';
 
     // attribute to store active route in request
+    public const ROUTE_NAME = 'routeName';
+
+    // attribute to store active route in request
     public const ROUTE_MATCHES = 'matches';
 
     /** @var string */
@@ -67,7 +70,7 @@ final class Router implements RouterInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         try {
-            $route = $this->matchRoute($request);
+            $route = $this->matchRoute($request, $routeName);
         } catch (RouteException $e) {
             throw new RouterException('Invalid route definition', $e->getCode(), $e);
         }
@@ -79,6 +82,7 @@ final class Router implements RouterInterface
         return $route->handle(
             $request
                 ->withAttribute(self::ROUTE_ATTRIBUTE, $route)
+                ->withAttribute(self::ROUTE_NAME, $routeName)
                 ->withAttribute(self::ROUTE_MATCHES, $route->getMatches() ?? [])
         );
     }
@@ -155,13 +159,14 @@ final class Router implements RouterInterface
      * @param ServerRequestInterface $request
      * @return null|RouteInterface
      */
-    protected function matchRoute(ServerRequestInterface $request): ?RouteInterface
+    protected function matchRoute(ServerRequestInterface $request, string &$routeName = null): ?RouteInterface
     {
-        foreach ($this->routes as $route) {
+        foreach ($this->routes as $name => $route) {
             // Matched route will return new route instance with matched parameters
             $matched = $route->match($request);
 
             if ($matched !== null) {
+                $routeName = $name;
                 return $matched;
             }
         }
