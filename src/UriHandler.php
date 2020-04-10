@@ -202,7 +202,7 @@ final class UriHandler
 
         foreach ($this->constrains as $key => $values) {
             if (empty($parameters[$key])) {
-                throw new UriHandlerException("Unable to generate Uri, parameter `{$key}` is missing.");
+                throw new UriHandlerException("Unable to generate Uri, parameter `{$key}` is missing");
             }
         }
 
@@ -267,6 +267,9 @@ final class UriHandler
             $uriString = $uri->getHost() . $path;
         } else {
             $uriString = substr($path, strlen($this->prefix));
+            if ($uriString === false) {
+                $uriString = '';
+            }
         }
 
         return trim($uriString, '/');
