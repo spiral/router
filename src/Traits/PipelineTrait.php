@@ -86,20 +86,20 @@ trait PipelineTrait
         }
 
         try {
-            $this->pipeline = $this->container->get(Pipeline::class);
+            $pipeline = $this->container->get(Pipeline::class);
 
             foreach ($this->middleware as $middleware) {
                 if ($middleware instanceof MiddlewareInterface) {
-                    $this->pipeline->pushMiddleware($middleware);
+                    $pipeline->pushMiddleware($middleware);
                 } else {
                     // dynamically resolved
-                    $this->pipeline->pushMiddleware($this->container->get($middleware));
+                    $pipeline->pushMiddleware($this->container->get($middleware));
                 }
             }
         } catch (ContainerExceptionInterface $e) {
             throw new RouteException($e->getMessage(), $e->getCode(), $e);
         }
 
-        return $this->pipeline;
+        return $pipeline;
     }
 }
