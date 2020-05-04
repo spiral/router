@@ -80,6 +80,11 @@ trait PipelineTrait
      */
     protected function makePipeline(): Pipeline
     {
+        // pre-aggregated
+        if (count($this->middleware) === 1 && $this->middleware[0] instanceof Pipeline) {
+            return $this->middleware[0];
+        }
+
         try {
             $this->pipeline = $this->container->get(Pipeline::class);
 
