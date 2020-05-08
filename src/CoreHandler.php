@@ -18,6 +18,7 @@ use Spiral\Http\Exception\ClientException;
 use Spiral\Http\Exception\ClientException\BadRequestException;
 use Spiral\Http\Exception\ClientException\ForbiddenException;
 use Spiral\Http\Exception\ClientException\NotFoundException;
+use Spiral\Http\Exception\ClientException\UnauthorizedException;
 use Spiral\Http\Traits\JsonTrait;
 use Spiral\Router\Exception\HandlerException;
 
@@ -185,6 +186,8 @@ class CoreHandler implements RequestHandlerInterface
                 return new NotFoundException($exception->getMessage());
             case ControllerException::FORBIDDEN:
                 return new ForbiddenException($exception->getMessage());
+            case ControllerException::UNAUTHORIZED:
+                return new UnauthorizedException($exception->getMessage());
             default:
                 return new BadRequestException($exception->getMessage());
         }
