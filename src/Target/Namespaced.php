@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Spiral\Router\Target;
 
-use Doctrine\Common\Inflector\Inflector;
 use Spiral\Router\Exception\TargetException;
 
 /**
@@ -26,6 +25,9 @@ final class Namespaced extends AbstractTarget
 
     /** @var string */
     private $postfix;
+
+    /** @var \Doctrine\Inflector\Inflector */
+    private $inflector;
 
     /**
      * @param string $namespace
@@ -47,6 +49,8 @@ final class Namespaced extends AbstractTarget
             ['controller' => null, 'action' => null],
             $options
         );
+
+        $this->inflector = (new \Doctrine\Inflector\Rules\English\InflectorFactory())->build();
     }
 
     /**
@@ -61,7 +65,7 @@ final class Namespaced extends AbstractTarget
         return sprintf(
             '%s\\%s%s',
             $this->namespace,
-            Inflector::classify($matches['controller']),
+            $this->inflector->classify($matches['controller']),
             $this->postfix
         );
     }
