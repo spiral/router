@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Router\Diactoros;
@@ -14,7 +7,7 @@ namespace Spiral\Tests\Router\Diactoros;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UploadedFileFactoryInterface;
 use Psr\Http\Message\UploadedFileInterface;
-use Laminas\Diactoros\UploadedFile;
+use Nyholm\Psr7\UploadedFile;
 
 final class UploadedFileFactory implements UploadedFileFactoryInterface
 {

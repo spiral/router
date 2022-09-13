@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router;
@@ -14,17 +7,11 @@ namespace Spiral\Router;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Router\Exception\RouteException;
-use Spiral\Router\Exception\RouterException;
 use Spiral\Router\Exception\UndefinedRouteException;
+use Spiral\Router\Loader\Configurator\RoutingConfigurator;
 
 interface RouterInterface extends RequestHandlerInterface
 {
-    /**
-     * @throws RouterException
-     * @deprecated see setRoute()
-     */
-    public function addRoute(string $name, RouteInterface $route): void;
-
     /**
      * Set route.
      */
@@ -37,7 +24,6 @@ interface RouterInterface extends RequestHandlerInterface
 
     /**
      * Get route by it's name.
-     *
      *
      * @throws UndefinedRouteException
      */
@@ -61,5 +47,7 @@ interface RouterInterface extends RequestHandlerInterface
      * @throws RouteException
      * @throws UndefinedRouteException
      */
-    public function uri(string $route, $parameters = []): UriInterface;
+    public function uri(string $route, iterable $parameters = []): UriInterface;
+
+    public function import(RoutingConfigurator $routes): void;
 }

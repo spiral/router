@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
@@ -22,7 +15,7 @@ class TestCore implements CoreInterface
         $this->core = $core;
     }
 
-    public function callAction(string $controller, string $action = null, array $parameters = [])
+    public function callAction(string $controller, string $action = null, array $parameters = []): string
     {
         return '@wrapped.' . $this->core->callAction($controller, $action, $parameters);
     }

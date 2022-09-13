@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
@@ -95,6 +88,25 @@ class UriTest extends BaseTest
         $router = $this->makeRouter();
 
         $uri = $router->uri('test:id', ['id' => 100, 'title' => 'Hello World']);
+        $this->assertSame('/test/id/100-hello-world', $uri->getPath());
+    }
+
+    public function testObject(): void
+    {
+        $router = $this->makeRouter();
+        $router->setDefault(
+            new Route('/<controller>[/<action>[/<id>[-<title>]]]', new Group([
+                'test' => TestController::class,
+            ]))
+        );
+
+        $uri = $router->uri('test:id', ['id' => 100, 'title' => new class implements \Stringable {
+            public function __toString()
+            {
+                return 'hello-world';
+            }
+        }]);
+
         $this->assertSame('/test/id/100-hello-world', $uri->getPath());
     }
 }

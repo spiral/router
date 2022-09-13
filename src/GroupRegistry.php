@@ -1,17 +1,9 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router;
 
-use Psr\Container\ContainerInterface;
 use Spiral\Core\FactoryInterface;
 
 /**
@@ -19,15 +11,14 @@ use Spiral\Core\FactoryInterface;
  */
 final class GroupRegistry implements \IteratorAggregate
 {
-    /** @var ContainerInterface */
-    private $factory;
+    private string $defaultGroup = 'web';
 
-    /** @var RouteGroup[] */
-    private $groups = [];
+    /** @var array<non-empty-string, RouteGroup> */
+    private array $groups = [];
 
-    public function __construct(FactoryInterface $factory)
-    {
-        $this->factory = $factory;
+    public function __construct(
+        private readonly FactoryInterface $factory
+    ) {
     }
 
     public function getGroup(string $name): RouteGroup
@@ -37,6 +28,18 @@ final class GroupRegistry implements \IteratorAggregate
         }
 
         return $this->groups[$name];
+    }
+
+    public function setDefaultGroup(string $group): self
+    {
+        $this->defaultGroup = $group;
+
+        return $this;
+    }
+
+    public function getDefaultGroup(): string
+    {
+        return $this->defaultGroup;
     }
 
     /**

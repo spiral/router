@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Router;
@@ -21,25 +14,17 @@ abstract class AbstractRoute implements RouteInterface
     use VerbsTrait;
     use DefaultsTrait;
 
-    /** @var UriHandler */
-    protected $uriHandler;
+    protected UriHandler $uriHandler;
+    protected ?array $matches = null;
 
-    /** @var string */
-    protected $pattern;
-
-    /** @var array|null */
-    protected $matches;
-
-    public function __construct(string $pattern, array $defaults = [])
-    {
-        $this->pattern = $pattern;
+    public function __construct(
+        protected string $pattern,
+        array $defaults = []
+    ) {
         $this->defaults = $defaults;
     }
 
-    /**
-     * @return static
-     */
-    public function withUriHandler(UriHandler $uriHandler): RouteInterface
+    public function withUriHandler(UriHandler $uriHandler): static
     {
         $route = clone $this;
         $route->uriHandler = $uriHandler->withPattern($this->pattern);
@@ -47,20 +32,14 @@ abstract class AbstractRoute implements RouteInterface
         return $route;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getUriHandler(): UriHandler
     {
         return $this->uriHandler;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function match(Request $request): ?RouteInterface
+    public function match(Request $request): ?static
     {
-        if (!in_array(strtoupper($request->getMethod()), $this->getVerbs(), true)) {
+        if (!\in_array(\strtoupper($request->getMethod()), $this->getVerbs(), true)) {
             return null;
         }
 
@@ -75,17 +54,11 @@ abstract class AbstractRoute implements RouteInterface
         return $route;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getMatches(): ?array
     {
         return $this->matches;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function uri(iterable $parameters = []): UriInterface
     {
         return $this->uriHandler->uri(

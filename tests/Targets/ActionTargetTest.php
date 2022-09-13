@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Router\Targets;
@@ -14,14 +7,13 @@ namespace Spiral\Tests\Router\Targets;
 use PHPUnit\Framework\TestCase;
 use Spiral\Router\Autofill;
 use Spiral\Router\Exception\ConstrainException;
-use Spiral\Router\Exception\InvalidArgumentException;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Action;
 use Spiral\Tests\Router\Diactoros\UriFactory;
 use Spiral\Tests\Router\Fixtures\TestController;
 use Spiral\Router\UriHandler;
-use Laminas\Diactoros\ServerRequest;
-use Laminas\Diactoros\Uri;
+use Nyholm\Psr7\ServerRequest;
+use Nyholm\Psr7\Uri;
 
 class ActionTargetTest extends TestCase
 {
@@ -53,7 +45,7 @@ class ActionTargetTest extends TestCase
         $route = new Route('/home', new Action(TestController::class, ['test', 'other']));
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
-        $route->match(new ServerRequest());
+        $route->match(new ServerRequest('GET', ''));
     }
 
     public function testMatch(): void
@@ -66,42 +58,35 @@ class ActionTargetTest extends TestCase
 
         $route = $route->withDefaults(['action' => 'test']);
 
-        $this->assertNull($route->match(new ServerRequest()));
-        $this->assertNull($route->match(new ServerRequest([], [], new Uri('/test/something'))));
-        $this->assertNull($route->match(new ServerRequest([], [], new Uri('/test/tester'))));
+        $this->assertNull($route->match(new ServerRequest('GET', '')));
+        $this->assertNull($route->match(new ServerRequest('GET', new Uri('/test/something'))));
+        $this->assertNull($route->match(new ServerRequest('GET', new Uri('/test/tester'))));
 
         $this->assertNotNull(
-            $match = $route->match(new ServerRequest([], [], new Uri('/test')))
+            $match = $route->match(new ServerRequest('GET', new Uri('/test')))
         );
 
         $this->assertSame(['action' => 'test'], $match->getMatches());
 
         $this->assertNotNull(
-            $match = $route->match(new ServerRequest([], [], new Uri('/test/')))
+            $match = $route->match(new ServerRequest('GET', new Uri('/test/')))
         );
         $this->assertSame(['action' => 'test'], $match->getMatches());
 
         $this->assertNotNull(
-            $match = $route->match(new ServerRequest([], [], new Uri('/test/test')))
+            $match = $route->match(new ServerRequest('GET', new Uri('/test/test')))
         );
         $this->assertSame(['action' => 'test'], $match->getMatches());
 
         $this->assertNotNull(
-            $match = $route->match(new ServerRequest([], [], new Uri('/test/test/')))
+            $match = $route->match(new ServerRequest('GET', new Uri('/test/test/')))
         );
         $this->assertSame(['action' => 'test'], $match->getMatches());
 
         $this->assertNotNull(
-            $match = $route->match(new ServerRequest([], [], new Uri('/test/other')))
+            $match = $route->match(new ServerRequest('GET', new Uri('/test/other')))
         );
 
         $this->assertSame(['action' => 'other'], $match->getMatches());
-    }
-
-    public function testActionException(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        new Action(TestController::class, $this);
     }
 }
