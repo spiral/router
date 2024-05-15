@@ -45,7 +45,7 @@ final class RouteGroupTest extends BaseTestCase
         $this->assertSame('controller', $this->getProperty($t, 'controller'));
         $this->assertSame('method', $this->getProperty($t, 'action'));
 
-        $this->assertInstanceOf(RoutesTestCore::class, $this->getActionProperty($t, 'pipeline'));
+        $this->assertInstanceOf(RoutesTestCore::class, $this->getActionProperty($t, 'core'));
     }
 
     public function testCoreObject(): void
@@ -63,7 +63,7 @@ final class RouteGroupTest extends BaseTestCase
         $this->assertSame('controller', $this->getProperty($t, 'controller'));
         $this->assertSame('method', $this->getProperty($t, 'action'));
 
-        $this->assertInstanceOf(RoutesTestCore::class, $this->getActionProperty($t, 'pipeline'));
+        $this->assertInstanceOf(RoutesTestCore::class, $this->getActionProperty($t, 'core'));
     }
 
     public function testGroupHasRoute(): void

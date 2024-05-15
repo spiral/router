@@ -7,7 +7,6 @@ namespace Spiral\Router\Loader\Configurator;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Core\CoreInterface;
-use Spiral\Interceptors\HandlerInterface;
 use Spiral\Router\Exception\TargetException;
 use Spiral\Router\RouteCollection;
 use Spiral\Router\Target\Action;
@@ -22,7 +21,7 @@ final class RouteConfigurator
     private ?string $group = null;
     private ?array $methods = null;
     private string $prefix = '';
-    private HandlerInterface|CoreInterface|null $core = null;
+    private ?CoreInterface $core = null;
     private ?array $middleware = null;
 
     /** @var null|string|callable|RequestHandlerInterface|TargetInterface */
@@ -134,7 +133,7 @@ final class RouteConfigurator
         return $this;
     }
 
-    public function core(HandlerInterface|CoreInterface $core): self
+    public function core(CoreInterface $core): self
     {
         $this->core = $core;
 

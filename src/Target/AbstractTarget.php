@@ -10,7 +10,6 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\ScopeInterface;
-use Spiral\Interceptors\HandlerInterface;
 use Spiral\Router\CoreHandler;
 use Spiral\Router\Exception\TargetException;
 use Spiral\Router\TargetInterface;
@@ -25,7 +24,7 @@ abstract class AbstractTarget implements TargetInterface
     // Automatically prepend HTTP verb to all action names.
     public const RESTFUL = 1;
 
-    private HandlerInterface|CoreInterface|null $pipeline = null;
+    private ?CoreInterface $core = null;
     private ?CoreHandler $handler = null;
     private bool $verbActions;
 
@@ -50,24 +49,11 @@ abstract class AbstractTarget implements TargetInterface
 
     /**
      * @mutation-free
-     * @deprecated Use {@see withHandler()} instead.
      */
-    public function withCore(HandlerInterface|CoreInterface $core): TargetInterface
+    public function withCore(CoreInterface $core): TargetInterface
     {
         $target = clone $this;
-        $target->pipeline = $core;
-        $target->handler = null;
-
-        return $target;
-    }
-
-    /**
-     * @mutation-free
-     */
-    public function withHandler(HandlerInterface $handler): TargetInterface
-    {
-        $target = clone $this;
-        $target->pipeline = $handler;
+        $target->core = $core;
         $target->handler = null;
 
         return $target;
@@ -91,7 +77,7 @@ abstract class AbstractTarget implements TargetInterface
         try {
             // construct on demand
             $this->handler = new CoreHandler(
-                $this->pipeline ?? $container->get(HandlerInterface::class),
+                $this->core ?? $container->get(CoreInterface::class),
                 $container->get(ScopeInterface::class),
                 $container->get(ResponseFactoryInterface::class),
                 $container->get(TracerInterface::class)
