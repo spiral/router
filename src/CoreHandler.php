@@ -10,14 +10,20 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Core\CoreInterface;
 use Spiral\Core\Exception\ControllerException;
+use Spiral\Core\Scope;
 use Spiral\Core\ScopeInterface;
 use Spiral\Http\Exception\ClientException;
 use Spiral\Http\Exception\ClientException\BadRequestException;
 use Spiral\Http\Exception\ClientException\ForbiddenException;
 use Spiral\Http\Exception\ClientException\NotFoundException;
+use Spiral\Http\Exception\ClientException\ServerErrorException;
 use Spiral\Http\Exception\ClientException\UnauthorizedException;
 use Spiral\Http\Stream\GeneratorStream;
 use Spiral\Http\Traits\JsonTrait;
+use Spiral\Interceptors\Context\CallContext;
+use Spiral\Interceptors\Context\Target;
+use Spiral\Interceptors\Exception\TargetCallException;
+use Spiral\Interceptors\HandlerInterface;
 use Spiral\Router\Exception\HandlerException;
 use Spiral\Telemetry\NullTracer;
 use Spiral\Telemetry\TracerInterface;
@@ -37,13 +43,16 @@ final class CoreHandler implements RequestHandlerInterface
     /** @readonly */
     private ?array $parameters = null;
 
+    private bool $isLegacyPipeline;
+
     public function __construct(
-        private readonly CoreInterface $core,
+        private readonly HandlerInterface|CoreInterface $core,
         private readonly ScopeInterface $scope,
         private readonly ResponseFactoryInterface $responseFactory,
         ?TracerInterface $tracer = null
     ) {
         $this->tracer = $tracer ?? new NullTracer($scope);
+        $this->isLegacyPipeline = !$core instanceof HandlerInterface;
     }
 
     /**
@@ -95,18 +104,29 @@ final class CoreHandler implements RequestHandlerInterface
                 : $this->action;
 
             // run the core withing PSR-7 Request/Response scope
+            /**
+             * @psalm-suppress InvalidArgument
+             * TODO: Can we bind all controller classes at the bootstrap stage?
+             */
             $result = $this->scope->runScope(
-                [
-                    Request::class  => $request,
-                    Response::class => $response,
-                ],
+                new Scope(
+                    name: 'http.request',
+                    bindings: [Request::class => $request, Response::class => $response, $controller => $controller],
+                ),
                 fn (): mixed => $this->tracer->trace(
                     name: 'Controller [' . $controller . ':' . $action . ']',
-                    callback: fn (): mixed => $this->core->callAction(
-                        controller: $controller,
-                        action: $action,
-                        parameters: $parameters,
-                    ),
+                    callback: $this->isLegacyPipeline
+                        ? fn (): mixed => $this->core->callAction(
+                            controller: $controller,
+                            action: $action,
+                            parameters: $parameters,
+                        )
+                        : fn (): mixed => $this->core->handle(
+                            new CallContext(
+                                Target::fromPair($controller, $action),
+                                $parameters,
+                            ),
+                        ),
                     attributes: [
                         'route.controller' => $this->controller,
                         'route.action' => $action,
@@ -114,7 +134,7 @@ final class CoreHandler implements RequestHandlerInterface
                     ]
                 )
             );
-        } catch (ControllerException $e) {
+        } catch (TargetCallException $e) {
             \ob_get_clean();
             throw $this->mapException($e);
         } catch (\Throwable $e) {
@@ -169,13 +189,14 @@ final class CoreHandler implements RequestHandlerInterface
     /**
      * Converts core specific ControllerException into HTTP ClientException.
      */
-    private function mapException(ControllerException $exception): ClientException
+    private function mapException(TargetCallException $exception): ClientException
     {
         return match ($exception->getCode()) {
-            ControllerException::BAD_ACTION,
-            ControllerException::NOT_FOUND => new NotFoundException('Not found', $exception),
-            ControllerException::FORBIDDEN => new ForbiddenException('Forbidden', $exception),
-            ControllerException::UNAUTHORIZED => new UnauthorizedException('Unauthorized', $exception),
+            TargetCallException::BAD_ACTION,
+            TargetCallException::NOT_FOUND => new NotFoundException('Not found', $exception),
+            TargetCallException::FORBIDDEN => new ForbiddenException('Forbidden', $exception),
+            TargetCallException::UNAUTHORIZED => new UnauthorizedException('Unauthorized', $exception),
+            TargetCallException::INVALID_CONTROLLER => new ServerErrorException('Server error', $exception),
             default => new BadRequestException('Bad request', $exception),
         };
     }
