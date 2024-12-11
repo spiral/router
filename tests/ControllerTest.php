@@ -74,10 +74,10 @@ class ControllerTest extends BaseTestCase
     public function testFallbackHandler(): void
     {
         $target = new Action(TestController::class, 'default');
-        $this->getContainer()->removeBinding(HandlerInterface::class);
-        $this->getContainer()->removeBinding(CoreInterface::class);
+        $this->container->removeBinding(HandlerInterface::class);
+        $this->container->removeBinding(CoreInterface::class);
 
-        $core = $target->getHandler($this->getContainer(), []);
+        $core = $target->getHandler($this->container, []);
         $handler = (fn(CoreHandler $core) => $core->core)->call($core, $core);
 
         self::assertInstanceOf(AutowireHandler::class, $handler);

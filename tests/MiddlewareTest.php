@@ -6,7 +6,6 @@ namespace Spiral\Tests\Router;
 
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
-use Psr\Container\NotFoundExceptionInterface;
 use Spiral\Router\Exception\RouteException;
 use Spiral\Router\Route;
 use Spiral\Router\Target\Group;
@@ -15,10 +14,8 @@ use Spiral\Tests\Router\Diactoros\UriFactory;
 use Spiral\Tests\Router\Fixtures\TestController;
 use Spiral\Tests\Router\Stub\HeaderMiddleware;
 
-class MiddlewareTest extends BaseTestingCase
+class MiddlewareTest extends BaseTestCase
 {
-    use RouterFactoryTrait;
-
     public function testRoute(): void
     {
         $router = $this->makeRouter();
@@ -85,28 +82,40 @@ class MiddlewareTest extends BaseTestingCase
 
     public function testInvalid(): void
     {
+        $this->expectException(RouteException::class);
+
         $router = $this->makeRouter();
 
-        $this->expectException(\Throwable::class);
         $router->setRoute(
             'group',
             (new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
             ])))->withMiddleware($this)
         );
+
+        $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('hello world', (string)$response->getBody());
+        $this->assertSame('Value*, Value*', $response->getHeaderLine('Header'));
     }
 
     public function testInvalid2(): void
     {
+        $this->expectException(RouteException::class);
+
         $router = $this->makeRouter();
 
-        $this->expectException(\Throwable::class);
         $router->setRoute(
             'group',
             (new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
             ])))->withMiddleware([[]])
         );
+
+        $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('hello world', (string)$response->getBody());
+        $this->assertSame('Value*, Value*', $response->getHeaderLine('Header'));
     }
 
     public function testPipelineException(): void
@@ -125,18 +134,18 @@ class MiddlewareTest extends BaseTestingCase
         $this->assertSame('Value*, Value*', $response->getHeaderLine('Header'));
     }
 
-    public function testUndefinedMiddleware(): void
+    public function testPipelineExceptionMiddleware(): void
     {
+        $this->expectException(RouteException::class);
+
         $r = (new Route('/<controller>[/<action>[/<id>]]', new Group([
             'test' => TestController::class,
         ])))->withMiddleware([new HeaderMiddleware(), 'other']);
         $r = $r->withUriHandler(new UriHandler(new UriFactory()));
 
-        $r = $r->withContainer($this->getContainer());
+        $r = $r->withContainer($this->container);
 
         $r = $r->match(new ServerRequest('GET', new Uri('/test')));
-
-        $this->expectException(NotFoundExceptionInterface::class);
         $r->handle(new ServerRequest('GET', new Uri('/test')));
     }
 }

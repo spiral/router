@@ -15,7 +15,7 @@ use Spiral\Tests\Router\Fixtures\UserContextBootloader;
 use Spiral\Tests\Router\Fixtures\UserContextController;
 use Spiral\Tests\Router\Stub\IdentityScopedMiddleware;
 
-class ContainerScopeTest extends BaseTestingCase
+class ContainerScopeTest extends \Spiral\Testing\TestCase
 {
     public function defineBootloaders(): array
     {

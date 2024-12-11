@@ -59,7 +59,7 @@ class NamespacedTest extends BaseTestCase
 
         $n = new Namespaced('Spiral\Tests\Router\Fixtures');
 
-        $n->getHandler($this->getContainer(), [
+        $n->getHandler($this->container, [
             'controller' => 'secret/controller',
             'action'     => null,
         ]);
