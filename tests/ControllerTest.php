@@ -42,16 +42,16 @@ class ControllerTest extends BaseTestCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('hello world', (string)$response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('hello world', (string)$response->getBody());
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/echo')));
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('echoed', (string)$response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('echoed', (string)$response->getBody());
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/id/888')));
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('888', (string)$response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('888', (string)$response->getBody());
     }
 
     public function testOptionalParam(): void
@@ -63,22 +63,22 @@ class ControllerTest extends BaseTestCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/default')));
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('default', (string)$response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('default', (string)$response->getBody());
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/default/123')));
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('123', (string)$response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('123', (string)$response->getBody());
     }
 
     public function testFallbackHandler(): void
     {
         $target = new Action(TestController::class, 'default');
-        $this->getContainer()->removeBinding(HandlerInterface::class);
-        $this->getContainer()->removeBinding(CoreInterface::class);
+        $this->container->removeBinding(HandlerInterface::class);
+        $this->container->removeBinding(CoreInterface::class);
 
-        $core = $target->getHandler($this->getContainer(), []);
-        $handler = (fn(CoreHandler $core): HandlerInterface|CoreInterface => $core->core)->call($core, $core);
+        $core = $target->getHandler($this->container, []);
+        $handler = (fn(CoreHandler $core) => $core->core)->call($core, $core);
 
         self::assertInstanceOf(AutowireHandler::class, $handler);
     }
@@ -92,12 +92,12 @@ class ControllerTest extends BaseTestCase
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/defaultInt')));
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('int: 1', (string)$response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('int: 1', (string)$response->getBody());
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/defaultInt/123')));
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('string: 123', (string)$response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('string: 123', (string)$response->getBody());
     }
 
     public function testUriGeneration(): void
@@ -109,10 +109,10 @@ class ControllerTest extends BaseTestCase
         );
 
         $uri = $router->uri('action/test');
-        self::assertSame('/test', $uri->getPath());
+        $this->assertSame('/test', $uri->getPath());
 
         $uri = $router->uri('action/id', ['id' => 100]);
-        self::assertSame('/id/100', $uri->getPath());
+        $this->assertSame('/id/100', $uri->getPath());
     }
 
     public function testClientException(): void

@@ -33,14 +33,18 @@ class HostsTest extends BaseTestCase
             new Action(TestController::class, 'test')
         ));
 
-        self::assertNotNull($r = $router->handle(new ServerRequest('GET', 'http://domain.com/')));
+        $this->assertNotNull(
+            $r = $router->handle(new ServerRequest('GET', 'http://domain.com/'))
+        );
 
-        self::assertSame(200, $r->getStatusCode());
-        self::assertSame('hello world', (string)$r->getBody());
+        $this->assertSame(200, $r->getStatusCode());
+        $this->assertSame('hello world', (string)$r->getBody());
 
-        self::assertNotNull($r = $router->handle(new ServerRequest('GET', 'https://domain.com/')));
+        $this->assertNotNull(
+            $r = $router->handle(new ServerRequest('GET', 'https://domain.com/'))
+        );
 
-        self::assertSame(200, $r->getStatusCode());
-        self::assertSame('hello world', (string)$r->getBody());
+        $this->assertSame(200, $r->getStatusCode());
+        $this->assertSame('hello world', (string)$r->getBody());
     }
 }

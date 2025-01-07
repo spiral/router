@@ -28,7 +28,7 @@ class PatternsTests extends TestCase
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://site.com/statistics/set/10/285/0')));
 
-        self::assertSame([
+        $this->assertSame([
             'moduleType' => '10',
             'moduleId' => '285',
             'type' => '0',
@@ -48,7 +48,7 @@ class PatternsTests extends TestCase
             new ServerRequest('GET', new Uri('http://site.com/users/1'))
         );
 
-        self::assertSame([
+        $this->assertSame([
             'int' => '1',
         ], $match->getMatches());
     }
@@ -66,7 +66,7 @@ class PatternsTests extends TestCase
             new ServerRequest('GET', new Uri('http://site.com/users/1b'))
         );
 
-        self::assertNull($match);
+        $this->assertNull($match);
     }
 
     public function testIntegerPatternWithValidValue(): void
@@ -82,7 +82,7 @@ class PatternsTests extends TestCase
             new ServerRequest('GET', new Uri('http://site.com/users/1'))
         );
 
-        self::assertSame([
+        $this->assertSame([
             'integer' => '1',
         ], $match->getMatches());
     }
@@ -100,7 +100,7 @@ class PatternsTests extends TestCase
             new ServerRequest('GET', new Uri('http://site.com/users/1b'))
         );
 
-        self::assertNull($match);
+        $this->assertNull($match);
     }
 
     public function testUuidPatternWithValidValue(): void
@@ -116,7 +116,7 @@ class PatternsTests extends TestCase
             new ServerRequest('GET', new Uri('http://site.com/users/34f7b660-7ad0-11ed-a1eb-0242ac120002'))
         );
 
-        self::assertSame([
+        $this->assertSame([
             'uuid' => '34f7b660-7ad0-11ed-a1eb-0242ac120002',
         ], $match->getMatches());
     }
@@ -134,7 +134,7 @@ class PatternsTests extends TestCase
             new ServerRequest('GET', new Uri('http://site.com/users/34f7b660-7ad0'))
         );
 
-        self::assertNull($match);
+        $this->assertNull($match);
     }
 
     public function testCustomPattern(): void
@@ -162,7 +162,7 @@ class PatternsTests extends TestCase
             new ServerRequest('GET', new Uri('http://site.com/users/34f7b660-7ad0-11ed-a1eb-0242ac222222'))
         );
 
-        self::assertSame([
+        $this->assertSame([
             'uuid' => '34f7b660-7ad0-11ed-a1eb-0242ac222222',
         ], $match->getMatches());
     }
@@ -202,12 +202,12 @@ class PatternsTests extends TestCase
             new ServerRequest('GET', new Uri('http://site.com/users/baz'))
         );
 
-        self::assertSame([
+        $this->assertSame([
             'name' => 'foo',
         ], $match->getMatches());
-        self::assertSame([
+        $this->assertSame([
             'name' => 'bar',
         ], $match1->getMatches());
-        self::assertNull($match2);
+        $this->assertNull($match2);
     }
 }

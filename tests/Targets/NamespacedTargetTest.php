@@ -21,7 +21,7 @@ class NamespacedTargetTest extends TestCase
         $route = new Route('/<controller>/<action>', new Namespaced('Spiral\Router\Fixtures'));
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
-        self::assertSame(['controller' => null, 'action' => null], $route->getDefaults());
+        $this->assertSame(['controller' => null, 'action' => null], $route->getDefaults());
     }
 
     public function testConstrainedController(): void
@@ -54,19 +54,25 @@ class NamespacedTargetTest extends TestCase
 
         $route = $route->withDefaults(['controller' => 'test']);
 
-        self::assertNull($route->match(new ServerRequest('GET', '')));
+        $this->assertNull($route->match(new ServerRequest('GET', '')));
 
-        self::assertNotNull($match = $route->match(new ServerRequest('GET', new Uri('/test'))));
+        $this->assertNotNull(
+            $match = $route->match(new ServerRequest('GET', new Uri('/test')))
+        );
 
-        self::assertSame(['controller' => 'test', 'action' => null], $match->getMatches());
+        $this->assertSame(['controller' => 'test', 'action' => null], $match->getMatches());
 
-        self::assertNotNull($match = $route->match(new ServerRequest('GET', new Uri('/test/action/'))));
+        $this->assertNotNull(
+            $match = $route->match(new ServerRequest('GET', new Uri('/test/action/')))
+        );
 
-        self::assertSame(['controller' => 'test', 'action' => 'action'], $match->getMatches());
+        $this->assertSame(['controller' => 'test', 'action' => 'action'], $match->getMatches());
 
-        self::assertNotNull($match = $route->match(new ServerRequest('GET', new Uri('/other/action/'))));
+        $this->assertNotNull(
+            $match = $route->match(new ServerRequest('GET', new Uri('/other/action/')))
+        );
 
-        self::assertSame(['controller' => 'other', 'action' => 'action'], $match->getMatches());
+        $this->assertSame(['controller' => 'other', 'action' => 'action'], $match->getMatches());
     }
 
     #[DataProvider('defaultProvider')]
@@ -78,11 +84,11 @@ class NamespacedTargetTest extends TestCase
         $request = new ServerRequest('GET', new Uri($uri));
 
         $match = $route->match($request);
-        self::assertNotNull($match);
+        $this->assertNotNull($match);
 
         $values = $match->getMatches();
-        self::assertNotNull($values['controller']);
-        self::assertNotNull($values['action']);
+        $this->assertNotNull($values['controller']);
+        $this->assertNotNull($values['action']);
     }
 
     public static function defaultProvider(): \Traversable
