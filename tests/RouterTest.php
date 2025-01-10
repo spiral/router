@@ -24,7 +24,7 @@ class RouterTest extends BaseTestCase
         $router = $this->makeRouter();
 
         $router->setRoute('name', new Route('/', Call::class));
-        $this->assertCount(1, $router->getRoutes());
+        self::assertCount(1, $router->getRoutes());
     }
 
     public function testDefault(): void
@@ -34,7 +34,7 @@ class RouterTest extends BaseTestCase
         $router->setRoute('name', new Route('/', Call::class));
         $router->setDefault(new Route('/', Call::class));
 
-        $this->assertCount(2, $router->getRoutes());
+        self::assertCount(2, $router->getRoutes());
     }
 
     public function testCastError(): void
@@ -48,7 +48,7 @@ class RouterTest extends BaseTestCase
     public function testEventsShouldBeDispatched(): void
     {
         $request = new ServerRequest('GET', '/foo');
-        $route = (new Route('/foo', Call::class))->withContainer($this->container);
+        $route = (new Route('/foo', Call::class))->withContainer($this->getContainer());
 
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $dispatcher
@@ -88,10 +88,10 @@ class RouterTest extends BaseTestCase
         $configurator->add('foo', '//<host>/register')->callable(fn () => null);
 
         $router->import($configurator);
-        $this->container->get(GroupRegistry::class)->registerRoutes($router);
+        $this->getContainer()->get(GroupRegistry::class)->registerRoutes($router);
 
         $uri = (string) $router->uri('foo', ['host' => 'some']);
-        $this->assertSame('some/register', $uri);
-        $this->assertFalse(\str_contains('https://host.com', $uri));
+        self::assertSame('some/register', $uri);
+        self::assertFalse(\str_contains('https://host.com', $uri));
     }
 }
