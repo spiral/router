@@ -43,7 +43,7 @@ class CoreTest extends \Spiral\Testing\TestCase
         $action = new Action(TestController::class, 'test');
         $handler = $action->getHandler($this->getContainer(), []);
 
-        self::assertInstanceOf(CoreHandler::class, $handler);
+        $this->assertInstanceOf(CoreHandler::class, $handler);
     }
 
     public function testWithAutoCore(): void
@@ -53,11 +53,11 @@ class CoreTest extends \Spiral\Testing\TestCase
         $action = $action->withCore(new TestCore($this->getContainer()->get(CoreInterface::class)));
 
         $handler = $action->getHandler($this->getContainer(), []);
-        self::assertInstanceOf(CoreHandler::class, $handler);
+        $this->assertInstanceOf(CoreHandler::class, $handler);
 
         $result = $handler->handle(new ServerRequest('GET', ''));
 
-        self::assertSame('@wrapped.hello world', (string)$result->getBody());
+        $this->assertSame('@wrapped.hello world', (string)$result->getBody());
     }
 
     public function testErrAction(): void
@@ -70,7 +70,7 @@ class CoreTest extends \Spiral\Testing\TestCase
         $action = $action->withCore(new TestCore($this->getContainer()->get(CoreInterface::class)));
 
         $handler = $action->getHandler($this->getContainer(), []);
-        self::assertInstanceOf(CoreHandler::class, $handler);
+        $this->assertInstanceOf(CoreHandler::class, $handler);
 
         $handler->handle(new ServerRequest('GET', ''));
     }
@@ -80,11 +80,11 @@ class CoreTest extends \Spiral\Testing\TestCase
         $action = new Action(TestController::class, 'rsp');
 
         $handler = $action->getHandler($this->getContainer(), []);
-        self::assertInstanceOf(CoreHandler::class, $handler);
+        $this->assertInstanceOf(CoreHandler::class, $handler);
 
         $result = $handler->handle(new ServerRequest('GET', ''));
 
-        self::assertSame('rspbuf', (string)$result->getBody());
+        $this->assertSame('rspbuf', (string)$result->getBody());
     }
 
     public function testJson(): void
@@ -92,12 +92,12 @@ class CoreTest extends \Spiral\Testing\TestCase
         $action = new Action(TestController::class, 'json');
 
         $handler = $action->getHandler($this->getContainer(), []);
-        self::assertInstanceOf(CoreHandler::class, $handler);
+        $this->assertInstanceOf(CoreHandler::class, $handler);
 
         $result = $handler->handle(new ServerRequest('GET', ''));
 
-        self::assertSame(301, $result->getStatusCode());
-        self::assertSame('{"status":301,"msg":"redirect"}', (string)$result->getBody());
+        $this->assertSame(301, $result->getStatusCode());
+        $this->assertSame('{"status":301,"msg":"redirect"}', (string)$result->getBody());
     }
 
     public function testForbidden(): void
@@ -138,10 +138,10 @@ class CoreTest extends \Spiral\Testing\TestCase
         $action = new Action(TestController::class, 'Target', Action::RESTFUL);
         $r = $action->getHandler($this->getContainer(), [])->handle(new ServerRequest('POST', ''));
 
-        self::assertSame('POST', (string)$r->getBody());
+        $this->assertSame('POST', (string)$r->getBody());
 
         $r = $action->getHandler($this->getContainer(), [])->handle(new ServerRequest('DELETE', ''));
 
-        self::assertSame('DELETE', (string)$r->getBody());
+        $this->assertSame('DELETE', (string)$r->getBody());
     }
 }

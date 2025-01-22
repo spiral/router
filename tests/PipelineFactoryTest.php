@@ -43,7 +43,10 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             scope: $this->createMock(ScopeInterface::class),
         );
 
-        self::assertSame($newPipeline, $this->pipeline->createWithMiddleware([$newPipeline]));
+        $this->assertSame(
+            $newPipeline,
+            $this->pipeline->createWithMiddleware([$newPipeline])
+        );
     }
 
     public function testCreates(): void
@@ -72,14 +75,14 @@ final class PipelineFactoryTest extends \PHPUnit\Framework\TestCase
             ->with('foo')
             ->willReturn($middleware4 = $this->createMock(MiddlewareInterface::class));
 
-        self::assertSame($p, $this->pipeline->createWithMiddleware([
+        $this->assertSame($p, $this->pipeline->createWithMiddleware([
             'foo',
             $middleware1 = $this->createMock(MiddlewareInterface::class),
             $middleware2 = $this->createMock(MiddlewareInterface::class),
             new Autowire('bar'),
         ]));
 
-        $handle = fn(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface => $handler->handle($request);
+        $handle = fn(ServerRequestInterface $request, RequestHandlerInterface $handler) => $handler->handle($request);
 
         $middleware1->expects($this->once())->method('process')->willReturnCallback($handle);
         $middleware2->expects($this->once())->method('process')->willReturnCallback($handle);

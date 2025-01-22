@@ -21,7 +21,7 @@ class GroupTargetTest extends TestCase
         $route = new Route('/<controller>/<action>', new Group(['test' => TestController::class]));
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
-        self::assertSame(['controller' => null, 'action' => null], $route->getDefaults());
+        $this->assertSame(['controller' => null, 'action' => null], $route->getDefaults());
     }
 
     public function testConstrainedController(): void
@@ -54,18 +54,26 @@ class GroupTargetTest extends TestCase
 
         $route = $route->withDefaults(['controller' => 'test']);
 
-        self::assertNull($route->match(new ServerRequest('GET', '')));
+        $this->assertNull($route->match(new ServerRequest('GET', '')));
 
-        self::assertNotNull($match = $route->match(new ServerRequest('GET', new Uri('/test'))));
+        $this->assertNotNull(
+            $match = $route->match(new ServerRequest('GET', new Uri('/test')))
+        );
 
-        self::assertSame(['controller' => 'test', 'action' => null], $match->getMatches());
+        $this->assertSame(['controller' => 'test', 'action' => null], $match->getMatches());
 
-        self::assertNotNull($match = $route->match(new ServerRequest('GET', new Uri('/test/action/'))));
+        $this->assertNotNull(
+            $match = $route->match(new ServerRequest('GET', new Uri('/test/action/')))
+        );
 
-        self::assertSame(['controller' => 'test', 'action' => 'action'], $match->getMatches());
+        $this->assertSame(['controller' => 'test', 'action' => 'action'], $match->getMatches());
 
-        self::assertNull($match = $route->match(new ServerRequest('GET', new Uri('/other/action/'))));
+        $this->assertNull(
+            $match = $route->match(new ServerRequest('GET', new Uri('/other/action/')))
+        );
 
-        self::assertNull($match = $route->match(new ServerRequest('GET', new Uri('/other'))));
+        $this->assertNull(
+            $match = $route->match(new ServerRequest('GET', new Uri('/other')))
+        );
     }
 }
