@@ -37,10 +37,22 @@ abstract class BaseTestCase extends TestCase
     protected Container $container;
     protected Router $router;
 
+    public static function middlewaresDataProvider(): \Traversable
+    {
+        yield [TestMiddleware::class];
+        yield [new TestMiddleware()];
+        yield [new Autowire(TestMiddleware::class)];
+    }
+
     protected function setUp(): void
     {
         $this->initContainer();
         $this->initRouter();
+    }
+
+    protected function getContainer(): Container
+    {
+        return $this->container;
     }
 
     protected function makeRouter(string $basePath = '', ?EventDispatcherInterface $dispatcher = null): RouterInterface
@@ -49,11 +61,11 @@ abstract class BaseTestCase extends TestCase
             $basePath,
             new UriHandler(
                 new UriFactory(),
-                new Slugify()
+                new Slugify(),
             ),
             $this->container,
             $dispatcher,
-            new NullTracer($this->container)
+            new NullTracer($this->container),
         );
     }
 
@@ -65,13 +77,6 @@ abstract class BaseTestCase extends TestCase
         $r = new \ReflectionObject($object);
 
         return $r->getProperty($property)->getValue($object);
-    }
-
-    public static function middlewaresDataProvider(): \Traversable
-    {
-        yield [TestMiddleware::class];
-        yield [new TestMiddleware()];
-        yield [new Autowire(TestMiddleware::class)];
     }
 
     private function initContainer(): void
@@ -88,8 +93,8 @@ abstract class BaseTestCase extends TestCase
                 new LoaderRegistry([
                     new PhpFileLoader($this->container, $this->container),
                     new TestLoader(),
-                ])
-            )
+                ]),
+            ),
         );
 
         $this->container->bind(HandlerInterface::class, Core::class);

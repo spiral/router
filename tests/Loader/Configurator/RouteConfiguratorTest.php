@@ -27,7 +27,7 @@ final class RouteConfiguratorTest extends BaseTestCase
         $routes = new RouteCollection();
 
         $configurator = new RouteConfigurator('test', '/', $routes);
-        $this->assertCount(0, $routes);
+        self::assertCount(0, $routes);
 
         $this->expectException(TargetException::class);
         unset($configurator);
@@ -38,13 +38,13 @@ final class RouteConfiguratorTest extends BaseTestCase
         $routes = new RouteCollection();
 
         $configurator = new RouteConfigurator('test', '/', $routes);
-        $this->assertCount(0, $routes);
+        self::assertCount(0, $routes);
 
         $configurator->controller('Controller');
 
         unset($configurator);
 
-        $this->assertCount(1, $routes);
+        self::assertCount(1, $routes);
     }
 
     public function testController(): void
@@ -52,7 +52,7 @@ final class RouteConfiguratorTest extends BaseTestCase
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
         $configurator->controller('SomeController');
 
-        $this->assertInstanceOf(Controller::class, $configurator->target);
+        self::assertInstanceOf(Controller::class, $configurator->target);
     }
 
     public function testNamespaced(): void
@@ -60,7 +60,7 @@ final class RouteConfiguratorTest extends BaseTestCase
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
         $configurator->namespaced('App\\Controller');
 
-        $this->assertInstanceOf(Namespaced::class, $configurator->target);
+        self::assertInstanceOf(Namespaced::class, $configurator->target);
     }
 
     public function testGroupControllers(): void
@@ -68,7 +68,7 @@ final class RouteConfiguratorTest extends BaseTestCase
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
         $configurator->groupControllers(['Controller']);
 
-        $this->assertInstanceOf(Group::class, $configurator->target);
+        self::assertInstanceOf(Group::class, $configurator->target);
     }
 
     public function testAction(): void
@@ -76,22 +76,21 @@ final class RouteConfiguratorTest extends BaseTestCase
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
         $configurator->action('Controller', 'action');
 
-        $this->assertInstanceOf(Action::class, $configurator->target);
+        self::assertInstanceOf(Action::class, $configurator->target);
     }
 
     public function testCallable(): void
     {
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
-        $configurator->callable(fn () => null);
+        $configurator->callable(fn() => null);
 
-        $this->assertInstanceOf(\Closure::class, $configurator->target);
+        self::assertInstanceOf(\Closure::class, $configurator->target);
     }
 
     public function testHandler(): void
     {
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
-        $configurator->handler(new class ([], []) extends AbstractTarget
-        {
+        $configurator->handler(new class([], []) extends AbstractTarget {
             protected function resolveController(array $matches): string
             {
                 return '';
@@ -103,7 +102,7 @@ final class RouteConfiguratorTest extends BaseTestCase
             }
         });
 
-        $this->assertInstanceOf(AbstractTarget::class, $configurator->target);
+        self::assertInstanceOf(AbstractTarget::class, $configurator->target);
     }
 
     public function testDefaults(): void
@@ -111,7 +110,7 @@ final class RouteConfiguratorTest extends BaseTestCase
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
         $configurator->controller('Controller')->defaults(['some', 'array']);
 
-        $this->assertSame(['some', 'array'], $configurator->defaults);
+        self::assertSame(['some', 'array'], $configurator->defaults);
     }
 
     public function testGroup(): void
@@ -119,7 +118,7 @@ final class RouteConfiguratorTest extends BaseTestCase
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
         $configurator->controller('Controller')->group('api');
 
-        $this->assertSame('api', $configurator->group);
+        self::assertSame('api', $configurator->group);
     }
 
     public function testPrefix(): void
@@ -127,7 +126,7 @@ final class RouteConfiguratorTest extends BaseTestCase
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
         $configurator->controller('Controller')->prefix('admin');
 
-        $this->assertSame('admin', $configurator->prefix);
+        self::assertSame('admin', $configurator->prefix);
     }
 
     public function testCore(): void
@@ -135,38 +134,35 @@ final class RouteConfiguratorTest extends BaseTestCase
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
         $configurator->controller('Controller')->core(new Core(new Container()));
 
-        $this->assertInstanceOf(Core::class, $configurator->core);
+        self::assertInstanceOf(Core::class, $configurator->core);
     }
 
     public function testMiddleware(): void
     {
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
         $configurator->controller('Controller')->middleware('class-string');
-        $this->assertSame(['class-string'], $configurator->middleware);
+        self::assertSame(['class-string'], $configurator->middleware);
 
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
         $configurator->controller('Controller')->middleware(['class-string', 'other-class-string']);
-        $this->assertSame(['class-string', 'other-class-string'], $configurator->middleware);
+        self::assertSame(['class-string', 'other-class-string'], $configurator->middleware);
 
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
-        $testMiddleware = new class () implements MiddlewareInterface
-        {
-            public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
-            {
-            }
+        $testMiddleware = new class implements MiddlewareInterface {
+            public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {}
         };
         $configurator->controller('Controller')->middleware($testMiddleware);
-        $this->assertSame([$testMiddleware], $configurator->middleware);
+        self::assertSame([$testMiddleware], $configurator->middleware);
     }
 
     public function testMethods(): void
     {
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
         $configurator->controller('Controller')->methods('GET');
-        $this->assertSame(['GET'], $configurator->methods);
+        self::assertSame(['GET'], $configurator->methods);
 
         $configurator = new RouteConfigurator('test', '/', new RouteCollection());
         $configurator->controller('Controller')->methods(['GET', 'POST']);
-        $this->assertSame(['GET', 'POST'], $configurator->methods);
+        self::assertSame(['GET', 'POST'], $configurator->methods);
     }
 }

@@ -17,21 +17,13 @@ final class PhpFileLoaderTest extends TestCase
 {
     private Container $container;
 
-    protected function setUp(): void
-    {
-        $this->container = new Container();
-        $this->container->bind(LoaderInterface::class, $this->createMock(LoaderInterface::class));
-        $this->container->bind(RouterInterface::class, $this->createMock(RouterInterface::class));
-        $this->container->bind(UriFactoryInterface::class, $this->createMock(UriFactoryInterface::class));
-    }
-
     public function testLoad(): void
     {
         $loader = new PhpFileLoader($this->container, $this->container);
 
         $routes = $loader->load(\dirname(__DIR__) . '/Fixtures/file.php');
-        $this->assertInstanceOf(RouteCollection::class, $routes);
-        $this->assertCount(3, $routes);
+        self::assertInstanceOf(RouteCollection::class, $routes);
+        self::assertCount(3, $routes);
 
         $this->expectException(LoaderLoadException::class);
         $loader->load(\dirname(__DIR__) . '/Fixtures/unknown.php');
@@ -41,11 +33,19 @@ final class PhpFileLoaderTest extends TestCase
     {
         $loader = new PhpFileLoader($this->container, $this->container);
 
-        $this->assertTrue($loader->supports('file.php'));
-        $this->assertTrue($loader->supports('file.php', 'php'));
+        self::assertTrue($loader->supports('file.php'));
+        self::assertTrue($loader->supports('file.php', 'php'));
 
-        $this->assertFalse($loader->supports('file.php', 'txt'));
-        $this->assertFalse($loader->supports('file.txt'));
-        $this->assertFalse($loader->supports('file.txt', 'txt'));
+        self::assertFalse($loader->supports('file.php', 'txt'));
+        self::assertFalse($loader->supports('file.txt'));
+        self::assertFalse($loader->supports('file.txt', 'txt'));
+    }
+
+    protected function setUp(): void
+    {
+        $this->container = new Container();
+        $this->container->bind(LoaderInterface::class, $this->createMock(LoaderInterface::class));
+        $this->container->bind(RouterInterface::class, $this->createMock(RouterInterface::class));
+        $this->container->bind(UriFactoryInterface::class, $this->createMock(UriFactoryInterface::class));
     }
 }

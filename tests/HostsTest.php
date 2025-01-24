@@ -19,7 +19,7 @@ class HostsTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setDefault(new Route(
             '://<id>.com/',
-            new Action(TestController::class, 'test')
+            new Action(TestController::class, 'test'),
         ));
 
         $router->handle(new ServerRequest('GET', ''));
@@ -30,21 +30,17 @@ class HostsTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setDefault(new Route(
             '//<id>.com/',
-            new Action(TestController::class, 'test')
+            new Action(TestController::class, 'test'),
         ));
 
-        $this->assertNotNull(
-            $r = $router->handle(new ServerRequest('GET', 'http://domain.com/'))
-        );
+        self::assertNotNull($r = $router->handle(new ServerRequest('GET', 'http://domain.com/')));
 
-        $this->assertSame(200, $r->getStatusCode());
-        $this->assertSame('hello world', (string)$r->getBody());
+        self::assertSame(200, $r->getStatusCode());
+        self::assertSame('hello world', (string) $r->getBody());
 
-        $this->assertNotNull(
-            $r = $router->handle(new ServerRequest('GET', 'https://domain.com/'))
-        );
+        self::assertNotNull($r = $router->handle(new ServerRequest('GET', 'https://domain.com/')));
 
-        $this->assertSame(200, $r->getStatusCode());
-        $this->assertSame('hello world', (string)$r->getBody());
+        self::assertSame(200, $r->getStatusCode());
+        self::assertSame('hello world', (string) $r->getBody());
     }
 }

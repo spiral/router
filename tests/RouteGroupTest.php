@@ -20,14 +20,17 @@ use Spiral\Tests\Router\Stub\TestMiddleware;
 
 final class RouteGroupTest extends BaseTestCase
 {
-
-    protected function setUp(): void
+    public static function routePrefixDataProvider(): iterable
     {
-        parent::setUp();
-
-        $this->container = new Container();
-        $this->container->bind(LoaderInterface::class, $this->createMock(LoaderInterface::class));
-        $this->container->bind(UriFactoryInterface::class, Psr17Factory::class);
+        yield ['/api/', '/blog'];
+        yield ['/api', '/blog'];
+        yield ['/api', 'blog'];
+        yield ['api/', '/blog'];
+        yield ['api', '/blog'];
+        yield ['api', 'blog'];
+        yield ['api/', '/blog/'];
+        yield ['api', '/blog/'];
+        yield ['api', 'blog/'];
     }
 
     public function testCoreString(): void
@@ -40,12 +43,12 @@ final class RouteGroupTest extends BaseTestCase
 
         $t = $this->getProperty($this->router->getRoute('name'), 'target');
 
-        $this->assertInstanceOf(Action::class, $t);
+        self::assertInstanceOf(Action::class, $t);
 
-        $this->assertSame('controller', $this->getProperty($t, 'controller'));
-        $this->assertSame('method', $this->getProperty($t, 'action'));
+        self::assertSame('controller', $this->getProperty($t, 'controller'));
+        self::assertSame('method', $this->getProperty($t, 'action'));
 
-        $this->assertInstanceOf(RoutesTestCore::class, $this->getActionProperty($t, 'pipeline'));
+        self::assertInstanceOf(RoutesTestCore::class, $this->getActionProperty($t, 'pipeline'));
     }
 
     public function testCoreObject(): void
@@ -58,12 +61,12 @@ final class RouteGroupTest extends BaseTestCase
 
         $t = $this->getProperty($this->router->getRoute('name'), 'target');
 
-        $this->assertInstanceOf(Action::class, $t);
+        self::assertInstanceOf(Action::class, $t);
 
-        $this->assertSame('controller', $this->getProperty($t, 'controller'));
-        $this->assertSame('method', $this->getProperty($t, 'action'));
+        self::assertSame('controller', $this->getProperty($t, 'controller'));
+        self::assertSame('method', $this->getProperty($t, 'action'));
 
-        $this->assertInstanceOf(RoutesTestCore::class, $this->getActionProperty($t, 'pipeline'));
+        self::assertInstanceOf(RoutesTestCore::class, $this->getActionProperty($t, 'pipeline'));
     }
 
     public function testGroupHasRoute(): void
@@ -73,8 +76,8 @@ final class RouteGroupTest extends BaseTestCase
         $group->addRoute('foo', new Route('/', new Action('controller', 'method')));
         $group->register($this->router, $this->container);
 
-        $this->assertTrue($group->hasRoute('foo'));
-        $this->assertFalse($group->hasRoute('bar'));
+        self::assertTrue($group->hasRoute('foo'));
+        self::assertFalse($group->hasRoute('bar'));
     }
 
     #[DataProvider('middlewaresDataProvider')]
@@ -92,8 +95,9 @@ final class RouteGroupTest extends BaseTestCase
         $p = $this->getProperty($r, 'pipeline');
         $m = $this->getProperty($p, 'middleware');
 
-        $this->assertCount(1, $m);
-        $this->assertInstanceOf(TestMiddleware::class, $m[0]);
+        self::assertCount(1, $m);
+        // Because of the pipeline is lazy
+        self::assertSame($middleware, $m[0]);
     }
 
     public function testRouteWithMiddlewareAddGroupMiddleware(): void
@@ -110,10 +114,11 @@ final class RouteGroupTest extends BaseTestCase
         $p = $this->getProperty($r, 'pipeline');
         $m = $this->getProperty($p, 'middleware');
 
-        $this->assertCount(2, $m);
+        self::assertCount(2, $m);
 
-        $this->assertInstanceOf(TestMiddleware::class, $m[1]);
-        $this->assertInstanceOf(AnotherMiddleware::class, $m[0]);
+        // Because of the pipeline is lazy
+        self::assertSame(TestMiddleware::class, $m[1]);
+        self::assertSame(AnotherMiddleware::class, $m[0]);
     }
 
     public function testWithoutNamePrefix(): void
@@ -122,7 +127,7 @@ final class RouteGroupTest extends BaseTestCase
         $group->addRoute('name', new Route('/', new Action('controller', 'method')));
         $group->register($this->router, $this->container);
 
-        $this->assertTrue($group->hasRoute('name'));
+        self::assertTrue($group->hasRoute('name'));
     }
 
     public function testWithNamePrefix(): void
@@ -132,8 +137,8 @@ final class RouteGroupTest extends BaseTestCase
         $group->addRoute('name', new Route('/', new Action('controller', 'method')));
         $group->register($this->router, $this->container);
 
-        $this->assertTrue($group->hasRoute('admin.name'));
-        $this->assertFalse($group->hasRoute('name'));
+        self::assertTrue($group->hasRoute('admin.name'));
+        self::assertFalse($group->hasRoute('name'));
     }
 
     #[DataProvider('routePrefixDataProvider')]
@@ -146,24 +151,18 @@ final class RouteGroupTest extends BaseTestCase
         $group->register($this->router, $this->container);
 
         $route = $this->router->getRoute('name');
-        $this->assertNotNull(
-            $route->match(new ServerRequest('GET', '/api/blog'))
-        );
+        self::assertNotNull($route->match(new ServerRequest('GET', '/api/blog')));
 
-        $this->assertSame('/api/blog', (string) $route->uri());
+        self::assertSame('/api/blog', (string) $route->uri());
     }
 
-    public static function routePrefixDataProvider(): iterable
+    protected function setUp(): void
     {
-        yield ['/api/', '/blog'];
-        yield ['/api', '/blog'];
-        yield ['/api', 'blog'];
-        yield ['api/', '/blog'];
-        yield ['api', '/blog'];
-        yield ['api', 'blog'];
-        yield ['api/', '/blog/'];
-        yield ['api', '/blog/'];
-        yield ['api', 'blog/'];
+        parent::setUp();
+
+        $this->container = new Container();
+        $this->container->bind(LoaderInterface::class, $this->createMock(LoaderInterface::class));
+        $this->container->bind(UriFactoryInterface::class, Psr17Factory::class);
     }
 
     /**
