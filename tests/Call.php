@@ -6,7 +6,7 @@ namespace Spiral\Tests\Router;
 
 class Call
 {
-    public function __invoke(): string
+    public function __invoke()
     {
         return 'invoked';
     }

@@ -10,7 +10,7 @@ use Spiral\Router\Target\Action;
 use Spiral\Tests\Router\Fixtures\TestController;
 use Nyholm\Psr7\ServerRequest;
 
-final class HostsTest extends BaseTestCase
+class HostsTest extends BaseTestCase
 {
     public function testRouteException(): void
     {
@@ -19,10 +19,10 @@ final class HostsTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setDefault(new Route(
             '://<id>.com/',
-            new Action(TestController::class, 'test'),
+            new Action(TestController::class, 'test')
         ));
 
-        $router->handle(new ServerRequest('GET', ''));
+        $match = $router->handle(new ServerRequest('GET', ''));
     }
 
     public function testRoute(): void
@@ -30,17 +30,21 @@ final class HostsTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setDefault(new Route(
             '//<id>.com/',
-            new Action(TestController::class, 'test'),
+            new Action(TestController::class, 'test')
         ));
 
-        self::assertNotNull($r = $router->handle(new ServerRequest('GET', 'http://domain.com/')));
+        $this->assertNotNull(
+            $r = $router->handle(new ServerRequest('GET', 'http://domain.com/'))
+        );
 
-        self::assertSame(200, $r->getStatusCode());
-        self::assertSame('hello world', (string) $r->getBody());
+        $this->assertSame(200, $r->getStatusCode());
+        $this->assertSame('hello world', (string)$r->getBody());
 
-        self::assertNotNull($r = $router->handle(new ServerRequest('GET', 'https://domain.com/')));
+        $this->assertNotNull(
+            $r = $router->handle(new ServerRequest('GET', 'https://domain.com/'))
+        );
 
-        self::assertSame(200, $r->getStatusCode());
-        self::assertSame('hello world', (string) $r->getBody());
+        $this->assertSame(200, $r->getStatusCode());
+        $this->assertSame('hello world', (string)$r->getBody());
     }
 }

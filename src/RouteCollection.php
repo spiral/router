@@ -14,6 +14,13 @@ class RouteCollection implements \IteratorAggregate, \Countable
     /** @var array<non-empty-string, RouteConfigurator> */
     private array $routes = [];
 
+    public function __clone()
+    {
+        foreach ($this->routes as $name => $route) {
+            $this->routes[$name] = clone $route;
+        }
+    }
+
     /**
      * Gets the current RouteCollection as an Iterator that includes all routes.
      *
@@ -39,7 +46,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * TODO add return type
      */
-    public function add(string $name, RouteConfigurator $route): void
+    public function add(string $name, RouteConfigurator $route)
     {
         $this->routes[$name] = $route;
     }
@@ -83,7 +90,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * TODO add return type
      */
-    public function remove(string|array $name): void
+    public function remove(string|array $name)
     {
         foreach ((array) $name as $n) {
             unset($this->routes[$n]);
@@ -95,7 +102,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * TODO add return type
      */
-    public function addCollection(self $collection): void
+    public function addCollection(self $collection)
     {
         foreach ($collection->all() as $name => $route) {
             $this->routes[$name] = $route;
@@ -111,17 +118,10 @@ class RouteCollection implements \IteratorAggregate, \Countable
      *
      * TODO add return type
      */
-    public function group(string $group): void
+    public function group(string $group)
     {
         foreach ($this->routes as $route) {
             $route->group($group);
-        }
-    }
-
-    public function __clone()
-    {
-        foreach ($this->routes as $name => $route) {
-            $this->routes[$name] = clone $route;
         }
     }
 }

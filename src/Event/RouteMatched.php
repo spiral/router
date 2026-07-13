@@ -12,5 +12,6 @@ final class RouteMatched
     public function __construct(
         public readonly ServerRequestInterface $request,
         public readonly RouteInterface $route,
-    ) {}
+    ) {
+    }
 }

@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Spiral\Tests\Router;
 
-use Spiral\Bootloader\Http\RouterBootloader;
 use Spiral\Core\Container;
 use Spiral\Core\CoreInterface;
 use Spiral\Http\Exception\ClientException\BadRequestException;
 use Spiral\Http\Exception\ClientException\ForbiddenException;
 use Spiral\Http\Exception\ClientException\NotFoundException;
-use Spiral\Nyholm\Bootloader\NyholmBootloader;
 use Spiral\Router\CoreHandler;
 use Spiral\Router\Exception\HandlerException;
 use Spiral\Router\Exception\TargetException;
@@ -18,16 +16,8 @@ use Spiral\Router\Target\Action;
 use Spiral\Tests\Router\Fixtures\TestController;
 use Nyholm\Psr7\ServerRequest;
 
-final class CoreTest extends \Spiral\Testing\TestCase
+class CoreTest extends BaseTestCase
 {
-    public function defineBootloaders(): array
-    {
-        return [
-            RouterBootloader::class,
-            NyholmBootloader::class,
-        ];
-    }
-
     public function testMissingBinding(): void
     {
         $this->expectException(TargetException::class);
@@ -41,23 +31,23 @@ final class CoreTest extends \Spiral\Testing\TestCase
     public function testAutoCore(): void
     {
         $action = new Action(TestController::class, 'test');
-        $handler = $action->getHandler($this->getContainer(), []);
+        $handler = $action->getHandler($this->container, []);
 
-        self::assertInstanceOf(CoreHandler::class, $handler);
+        $this->assertInstanceOf(CoreHandler::class, $handler);
     }
 
     public function testWithAutoCore(): void
     {
         $action = new Action(TestController::class, 'test');
 
-        $action = $action->withCore(new TestCore($this->getContainer()->get(CoreInterface::class)));
+        $action = $action->withCore(new TestCore($this->container->get(CoreInterface::class)));
 
-        $handler = $action->getHandler($this->getContainer(), []);
-        self::assertInstanceOf(CoreHandler::class, $handler);
+        $handler = $action->getHandler($this->container, []);
+        $this->assertInstanceOf(CoreHandler::class, $handler);
 
         $result = $handler->handle(new ServerRequest('GET', ''));
 
-        self::assertSame('@wrapped.hello world', (string) $result->getBody());
+        $this->assertSame('@wrapped.hello world', (string)$result->getBody());
     }
 
     public function testErrAction(): void
@@ -67,10 +57,10 @@ final class CoreTest extends \Spiral\Testing\TestCase
 
         $action = new Action(TestController::class, 'err');
 
-        $action = $action->withCore(new TestCore($this->getContainer()->get(CoreInterface::class)));
+        $action = $action->withCore(new TestCore($this->container->get(CoreInterface::class)));
 
-        $handler = $action->getHandler($this->getContainer(), []);
-        self::assertInstanceOf(CoreHandler::class, $handler);
+        $handler = $action->getHandler($this->container, []);
+        $this->assertInstanceOf(CoreHandler::class, $handler);
 
         $handler->handle(new ServerRequest('GET', ''));
     }
@@ -79,25 +69,25 @@ final class CoreTest extends \Spiral\Testing\TestCase
     {
         $action = new Action(TestController::class, 'rsp');
 
-        $handler = $action->getHandler($this->getContainer(), []);
-        self::assertInstanceOf(CoreHandler::class, $handler);
+        $handler = $action->getHandler($this->container, []);
+        $this->assertInstanceOf(CoreHandler::class, $handler);
 
         $result = $handler->handle(new ServerRequest('GET', ''));
 
-        self::assertSame('rspbuf', (string) $result->getBody());
+        $this->assertSame('rspbuf', (string)$result->getBody());
     }
 
     public function testJson(): void
     {
         $action = new Action(TestController::class, 'json');
 
-        $handler = $action->getHandler($this->getContainer(), []);
-        self::assertInstanceOf(CoreHandler::class, $handler);
+        $handler = $action->getHandler($this->container, []);
+        $this->assertInstanceOf(CoreHandler::class, $handler);
 
         $result = $handler->handle(new ServerRequest('GET', ''));
 
-        self::assertSame(301, $result->getStatusCode());
-        self::assertSame('{"status":301,"msg":"redirect"}', (string) $result->getBody());
+        $this->assertSame(301, $result->getStatusCode());
+        $this->assertSame('{"status":301,"msg":"redirect"}', (string)$result->getBody());
     }
 
     public function testForbidden(): void
@@ -105,7 +95,7 @@ final class CoreTest extends \Spiral\Testing\TestCase
         $this->expectException(ForbiddenException::class);
 
         $action = new Action(TestController::class, 'forbidden');
-        $action->getHandler($this->getContainer(), [])->handle(new ServerRequest('GET', ''));
+        $r = $action->getHandler($this->container, [])->handle(new ServerRequest('GET', ''));
     }
 
     public function testNotFound(): void
@@ -113,7 +103,7 @@ final class CoreTest extends \Spiral\Testing\TestCase
         $this->expectException(NotFoundException::class);
 
         $action = new Action(TestController::class, 'not-found');
-        $action->getHandler($this->getContainer(), [])->handle(new ServerRequest('GET', ''));
+        $r = $action->getHandler($this->container, [])->handle(new ServerRequest('GET', ''));
     }
 
     public function testBadRequest(): void
@@ -121,7 +111,7 @@ final class CoreTest extends \Spiral\Testing\TestCase
         $this->expectException(BadRequestException::class);
 
         $action = new Action(TestController::class, 'weird');
-        $action->getHandler($this->getContainer(), [])->handle(new ServerRequest('GET', ''));
+        $r = $action->getHandler($this->container, [])->handle(new ServerRequest('GET', ''));
     }
 
     public function testCoreException(): void
@@ -129,19 +119,19 @@ final class CoreTest extends \Spiral\Testing\TestCase
         $this->expectException(HandlerException::class);
 
         /** @var CoreHandler $core */
-        $core = $this->getContainer()->get(CoreHandler::class);
+        $core = $this->container->get(CoreHandler::class);
         $core->handle(new ServerRequest('GET', ''));
     }
 
     public function testRESTFul(): void
     {
         $action = new Action(TestController::class, 'Target', Action::RESTFUL);
-        $r = $action->getHandler($this->getContainer(), [])->handle(new ServerRequest('POST', ''));
+        $r = $action->getHandler($this->container, [])->handle(new ServerRequest('POST', ''));
 
-        self::assertSame('POST', (string) $r->getBody());
+        $this->assertSame('POST', (string)$r->getBody());
 
-        $r = $action->getHandler($this->getContainer(), [])->handle(new ServerRequest('DELETE', ''));
+        $r = $action->getHandler($this->container, [])->handle(new ServerRequest('DELETE', ''));
 
-        self::assertSame('DELETE', (string) $r->getBody());
+        $this->assertSame('DELETE', (string)$r->getBody());
     }
 }

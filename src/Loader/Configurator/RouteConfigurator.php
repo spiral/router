@@ -7,7 +7,6 @@ namespace Spiral\Router\Loader\Configurator;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Spiral\Core\CoreInterface;
-use Spiral\Interceptors\HandlerInterface;
 use Spiral\Router\Exception\TargetException;
 use Spiral\Router\RouteCollection;
 use Spiral\Router\Target\Action;
@@ -16,23 +15,13 @@ use Spiral\Router\Target\Group;
 use Spiral\Router\Target\Namespaced;
 use Spiral\Router\TargetInterface;
 
-/**
- * @property-read HandlerInterface|CoreInterface|null $core
- * @property-read null|string|callable|RequestHandlerInterface|TargetInterface $target
- * @property-read array $defaults
- * @property-read null|string $group
- * @property-read array<MiddlewareInterface|non-empty-string> $middleware
- * @property-read list<non-empty-string>|null $methods
- * @property-read non-empty-string $pattern
- * @property-read string $prefix
- */
 final class RouteConfigurator
 {
     private array $defaults = [];
     private ?string $group = null;
     private ?array $methods = null;
     private string $prefix = '';
-    private HandlerInterface|CoreInterface|null $core = null;
+    private ?CoreInterface $core = null;
     private ?array $middleware = null;
 
     /** @var null|string|callable|RequestHandlerInterface|TargetInterface */
@@ -45,8 +34,41 @@ final class RouteConfigurator
     public function __construct(
         private readonly string $name,
         private readonly string $pattern,
-        private readonly RouteCollection $collection,
-    ) {}
+        private readonly RouteCollection $collection
+    ) {
+    }
+
+    public function __destruct()
+    {
+        if ($this->target === null) {
+            throw new TargetException(
+                \sprintf('The [%s] route has no defined target. Call one of: `controller`, `action`,
+                    `namespaced`, `groupControllers`, `callable`, `handler` methods.', $this->name)
+            );
+        }
+
+        $this->collection->add($this->name, $this);
+    }
+
+    /**
+     * @internal
+     *
+     * Don't use this method. For internal use only.
+     */
+    public function __get(string $name): mixed
+    {
+        return match ($name) {
+            'core' => $this->core,
+            'target' => $this->target,
+            'defaults' => $this->defaults,
+            'group' => $this->group,
+            'middleware' => $this->middleware,
+            'methods' => $this->methods,
+            'pattern' => $this->pattern,
+            'prefix' => \trim($this->prefix, '/'),
+            default => throw new \BadMethodCallException(\sprintf('Unable to access %s.', $name))
+        };
+    }
 
     public function controller(string $controller, int $options = 0, string $defaultAction = 'index'): self
     {
@@ -111,7 +133,7 @@ final class RouteConfigurator
         return $this;
     }
 
-    public function core(HandlerInterface|CoreInterface $core): self
+    public function core(CoreInterface $core): self
     {
         $this->core = $core;
 
@@ -129,45 +151,10 @@ final class RouteConfigurator
         return $this;
     }
 
-    /**
-     * @param non-empty-string|list<non-empty-string> $methods
-     */
     public function methods(string|array $methods): self
     {
         $this->methods = (array) $methods;
 
         return $this;
-    }
-
-    /**
-     * @internal
-     *
-     * Don't use this method. For internal use only.
-     */
-    public function __get(string $name): mixed
-    {
-        return match ($name) {
-            'core' => $this->core,
-            'target' => $this->target,
-            'defaults' => $this->defaults,
-            'group' => $this->group,
-            'middleware' => $this->middleware,
-            'methods' => $this->methods,
-            'pattern' => $this->pattern,
-            'prefix' => \trim($this->prefix, '/'),
-            default => throw new \BadMethodCallException(\sprintf('Unable to access %s.', $name)),
-        };
-    }
-
-    public function __destruct()
-    {
-        if ($this->target === null) {
-            throw new TargetException(
-                \sprintf('The [%s] route has no defined target. Call one of: `controller`, `action`,
-                    `namespaced`, `groupControllers`, `callable`, `handler` methods.', $this->name),
-            );
-        }
-
-        $this->collection->add($this->name, $this);
     }
 }

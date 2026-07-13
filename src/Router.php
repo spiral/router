@@ -67,7 +67,7 @@ final class Router implements RouterInterface
 
         return $this->tracer->trace(
             name: 'Routing',
-            callback: function (SpanInterface $span) use ($request): ResponseInterface {
+            callback: function (SpanInterface $span) use ($request) {
                 try {
                     $route = $this->matchRoute($request, $routeName);
                 } catch (RouteException $e) {
@@ -80,7 +80,7 @@ final class Router implements RouterInterface
                 }
 
                 $span
-                    ->setAttribute('request.uri', (string) $request->getUri())
+                    ->setAttribute('request.uri', (string)$request->getUri())
                     ->setAttribute('route.name', $routeName)
                     ->setAttribute('route.matches', $route->getMatches() ?? []);
 
@@ -92,7 +92,7 @@ final class Router implements RouterInterface
                 $this->eventDispatcher?->dispatch(new RouteMatched($request, $route));
 
                 return $route->handle($request);
-            },
+            }
         );
     }
 
@@ -162,9 +162,7 @@ final class Router implements RouterInterface
 
             if (!isset($this->routes[$name]) && $name !== RoutingConfigurator::DEFAULT_ROUTE_NAME) {
                 $group = $groups->getGroup($configurator->group ?? $groups->getDefaultGroup());
-                if ($configurator->prefix !== '') {
-                    $group->setPrefix($configurator->prefix);
-                }
+                $group->setPrefix($configurator->prefix);
                 $group->addRoute($name, $route);
             }
 
@@ -177,7 +175,7 @@ final class Router implements RouterInterface
     /**
      * Find route matched for given request.
      */
-    protected function matchRoute(ServerRequestInterface $request, ?string &$routeName = null): ?RouteInterface
+    protected function matchRoute(ServerRequestInterface $request, string &$routeName = null): ?RouteInterface
     {
         foreach ($this->routes as $name => $route) {
             // Matched route will return new route instance with matched parameters
@@ -230,11 +228,11 @@ final class Router implements RouterInterface
             !\preg_match(
                 '/^(?:(?P<name>[^\/]+)\/)?(?:(?P<controller>[^:]+):+)?(?P<action>[a-z_\-]+)$/i',
                 $route,
-                $matches,
+                $matches
             )
         ) {
             throw new UndefinedRouteException(
-                "Unable to locate route or use default route with 'name/controller:action' pattern",
+                "Unable to locate route or use default route with 'name/controller:action' pattern"
             );
         }
 
@@ -253,7 +251,7 @@ final class Router implements RouterInterface
             [
                 'controller' => $matches['controller'],
                 'action' => $matches['action'],
-            ],
+            ]
         );
     }
 }

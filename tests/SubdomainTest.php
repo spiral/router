@@ -11,25 +11,23 @@ use Spiral\Router\Route;
 use Spiral\Router\UriHandler;
 use Spiral\Tests\Router\Diactoros\UriFactory;
 
-final class SubdomainTest extends TestCase
+class SubdomainTest extends TestCase
 {
     public function testSubDomainWithoutAction(): void
     {
         $route = new Route(
             '//[<sub>.]site.com/foo',
             'test',
-            ['sub' => 'subdomain'],
+            ['sub' => 'subdomain']
         );
 
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://site.com/foo')));
-        self::assertInstanceOf(Route::class, $match);
-        self::assertSame(['sub' => 'subdomain'], $match->getMatches());
+        $this->assertSame(['sub' => 'subdomain'], $match->getMatches());
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://bar.site.com/foo')));
-        self::assertInstanceOf(Route::class, $match);
-        self::assertSame(['sub' => 'bar'], $match->getMatches());
+        $this->assertSame(['sub' => 'bar'], $match->getMatches());
     }
 
     public function testSubDomainWithAction(): void
@@ -37,25 +35,21 @@ final class SubdomainTest extends TestCase
         $route = new Route(
             '//[<sub>.]site.com/foo[/<action>]',
             'test',
-            ['sub' => 'subdomain'],
+            ['sub' => 'subdomain']
         );
 
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://site.com/foo/bar')));
-        self::assertInstanceOf(Route::class, $match);
-        self::assertSame(['sub' => 'subdomain', 'action' => 'bar'], $match->getMatches());
+        $this->assertSame(['sub' => 'subdomain', 'action' => 'bar'], $match->getMatches());
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://site.com/foo')));
-        self::assertInstanceOf(Route::class, $match);
-        self::assertSame(['sub' => 'subdomain', 'action' => null], $match->getMatches());
+        $this->assertSame(['sub' => 'subdomain', 'action' => null], $match->getMatches());
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://bar.site.com/foo')));
-        self::assertInstanceOf(Route::class, $match);
-        self::assertSame(['sub' => 'bar', 'action' => null], $match->getMatches());
+        $this->assertSame(['sub' => 'bar', 'action' => null], $match->getMatches());
 
         $match = $route->match(new ServerRequest('GET', new Uri('http://bar.site.com/foo/bar')));
-        self::assertInstanceOf(Route::class, $match);
-        self::assertSame(['sub' => 'bar', 'action' => 'bar'], $match->getMatches());
+        $this->assertSame(['sub' => 'bar', 'action' => 'bar'], $match->getMatches());
     }
 }

@@ -9,10 +9,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Spiral\Core\CoreInterface;
-use Spiral\Core\Internal\Proxy;
 use Spiral\Core\ScopeInterface;
-use Spiral\Interceptors\Handler\AutowireHandler;
-use Spiral\Interceptors\HandlerInterface;
 use Spiral\Router\CoreHandler;
 use Spiral\Router\Exception\TargetException;
 use Spiral\Router\TargetInterface;
@@ -27,7 +24,7 @@ abstract class AbstractTarget implements TargetInterface
     // Automatically prepend HTTP verb to all action names.
     public const RESTFUL = 1;
 
-    private HandlerInterface|CoreInterface|null $pipeline = null;
+    private ?CoreInterface $core = null;
     private ?CoreHandler $handler = null;
     private bool $verbActions;
 
@@ -35,7 +32,7 @@ abstract class AbstractTarget implements TargetInterface
         private array $defaults,
         private array $constrains,
         int $options = 0,
-        private string $defaultAction = 'index',
+        private string $defaultAction = 'index'
     ) {
         $this->verbActions = ($options & self::RESTFUL) === self::RESTFUL;
     }
@@ -52,24 +49,11 @@ abstract class AbstractTarget implements TargetInterface
 
     /**
      * @mutation-free
-     * @deprecated Use {@see withHandler()} instead.
      */
-    public function withCore(HandlerInterface|CoreInterface $core): TargetInterface
+    public function withCore(CoreInterface $core): TargetInterface
     {
         $target = clone $this;
-        $target->pipeline = $core;
-        $target->handler = null;
-
-        return $target;
-    }
-
-    /**
-     * @mutation-free
-     */
-    public function withHandler(HandlerInterface $handler): TargetInterface
-    {
-        $target = clone $this;
-        $target->pipeline = $handler;
+        $target->core = $core;
         $target->handler = null;
 
         return $target;
@@ -80,7 +64,7 @@ abstract class AbstractTarget implements TargetInterface
         return $this->coreHandler($container)->withContext(
             $this->resolveController($matches),
             $this->resolveAction($matches) ?? $this->defaultAction,
-            $matches,
+            $matches
         )->withVerbActions($this->verbActions);
     }
 
@@ -90,19 +74,13 @@ abstract class AbstractTarget implements TargetInterface
             return $this->handler;
         }
 
-        $scope = Proxy::create(new \ReflectionClass(ScopeInterface::class), null, new \Spiral\Core\Attribute\Proxy());
-
         try {
             // construct on demand
             $this->handler = new CoreHandler(
-                match (false) {
-                    $this->pipeline === null => $this->pipeline,
-                    $container->has(HandlerInterface::class) => new AutowireHandler($container),
-                    default => $container->get(HandlerInterface::class),
-                },
-                $scope,
+                $this->core ?? $container->get(CoreInterface::class),
+                $container->get(ScopeInterface::class),
                 $container->get(ResponseFactoryInterface::class),
-                $container->get(TracerInterface::class),
+                $container->get(TracerInterface::class)
             );
 
             return $this->handler;

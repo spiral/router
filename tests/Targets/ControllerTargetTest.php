@@ -13,43 +13,53 @@ use Spiral\Router\UriHandler;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
 
-final class ControllerTargetTest extends TestCase
+class ControllerTargetTest extends TestCase
 {
     public function testDefaultAction(): void
     {
         $route = new Route('/home[/<action>]', new Controller(TestController::class));
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
-        self::assertSame(['action' => null], $route->getDefaults());
+        $this->assertSame(['action' => null], $route->getDefaults());
     }
 
     public function testMatch(): void
     {
         $route = new Route(
             '/test[/<action>]',
-            new Controller(TestController::class),
+            new Controller(TestController::class)
         );
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
-        self::assertNull($route->match(new ServerRequest('GET', '')));
-        self::assertNotNull($route->match(new ServerRequest('GET', new Uri('/test/something'))));
-        self::assertNotNull($route->match(new ServerRequest('GET', new Uri('/test/tester'))));
+        $this->assertNull($route->match(new ServerRequest('GET', '')));
+        $this->assertNotNull($route->match(new ServerRequest('GET', new Uri('/test/something'))));
+        $this->assertNotNull($route->match(new ServerRequest('GET', new Uri('/test/tester'))));
 
-        self::assertNotNull($match = $route->match(new ServerRequest('GET', new Uri('/test'))));
+        $this->assertNotNull(
+            $match = $route->match(new ServerRequest('GET', new Uri('/test')))
+        );
 
-        self::assertSame(['action' => null], $match->getMatches());
+        $this->assertSame(['action' => null], $match->getMatches());
 
-        self::assertNotNull($match = $route->match(new ServerRequest('GET', new Uri('/test/'))));
-        self::assertSame(['action' => null], $match->getMatches());
+        $this->assertNotNull(
+            $match = $route->match(new ServerRequest('GET', new Uri('/test/')))
+        );
+        $this->assertSame(['action' => null], $match->getMatches());
 
-        self::assertNotNull($match = $route->match(new ServerRequest('GET', new Uri('/test/test'))));
-        self::assertSame(['action' => 'test'], $match->getMatches());
+        $this->assertNotNull(
+            $match = $route->match(new ServerRequest('GET', new Uri('/test/test')))
+        );
+        $this->assertSame(['action' => 'test'], $match->getMatches());
 
-        self::assertNotNull($match = $route->match(new ServerRequest('GET', new Uri('/test/test/'))));
-        self::assertSame(['action' => 'test'], $match->getMatches());
+        $this->assertNotNull(
+            $match = $route->match(new ServerRequest('GET', new Uri('/test/test/')))
+        );
+        $this->assertSame(['action' => 'test'], $match->getMatches());
 
-        self::assertNotNull($match = $route->match(new ServerRequest('GET', new Uri('/test/other'))));
+        $this->assertNotNull(
+            $match = $route->match(new ServerRequest('GET', new Uri('/test/other')))
+        );
 
-        self::assertSame(['action' => 'other'], $match->getMatches());
+        $this->assertSame(['action' => 'other'], $match->getMatches());
     }
 }

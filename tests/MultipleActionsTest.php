@@ -11,7 +11,7 @@ use Spiral\Tests\Router\Fixtures\TestController;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
 
-final class MultipleActionsTest extends BaseTestCase
+class MultipleActionsTest extends BaseTestCase
 {
     public function testRouteException(): void
     {
@@ -20,7 +20,7 @@ final class MultipleActionsTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            new Route('/<action>/<id>', new Action(TestController::class, ['test', 'id'])),
+            new Route('/<action>/<id>', new Action(TestController::class, ['test', 'id']))
         );
 
         $router->handle(new ServerRequest('GET', ''));
@@ -31,16 +31,16 @@ final class MultipleActionsTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            new Route('/<action>[/<id>]', new Action(TestController::class, ['test', 'id'])),
+            new Route('/<action>[/<id>]', new Action(TestController::class, ['test', 'id']))
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('hello world', (string) $response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('hello world', (string)$response->getBody());
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/id/900')));
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('900', (string) $response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('900', (string)$response->getBody());
     }
 
     public function testUriGeneration(): void
@@ -48,13 +48,13 @@ final class MultipleActionsTest extends BaseTestCase
         $router = $this->makeRouter();
         $router->setRoute(
             'action',
-            new Route('/<action>[/<id>]', new Action(TestController::class, ['test', 'id'])),
+            new Route('/<action>[/<id>]', new Action(TestController::class, ['test', 'id']))
         );
 
         $uri = $router->uri('action/test');
-        self::assertSame('/test', $uri->getPath());
+        $this->assertSame('/test', $uri->getPath());
 
         $uri = $router->uri('action/id', ['id' => 100]);
-        self::assertSame('/id/100', $uri->getPath());
+        $this->assertSame('/id/100', $uri->getPath());
     }
 }

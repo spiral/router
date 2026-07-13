@@ -6,7 +6,6 @@ namespace Spiral\Tests\Router\Fixtures;
 
 use Spiral\Core\Exception\ControllerException;
 use Nyholm\Psr7\Response;
-use Spiral\Core\Internal\Introspector;
 
 class TestController
 {
@@ -39,7 +38,7 @@ class TestController
 
     public function echo(): void
     {
-        \ob_start();
+        ob_start();
         echo 'echoed';
     }
 
@@ -62,7 +61,7 @@ class TestController
     {
         return [
             'status' => 301,
-            'msg'    => 'redirect',
+            'msg'    => 'redirect'
         ];
     }
 
@@ -89,11 +88,5 @@ class TestController
     public function deleteTarget(): string
     {
         return 'DELETE';
-    }
-
-    public function scopes(): string
-    {
-        $scopes = Introspector::scopeNames();
-        return \implode(', ', \array_filter($scopes));
     }
 }

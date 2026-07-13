@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 final class Routing
 {
     public function __construct(
-        public readonly ServerRequestInterface $request,
-    ) {}
+        public readonly ServerRequestInterface $request
+    ) {
+    }
 }

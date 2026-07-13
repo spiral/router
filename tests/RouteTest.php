@@ -10,25 +10,16 @@ use Spiral\Router\Route;
 use Spiral\Tests\Router\Diactoros\UriFactory;
 use Spiral\Router\UriHandler;
 use Nyholm\Psr7\ServerRequest;
+use Spiral\Tests\Router\Stub\TestMiddleware;
 
-final class RouteTest extends BaseTestCase
+class RouteTest extends BaseTestCase
 {
-    public static function prefixesDataProvider(): \Traversable
-    {
-        yield ['something', 'something'];
-        yield ['/something/', 'something'];
-        yield ['//something/', 'something'];
-        yield ['something//', 'something'];
-        yield ['something/other', 'something/other'];
-        yield ['/something/other/', 'something/other'];
-    }
-
     public function testEmptyPrefix(): void
     {
         $route = new Route('/action', Call::class);
         $route = $route->withUriHandler(new UriHandler(new UriFactory()));
 
-        self::assertSame('', $route->getUriHandler()->getPrefix());
+        $this->assertSame('', $route->getUriHandler()->getPrefix());
     }
 
     #[DataProvider('prefixesDataProvider')]
@@ -37,7 +28,7 @@ final class RouteTest extends BaseTestCase
         $route = new Route('/action', Call::class);
         $route = $route->withUriHandler((new UriHandler(new UriFactory()))->withPrefix($prefix));
 
-        self::assertSame($expected, $route->getUriHandler()->getPrefix());
+        $this->assertSame($expected, $route->getUriHandler()->getPrefix());
     }
 
     public function testContainerException(): void
@@ -59,8 +50,17 @@ final class RouteTest extends BaseTestCase
         $p = $this->getProperty($route, 'pipeline');
         $m = $this->getProperty($p, 'middleware');
 
-        self::assertCount(1, $m);
-        // Because of the pipeline is lazy
-        self::assertSame($middleware, $m[0]);
+        $this->assertCount(1, $m);
+        $this->assertInstanceOf(TestMiddleware::class, $m[0]);
+    }
+
+    public static function prefixesDataProvider(): \Traversable
+    {
+        yield ['something', 'something'];
+        yield ['/something/', 'something'];
+        yield ['//something/', 'something'];
+        yield ['something//', 'something'];
+        yield ['something/other', 'something/other'];
+        yield ['/something/other/', 'something/other'];
     }
 }

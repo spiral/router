@@ -17,15 +17,15 @@ final class LoaderRegistryTest extends TestCase
         $container = new Container();
         $registry = new LoaderRegistry([
             new PhpFileLoader($container, $container),
-            new TestLoader(),
+            new TestLoader()
         ]);
 
-        self::assertInstanceOf(PhpFileLoader::class, $registry->resolve('test/file.php'));
-        self::assertInstanceOf(PhpFileLoader::class, $registry->resolve('test/file.php', 'php'));
-        self::assertFalse($registry->resolve('test/file.php', 'txt'));
+        $this->assertInstanceOf(PhpFileLoader::class, $registry->resolve('test/file.php'));
+        $this->assertInstanceOf(PhpFileLoader::class, $registry->resolve('test/file.php', 'php'));
+        $this->assertFalse($registry->resolve('test/file.php', 'txt'));
 
-        self::assertInstanceOf(TestLoader::class, $registry->resolve('test/file.yaml', 'yaml'));
-        self::assertFalse($registry->resolve('test/file.yaml', 'php'));
+        $this->assertInstanceOf(TestLoader::class, $registry->resolve('test/file.yaml', 'yaml'));
+        $this->assertFalse($registry->resolve('test/file.yaml', 'php'));
     }
 
     public function testAddAndGetLoaders(): void
@@ -35,12 +35,12 @@ final class LoaderRegistryTest extends TestCase
         $php = new PhpFileLoader($container, $container);
         $yaml = new TestLoader();
 
-        self::assertSame([], $registry->getLoaders());
+        $this->assertSame([], $registry->getLoaders());
 
         $registry->addLoader($php);
-        self::assertSame([$php], $registry->getLoaders());
+        $this->assertSame([$php], $registry->getLoaders());
 
         $registry->addLoader($yaml);
-        self::assertSame([$php, $yaml], $registry->getLoaders());
+        $this->assertSame([$php, $yaml], $registry->getLoaders());
     }
 }

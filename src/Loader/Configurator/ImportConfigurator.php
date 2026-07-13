@@ -6,15 +6,30 @@ namespace Spiral\Router\Loader\Configurator;
 
 use Psr\Http\Server\MiddlewareInterface;
 use Spiral\Core\CoreInterface;
-use Spiral\Interceptors\HandlerInterface;
 use Spiral\Router\RouteCollection;
 
 final class ImportConfigurator
 {
     public function __construct(
         private readonly RouteCollection $parent,
-        private readonly RouteCollection $routes,
-    ) {}
+        private readonly RouteCollection $routes
+    ) {
+    }
+
+    public function __destruct()
+    {
+        $this->parent->addCollection($this->routes);
+    }
+
+    public function __sleep(): array
+    {
+        throw new \BadMethodCallException('Cannot unserialize ' . self::class);
+    }
+
+    public function __wakeup()
+    {
+        throw new \BadMethodCallException('Cannot unserialize ' . self::class);
+    }
 
     public function defaults(array $defaults): self
     {
@@ -62,7 +77,7 @@ final class ImportConfigurator
         return $this;
     }
 
-    public function core(HandlerInterface|CoreInterface $core): self
+    public function core(CoreInterface $core): self
     {
         foreach ($this->routes->all() as $configurator) {
             $configurator->core($core);
@@ -78,20 +93,5 @@ final class ImportConfigurator
         }
 
         return $this;
-    }
-
-    public function __sleep(): array
-    {
-        throw new \BadMethodCallException('Cannot unserialize ' . self::class);
-    }
-
-    public function __wakeup(): void
-    {
-        throw new \BadMethodCallException('Cannot unserialize ' . self::class);
-    }
-
-    public function __destruct()
-    {
-        $this->parent->addCollection($this->routes);
     }
 }

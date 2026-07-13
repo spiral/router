@@ -13,7 +13,7 @@ use Spiral\Tests\Router\Fixtures\TestController;
 use Nyholm\Psr7\ServerRequest;
 use Nyholm\Psr7\Uri;
 
-final class GroupTest extends BaseTestCase
+class GroupTest extends BaseTestCase
 {
     public function testRouteException(): void
     {
@@ -24,7 +24,7 @@ final class GroupTest extends BaseTestCase
             'group',
             new Route('/<controller>/<action>', new Group([
                 'test' => TestController::class,
-            ])),
+            ]))
         );
 
         $router->handle(new ServerRequest('GET', ''));
@@ -37,16 +37,16 @@ final class GroupTest extends BaseTestCase
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
-            ])),
+            ]))
         );
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test')));
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('hello world', (string) $response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('hello world', (string)$response->getBody());
 
         $response = $router->handle(new ServerRequest('GET', new Uri('/test/id/900')));
-        self::assertSame(200, $response->getStatusCode());
-        self::assertSame('900', (string) $response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('900', (string)$response->getBody());
     }
 
     public function testRouteOther(): void
@@ -58,7 +58,7 @@ final class GroupTest extends BaseTestCase
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
-            ])),
+            ]))
         );
 
         $router->handle(new ServerRequest('GET', new Uri('/other')));
@@ -73,10 +73,10 @@ final class GroupTest extends BaseTestCase
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
-            ])),
+            ]))
         );
 
-        $router->uri('group/test');
+        $uri = $router->uri('group/test');
     }
 
     public function testUriInvalidNoAction(): void
@@ -88,10 +88,10 @@ final class GroupTest extends BaseTestCase
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
-            ])),
+            ]))
         );
 
-        $router->getRoute('group')->uri(['controller' => 'test']);
+        $uri = $router->getRoute('group')->uri(['controller' => 'test']);
     }
 
     public function testClientException(): void
@@ -103,7 +103,7 @@ final class GroupTest extends BaseTestCase
             'group',
             new Route('/<controller>[/<action>[/<id>]]', new Group([
                 'test' => TestController::class,
-            ])),
+            ]))
         );
 
         $router->handle(new ServerRequest('GET', new Uri('/test/other')));

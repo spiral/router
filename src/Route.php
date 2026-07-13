@@ -41,7 +41,6 @@ final class Route extends AbstractRoute implements ContainerizedInterface
 
     /** @var string|callable|RequestHandlerInterface|TargetInterface */
     private mixed $target;
-
     private ?RequestHandlerInterface $requestHandler = null;
 
     /**
@@ -52,13 +51,13 @@ final class Route extends AbstractRoute implements ContainerizedInterface
     public function __construct(
         string $pattern,
         string|callable|RequestHandlerInterface|TargetInterface $target,
-        array $defaults = [],
+        array $defaults = []
     ) {
         parent::__construct(
             $pattern,
             $target instanceof TargetInterface
                 ? \array_merge($target->getDefaults(), $defaults)
-                : $defaults,
+                : $defaults
         );
 
         $this->target = $target;
@@ -91,7 +90,7 @@ final class Route extends AbstractRoute implements ContainerizedInterface
             $route->target = clone $route->target;
         }
 
-        $route->pipeline = $route->makeLazyPipeline();
+        $route->pipeline = $route->makePipeline();
 
         return $route;
     }
@@ -121,7 +120,7 @@ final class Route extends AbstractRoute implements ContainerizedInterface
         \assert($this->pipeline !== null);
         return $this->pipeline->process(
             $request->withAttribute(self::ROUTE_ATTRIBUTE, $this),
-            $this->requestHandler,
+            $this->requestHandler
         );
     }
 
@@ -130,9 +129,9 @@ final class Route extends AbstractRoute implements ContainerizedInterface
      */
     protected function requestHandler(): RequestHandlerInterface
     {
-        $this->hasContainer() or throw new RouteException(
-            'Unable to configure route pipeline without associated container.',
-        );
+        if (!$this->hasContainer()) {
+            throw new RouteException('Unable to configure route pipeline without associated container');
+        }
 
         if ($this->target instanceof TargetInterface) {
             try {
@@ -158,7 +157,7 @@ final class Route extends AbstractRoute implements ContainerizedInterface
 
             return new CallableHandler(
                 $target,
-                $this->container->get(ResponseFactoryInterface::class),
+                $this->container->get(ResponseFactoryInterface::class)
             );
         } catch (ContainerExceptionInterface $e) {
             throw new RouteException($e->getMessage(), $e->getCode(), $e);
