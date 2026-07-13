@@ -17,14 +17,14 @@ use Spiral\Router\Loader\LoaderInterface;
 use Spiral\Router\Route;
 use Spiral\Router\RouteCollection;
 
-class RouterTest extends BaseTestCase
+final class RouterTest extends BaseTestCase
 {
     public function testGetRoutes(): void
     {
         $router = $this->makeRouter();
 
         $router->setRoute('name', new Route('/', Call::class));
-        $this->assertCount(1, $router->getRoutes());
+        self::assertCount(1, $router->getRoutes());
     }
 
     public function testDefault(): void
@@ -34,7 +34,7 @@ class RouterTest extends BaseTestCase
         $router->setRoute('name', new Route('/', Call::class));
         $router->setDefault(new Route('/', Call::class));
 
-        $this->assertCount(2, $router->getRoutes());
+        self::assertCount(2, $router->getRoutes());
     }
 
     public function testCastError(): void
@@ -48,13 +48,13 @@ class RouterTest extends BaseTestCase
     public function testEventsShouldBeDispatched(): void
     {
         $request = new ServerRequest('GET', '/foo');
-        $route = (new Route('/foo', Call::class))->withContainer($this->container);
+        $route = (new Route('/foo', Call::class))->withContainer($this->getContainer());
 
         $dispatcher = $this->createMock(EventDispatcherInterface::class);
         $dispatcher
             ->expects(self::exactly(2))
             ->method('dispatch')
-            ->with($this->callback(static fn (Routing|RouteMatched $event): bool => $event->request instanceof ServerRequest));
+            ->with($this->callback(static fn(Routing|RouteMatched $event): bool => $event->request instanceof ServerRequest));
 
         $router = $this->makeRouter('', $dispatcher);
         $router->setDefault($route);
@@ -71,7 +71,7 @@ class RouterTest extends BaseTestCase
             ->method('dispatch')
             ->with($this->logicalOr(
                 new Routing($request),
-                new RouteNotFound($request)
+                new RouteNotFound($request),
             ));
 
         $router = $this->makeRouter('', $dispatcher);
@@ -82,16 +82,42 @@ class RouterTest extends BaseTestCase
 
     public function testImportWithHost(): void
     {
-        $router = $this->makeRouter('https://host.com', $this->createMock(EventDispatcherInterface::class));
+        $groupRegistry = $this->getContainer()->get(GroupRegistry::class);
+        $router = $this->makeRouter('https://host.com', $this->createStub(EventDispatcherInterface::class));
 
-        $configurator = new RoutingConfigurator(new RouteCollection(), $this->createMock(LoaderInterface::class));
-        $configurator->add('foo', '//<host>/register')->callable(fn () => null);
+        $configurator = new RoutingConfigurator(new RouteCollection(), $this->createStub(LoaderInterface::class));
+        $configurator->add('foo', '//<host>/register')->callable(static fn() => null);
 
         $router->import($configurator);
-        $this->container->get(GroupRegistry::class)->registerRoutes($router);
+        $groupRegistry->registerRoutes($router);
 
-        $uri = (string) $router->uri('foo', ['host' => 'some']);
-        $this->assertSame('some/register', $uri);
-        $this->assertFalse(\str_contains('https://host.com', $uri));
+        $uriFoo = (string) $router->uri('foo', ['host' => 'some']);
+        self::assertSame('some/register', $uriFoo);
+        self::assertStringNotContainsString($uriFoo, 'https://host.com');
+    }
+
+    public function testImportWithGroupPrefixes(): void
+    {
+        $groupRegistry = $this->getContainer()->get(GroupRegistry::class);
+
+        $groupRegistry
+            ->getGroup('console:user')
+            ->setNamePrefix('console.')
+            ->setPrefix('/console');
+
+        $router = $this->makeRouter(dispatcher: $this->createStub(EventDispatcherInterface::class));
+
+        $configurator = new RoutingConfigurator(new RouteCollection(), $this->createStub(LoaderInterface::class));
+        $configurator
+            ->add('some-path', 'some/path')
+            ->group('console:user')
+            ->methods('POST')
+            ->callable(static fn() => null);
+
+        $router->import($configurator);
+        $groupRegistry->registerRoutes($router);
+
+        $uriSome = (string) $router->uri('console.some-path');
+        self::assertSame('/console/some/path', $uriSome);
     }
 }
