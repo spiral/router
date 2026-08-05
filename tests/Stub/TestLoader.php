@@ -7,7 +7,7 @@ namespace Spiral\Tests\Router\Stub;
 use Spiral\Router\Loader\LoaderInterface;
 use Spiral\Router\RouteCollection;
 
-final class TestLoader implements LoaderInterface
+class TestLoader implements LoaderInterface
 {
     public function load(mixed $resource, ?string $type = null): RouteCollection
     {

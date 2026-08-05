@@ -6,7 +6,7 @@ namespace Spiral\Tests\Router;
 
 use Spiral\Core\CoreInterface;
 
-final class TestCore implements CoreInterface
+class TestCore implements CoreInterface
 {
     public function __construct(private readonly CoreInterface $core) {}
 

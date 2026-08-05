@@ -12,7 +12,7 @@ use Spiral\Core\Attribute\Proxy;
 use Spiral\Core\Scope;
 use Spiral\Core\ScopeInterface;
 
-final class IdentityScopedMiddleware implements MiddlewareInterface
+class IdentityScopedMiddleware implements MiddlewareInterface
 {
     public function __construct(
         #[Proxy] private ScopeInterface $scope,
